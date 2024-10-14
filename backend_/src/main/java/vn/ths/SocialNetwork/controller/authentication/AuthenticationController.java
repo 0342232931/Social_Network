@@ -17,6 +17,7 @@ import vn.ths.SocialNetwork.services.service.athentication.AuthenticationService
 
 import java.text.ParseException;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/auth")
 @Slf4j
