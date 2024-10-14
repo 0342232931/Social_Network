@@ -8,10 +8,12 @@ const HomePage = () => {
 
   const userlist = useSelector((state) => state.users.users?.allUsers);
 
-  const user = useSelector((state) => state.auth.login?.currentUser);
+  const user = useSelector((state) => state.auth.login?.currentUser.result);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  console.log(user);
+  
   useEffect(() => {
     if (user == null) 
       navigate("/login");

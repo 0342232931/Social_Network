@@ -9,14 +9,14 @@ import "./navbar.css";
 
 function NavBar({children}){
 
-  const user = useSelector((state) => state.auth.login.currentUser)
+  const user = useSelector((state) => state.auth.login.currentUser.result.userResponse)
 
   return (
     <nav className="navbar-container">
       <Link to="/" className="navbar-home"> Home </Link>
       {user? (
         <>
-        <p className="navbar-user">Hi, <span> {user.username}  </span> </p>
+        <p className="navbar-user">Hi, <span> {`${user.firstName} ` + `${user.lastName}`}  </span> </p>
         <Link to="/logout" className="navbar-logout"> Log out</Link>
         </>
       ) : (    
