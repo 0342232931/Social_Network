@@ -15,7 +15,7 @@ const HomePage = () => {
   useEffect(() => {
     if (user == null) 
       navigate("/login");
-    if(user.token != null)
+    if(user?.token != null)
       getAllUsers(user?.token, dispatch)
   }, [])
  
