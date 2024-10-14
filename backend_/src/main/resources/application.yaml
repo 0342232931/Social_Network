@@ -1,0 +1,18 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: SocialNetwork
+  datasource:
+    url: "jdbc:mysql://localhost:3300/social_network_db"
+    username: root
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+jwt:
+  signerKey: "qNNw/9z5dmLKbWYrvkibteO4btbWq0gCqM8RQQLwUBG3arvNndeikq5y/cpV3B7o"
+  valid-duration: 3600 # seconds
+  refreshable-duration: 36000 # seconds
