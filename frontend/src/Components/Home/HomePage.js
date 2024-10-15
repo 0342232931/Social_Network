@@ -1,24 +1,46 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "./home.css";
+import { createAxios } from "../../createInstance";
+import { jwtDecode } from "jwt-decode";
 import { getAllUsers } from "../../redux/apiRequest";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from 'react-router-dom'
+import axios from "axios";
+import { loginSuccess } from "../../redux/authSlice";
 
 const HomePage = () => {
 
-  const userlist = useSelector((state) => state.users.users?.allUsers);
+  const [list, setList] = useState([])
 
-  const user = useSelector((state) => state.auth.login?.currentUser.result);
+  const user = useSelector((state) => state.auth.login?.currentUser?.result);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  let axiosJWT = createAxios(user, dispatch, loginSuccess);
 
   console.log(user);
   
   useEffect(() => {
     if (user == null) 
       navigate("/login");
-    if(user?.token != null)
-      getAllUsers(user?.token, dispatch)
+  }, [])
+
+  useEffect(()=> {
+    const fetchData = async() => {
+      try {
+        const res = await axiosJWT.get("http://localhost:8080/users", {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        });
+        setList(res.data.result)
+        console.log(res.data.result);
+        
+      } catch (err) {
+        console.log("msg: " + err);
+      }
+    }
+    fetchData()
   }, [])
  
   const handleDelete = () => {
@@ -29,10 +51,10 @@ const HomePage = () => {
     <main className="home-container">
       <div className="home-title">User List</div>
       <div className="home-userlist">
-        {userlist?.map((user) => {
+        {list?.map((user) => {
           return (
-            <div className="user-container">
-              <div className="home-user">{user.username}</div>
+            <div key={user.id} className="user-container">
+              <div className="home-user">{user.firstName + " " + user.lastName}</div>
               <div className="delete-user" onClick={handleDelete}> Delete </div>
             </div>
           );
