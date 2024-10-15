@@ -29,12 +29,12 @@ export const registerUser = async (user, dispatch, navigate) => {
     }
 }
 
-export const getAllUsers = async (accessToken, dispatch) => {
+export const getAllUsers = async (token, dispatch) => {
     dispatch(getUsersStart());
     try {
         const res = await axios.get("http://localhost:8080/users", {
             headers: {
-                token : accessToken
+                Authorization : `Bearer ${token}`
             }
         });
         dispatch(getUsersSuccess(res.data));

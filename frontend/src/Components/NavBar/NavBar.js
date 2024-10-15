@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Routes, Route } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
@@ -8,7 +7,7 @@ import RegisterPage from "../Register/Register";
 import "./navbar.css";
 import { logoutUsers } from "../../redux/apiRequest";
 import { createAxios } from "../../createInstance";
-import { logoutSuccess } from "../../redux/authSlice";
+import { logoutFailed, logoutStart, logoutSuccess } from "../../redux/authSlice";
 
 
 function NavBar({children}){
@@ -25,13 +24,18 @@ function NavBar({children}){
     token : token,
   }
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    dispatch(logoutStart());
     try{
-      console.log(token);
-      
-      logoutUsers(token, dispatch, navigate, axiosJWT);
+      await axiosJWT.post("http://localhost:8080/auth/logout",request)
+      dispatch(logoutSuccess());
+      navigate("/login");
+      // logoutUsers(token, dispatch, navigate, axiosJWT);
     } catch(err){
       console.log("msg error: " + err);
+      console.log("logout failed");
+      
+      dispatch(logoutFailed());
     }
   }
 
@@ -40,7 +44,7 @@ function NavBar({children}){
       <Link to="/" className="navbar-home"> Home </Link>
       {user? (
         <>
-        <p className="navbar-user">Hi, <span> {`${user.firstName} ` + `${user.lastName}`}  </span> </p>
+        <p className="navbar-user">Hi, <span> {`${user.firstName} ${user.lastName}`}  </span> </p>
         <Link to="/logout" className="navbar-logout" onClick={handleLogout}> Log out</Link>
         </>
       ) : (    

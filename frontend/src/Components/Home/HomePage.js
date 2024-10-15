@@ -1,11 +1,8 @@
 import { useEffect, useState } from "react";
 import "./home.css";
 import { createAxios } from "../../createInstance";
-import { jwtDecode } from "jwt-decode";
-import { getAllUsers } from "../../redux/apiRequest";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from 'react-router-dom'
-import axios from "axios";
 import { loginSuccess } from "../../redux/authSlice";
 
 const HomePage = () => {
@@ -43,19 +40,15 @@ const HomePage = () => {
     fetchData()
   }, [])
  
-  const handleDelete = () => {
-     
-  }
-
   return (
     <main className="home-container">
       <div className="home-title">User List</div>
       <div className="home-userlist">
-        {list?.map((user) => {
+        {list?.map((u) => {
           return (
-            <div key={user.id} className="user-container">
-              <div className="home-user">{user.firstName + " " + user.lastName}</div>
-              <div className="delete-user" onClick={handleDelete}> Delete </div>
+            <div key={u.id} className="user-container">
+              <div className="home-user">{u.firstName + " " + u.lastName}</div>
+              <div className="delete-user" > Delete </div>
             </div>
           );
         })}
