@@ -1,66 +1,25 @@
 import { Link, useNavigate } from "react-router-dom";
-import { Routes, Route } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
-import HomePage from "../Home/HomePage";
-import LoginPage from "../Login/LoginPage";
-import RegisterPage from "../Register/Register";
-import "./navbar.css";
-import { logoutUsers } from "../../redux/apiRequest";
-import { createAxios } from "../../createInstance";
-import { logoutFailed, logoutStart, logoutSuccess } from "../../redux/authSlice";
+import styles from "./navbar.module.css";
 
 
-function NavBar({children}){
+function NavBar(){
 
   const user = useSelector((state) => state.auth.login.currentUser?.result.userResponse)
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const token = useSelector((state) => state.auth.login.currentUser?.result.token)
-
-  let axiosJWT = createAxios(user, dispatch, logoutSuccess);
-
-  const request = {
-    token : token,
-  }
-
-  const handleLogout = async () => {
-    dispatch(logoutStart());
-    try{
-      await axiosJWT.post("http://localhost:8080/auth/logout",request)
-      dispatch(logoutSuccess());
-      navigate("/login");
-      // logoutUsers(token, dispatch, navigate, axiosJWT);
-    } catch(err){
-      console.log("msg error: " + err);
-      console.log("logout failed");
-      
-      dispatch(logoutFailed());
-    }
-  }
 
   return (
-    <nav className="navbar-container">
-      <Link to="/" className="navbar-home"> Home </Link>
-      {user? (
-        <>
-        <p className="navbar-user">Hi, <span> {`${user.firstName} ${user.lastName}`}  </span> </p>
-        <Link to="/logout" className="navbar-logout" onClick={handleLogout}> Log out</Link>
-        </>
-      ) : (    
-        <>
-      <Link to="/login" className="navbar-login"> Login </Link>
-      <Link to="/register" className="navbar-register"> Register</Link>
-      </>
-)}
-      <Routes>
-            <Route path='/' element={<HomePage/>} />
-            <Route path="/login" element={ <LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-            <Route path="/logout" element={ <LoginPage />} />
-          </Routes>
+    <nav className={styles.navbar_container}>
+      <div className={styles.tag_link}>
+        <Link to="/" className={styles.navbar_home} >Home</Link>
+        <Link to="#" className={styles.navbar_chat}><i className="fab fa-facebook-messenger"></i></Link>
+        <Link to="#" className={styles.navbar_notification}><i class="fas fa-bell"></i></Link>
+        <Link to="#" className={styles.navbar_info}>My Info</Link>
+      </div>
     </nav>
-  );
+  )
 };
 
 export default NavBar;

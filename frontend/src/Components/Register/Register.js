@@ -1,8 +1,8 @@
 import { registerUser } from "../../redux/apiRequest";
-import "./register.css";
+import styles from "./register.module.css";
 import { useState } from "react"
 import { useDispatch } from "react-redux"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 function Register() {
 
@@ -24,33 +24,33 @@ function Register() {
   }
 
   return (
-    <div className="container">
-      <div className="center">
-        <h1>Register</h1>
-        <form onSubmit={handleRegister}>
-          <div className="txt_field">
-            <input type="text" name="username" onChange={(e) => setUsername(e.target.value)}/>
+    <div className={styles.container}>
+      <div className={styles.center}>
+        <h1 className={styles.h1_field}><b>Register</b></h1>
+        <form onSubmit={handleRegister} className={styles.form_register}>
+          <div className={styles.txt_field}>
+            <input className={styles.input_field} type="text" name="username" onChange={(e) => setUsername(e.target.value)}/>
             <span></span>
-            <label>Username</label>
+            <label className={styles.label_field}>Username</label>
           </div>
-          <div className="txt_field">
-            <input type="email" name="email" onChange={(e) => setEmail(e.target.value)}/>
+          <div className={styles.txt_field}>
+            <input className={styles.input_field} type="email" name="email" onChange={(e) => setEmail(e.target.value)}/>
             <span></span>
-            <label>Email</label>
+            <label className={styles.label_field}>Email</label>
           </div>
-          <div className="txt_field">
-            <input type="password" name="password" onChange={(e) => setPassword(e.target.value)}/>
+          <div className={styles.txt_field}>
+            <input className={styles.input_field} type="password" name="password" onChange={(e) => setPassword(e.target.value)}/>
             <span></span>
-            <label>Password</label>
+            <label className={styles.label_field}>Password</label>
           </div>
-          <div className="txt_field">
-            <input type="password" name="cpassword" />
+          <div className={styles.txt_field}>
+            <input className={styles.input_field} type="password" name="cpassword" />
             <span></span>
-            <label>Confirm Password</label>
+            <label className={styles.label_field}>Confirm Password</label>
           </div>
-          <input name="submit" type="Submit" value="Sign Up" />
-          <div className="signup_link">
-            Have an Account ?
+          <input name="submit" type="Submit" value="Sign Up" className={styles.submit_register}/>
+          <div className={styles.signup_link}>
+            <Link to={"/login"}>Have an Account ?</Link>
           </div>
         </form>
       </div>
