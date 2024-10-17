@@ -2,8 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import styles from "./navbar.module.css";
 
-
-function NavBar(){
+function NavBar(){ 
 
   const user = useSelector((state) => state.auth.login.currentUser?.result.userResponse)
 
@@ -12,12 +11,18 @@ function NavBar(){
 
   return (
     <nav className={styles.navbar_container}>
-      <div className={styles.tag_link}>
-        <Link to="/" className={styles.navbar_home} >Home</Link>
-        <Link to="#" className={styles.navbar_chat}><i className="fab fa-facebook-messenger"></i></Link>
-        <Link to="#" className={styles.navbar_notification}><i class="fas fa-bell"></i></Link>
-        <Link to="#" className={styles.navbar_info}>My Info</Link>
-      </div>
+        <section className={styles.serch_form}>
+          <form className="d-flex" role="search">
+              <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+              <button className="btn btn-outline-primary" type="submit">Search</button>
+          </form>
+        </section>
+        <section className={styles.tag}>
+          <Link to="/" className={styles.element_children} >Home</Link>
+          <Link to="#" className={styles.element_children}><i className="fab fa-facebook-messenger"></i></Link>
+          <Link to="#" className={styles.element_children}><i className="fas fa-bell"></i></Link>
+          <Link to="#" className={styles.element_children}>My Info</Link>
+        </section>
     </nav>
   )
 };

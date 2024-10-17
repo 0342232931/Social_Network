@@ -1,0 +1,32 @@
+.container {
+    scroll-behavior: smooth;
+    margin-top: -21px;
+}
+.content {
+    display: flex;
+}
+.util {
+    width: 25%;
+    margin-right: auto;
+    background-color: #f2f2f2;
+    border-right: 3px solid rgb(14, 14, 14);
+    position: fixed;
+}
+.list_friend {
+    width: 25%;
+    margin-left: auto;
+    background-color: #f2f2f2;
+    border-left: 3px solid rgb(14, 14, 14);
+    position: fixed;
+}
+.post_content {
+    display: grid;
+    margin-left: 25%;
+    margin-right: 25%;
+    width: 50%;
+    height: 100%;
+    background-color: white;
+    align-items: center;
+    justify-content: center;
+    margin-top: 90px;
+}

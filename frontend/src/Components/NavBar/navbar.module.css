@@ -1,41 +1,28 @@
 .navbar_container{
     display: flex;
     padding: 1rem 1.5rem;
-    justify-content: flex-end;
-    background-color: #0c87a9;
+    background-color:#FFFFE0;
     align-items: center;
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     width: 100%;
+    height: auto;
     z-index: 1000;
 } 
-.navbar_home {
+.element_children {
     margin: 0 1.25rem;
     font-weight: 600;
-    color: rgb(228, 242, 245);
+    color: rgb(23, 98, 184);
     margin-left: auto;
     text-decoration: none;
 }
-.navbar_chat {
-    margin: 0 1.25rem;
-    font-weight: 600;
-    color: rgb(228, 242, 245);
+.tag {
     margin-left: auto;
-    text-decoration: none;
+    display: flex;
 }
-.navbar_notification {
-    margin: 0 1.25rem;
-    font-weight: 600;
-    color: rgb(228, 242, 245);
-    margin-left: auto;
-    text-decoration: none;
-}
-.navbar_info {
-    margin: 0 1.25rem;
-    font-weight: 600;
-    color: rgb(228, 242, 245);
-    margin-left: auto;
-    text-decoration: none;
+.search_form {
+    margin-right: auto;
+    padding: 1rem 1.5rem;
 }
