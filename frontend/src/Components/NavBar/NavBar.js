@@ -21,7 +21,7 @@ function NavBar(){
           <Link to="/" className={styles.element_children} >Home</Link>
           <Link to="#" className={styles.element_children}><i className="fab fa-facebook-messenger"></i></Link>
           <Link to="#" className={styles.element_children}><i className="fas fa-bell"></i></Link>
-          <Link to="#" className={styles.element_children}>My Info</Link>
+          <Link to="/my_info" className={styles.element_children}>My Info</Link>
         </section>
     </nav>
   )

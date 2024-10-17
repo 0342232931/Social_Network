@@ -1,32 +1,117 @@
 .container {
     scroll-behavior: smooth;
     margin-top: -21px;
+	height: 100vh;
+    width: 100%;
+    height: 100%;
 }
 .content {
     display: flex;
 }
 .util {
     width: 25%;
+    left: 0;
     margin-right: auto;
-    background-color: #f2f2f2;
-    border-right: 3px solid rgb(14, 14, 14);
     position: fixed;
 }
 .list_friend {
     width: 25%;
+    right: 0;
     margin-left: auto;
-    background-color: #f2f2f2;
-    border-left: 3px solid rgb(14, 14, 14);
     position: fixed;
 }
 .post_content {
+    background-color: transparent;
     display: grid;
     margin-left: 25%;
     margin-right: 25%;
     width: 50%;
     height: 100%;
-    background-color: white;
     align-items: center;
     justify-content: center;
     margin-top: 90px;
+}
+.line {
+    border-bottom: 1px solid rgb(254, 251, 251);
+}
+.ads {
+    margin-left: 15px;
+}
+.ads_header {
+    margin-top: 110px;
+    font-size: 18px;
+    font-style: italic;
+    color: rgb(249, 247, 247);
+    margin-bottom: -10px;
+}
+.ads_element {
+    display: flex;
+    margin-bottom: 10px;
+}
+.img_ads {
+    width: 100px;
+    height: 120px;
+    margin-top: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+.title {
+    font-size: 16px;
+    color: rgb(249, 247, 247);
+    margin-left: 20px;
+    margin-top: 50px;
+}
+.friends {
+    margin-left: 15px;
+}
+ .friends_header {
+    margin-top: 20px;
+    font-size: 18px;
+    font-style: italic;
+    color: rgb(249, 247, 247);
+    margin-bottom: 10px;
+ }
+.friend_element {
+    display: flex;
+    margin-bottom: 10px;
+}
+.avatar_friend {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+.friend_name {
+    font-size: 16px;
+    color: rgb(249, 247, 247);
+    margin-left: 10px;
+    margin-top: 10px;
+}
+.my_info {
+    display: flex;
+    margin-top: 100px;
+    margin-left: 15px;
+    margin-bottom: 10px;
+    transition: transform 0.3s ease;
+    box-shadow: 0.3s ease;
+}
+.my_info:hover {
+    transform: scale(1.05); /* Phóng to nhẹ khi hover */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Tạo đổ bóng nổi bật */
+}
+.util_element {
+    display: flex;
+    margin-top: 10px;
+    margin-left: 15px;
+    margin-bottom: 10px;
+    transition: transform 0.3s ease;
+    box-shadow: 0.3s ease;
+}
+.util_element:hover {
+    transform: scale(1.05); /* Phóng to nhẹ khi hover */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Tạo đổ bóng nổi bật */
+}
+.link {
+    text-decoration: none;
+    display: flex;
 }
