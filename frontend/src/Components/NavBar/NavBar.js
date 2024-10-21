@@ -11,17 +11,30 @@ function NavBar(){
 
   return (
     <nav className={styles.navbar_container}>
-        <section className={styles.serch_form}>
-          <form className="d-flex" role="search">
-              <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-              <button className="btn btn-outline-primary" type="submit">Search</button>
-          </form>
-        </section>
+        <section className={`d-flex ${styles.serch_form}`}>
+          <div className={styles.logo_container}>
+            <img src="/img/logo.png" alt="logo" className={styles.logo} />
+          </div>
+          <div>
+            <form className="d-flex" role="search">
+                <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+                <button className="btn btn-outline-primary" type="submit">Search</button>
+            </form>
+          </div>
+        </section>       
         <section className={styles.tag}>
-          <Link to="/" className={styles.element_children} >Home</Link>
-          <Link to="#" className={styles.element_children}><i className="fab fa-facebook-messenger"></i></Link>
-          <Link to="#" className={styles.element_children}><i className="fas fa-bell"></i></Link>
-          <Link to="/my_info" className={styles.element_children}>My Info</Link>
+          <Link to="/" className={styles.element_children} >
+            <img className={styles.icon} src="/img/house.png" alt="home"/>
+          </Link>
+          <Link to="#" className={styles.element_children}>
+            <img className={styles.icon} src="/img/notification.png" alt="message"/>
+          </Link>
+          <Link to="#" className={styles.element_children}>
+            <img className={styles.icon} src="/img/notification-bell.png"alt="bell"/>
+          </Link>
+          <Link to="/my_info" className={styles.element_children}>
+            <img className={styles.avatar} alt="info" src="https://cdna.artstation.com/p/assets/images/images/057/968/226/large/isula-perera-pepsi-final-color-graded-with-watermark.jpg?1673092062"/>
+          </Link>
         </section>
     </nav>
   )

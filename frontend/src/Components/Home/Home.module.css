@@ -64,7 +64,7 @@
 .friends {
     margin-left: 15px;
 }
- .friends_header {
+.friends_header {
     margin-top: 20px;
     font-size: 18px;
     font-style: italic;
@@ -76,8 +76,8 @@
     margin-bottom: 10px;
 }
 .avatar_friend {
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     overflow: hidden;
 }

@@ -7,6 +7,9 @@
 .infomation {
     width: 30%;
     left: 0;
+    display: grid;
+    place-items: center;
+    position: sticky;
 }
 .me_container {
     width: 70%;
@@ -49,25 +52,57 @@
     color: lightgray;
     margin-left: 10px;
 }
-.text_header {
-    color: lightgray;
-    margin-left: 10px;
-    margin-top: 10px
-}
-.text_footer {
-    color: lightgray;
-    margin-left: 10px;
-    margin-bottom: 10px;
-}
 .button_config {
     margin-top: 140px;
     margin-left: auto;
     margin-right: 30px;
 }
 .about {
-    margin-top: 90px;
+    margin-top: 100px;
     width: 400px;
     margin-left: 20px;
     background-color: #343338;
     border-radius: 10px;
+    padding-top: 5px;
+    padding-bottom: 3px;
+}
+.text_header {
+    color: lightgray;
+    margin-left: 10px;
+    font-size: 24px;
+    font-family: 'Times New Roman', Times, serif
+}
+.text_footer {
+    color: lightgray;
+    margin-left: 10px;
+}
+.button_config_infomation {
+    margin-bottom: 10px;
+    margin-left: 10px;
+    width: 380px;
+    text-align: center;
+}
+.information_child {
+    margin-top: 20px;
+    width: 400px;
+    margin-left: 20px;
+    background-color: #343338;
+    border-radius: 10px;
+    padding-top: 5px;
+    padding-bottom: 3px;
+}
+.img_header {
+    display: flex;
+}
+.all_img {
+    right: 0;
+    margin-left: 250px;
+}
+.all_friend {
+    right: 0;
+    margin-left: 225px;
+}
+.icon {
+    width: 20px;
+    height: 20px;
 }
