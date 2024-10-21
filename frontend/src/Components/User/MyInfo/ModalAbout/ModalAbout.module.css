@@ -1,0 +1,20 @@
+.container {
+    background-color: #343338;
+    color: aliceblue;
+    width: 650px;
+}
+.title {
+    margin-left: 230px;
+}
+.icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+.margin_top {
+    margin-top: 10px;
+}
+.title_input {
+    margin-bottom: 5px;
+}
