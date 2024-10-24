@@ -12,7 +12,7 @@ function HomePage () {
             <div className={styles.content}>
                 <div className={styles.util}>
                     <div className={styles.my_info}>
-                        <Link className={styles.link} to="/my_info">
+                        <Link className={styles.link} to="/my-info">
                             <img className={styles.avatar_friend} src='https://cdna.artstation.com/p/assets/images/images/057/968/226/large/isula-perera-pepsi-final-color-graded-with-watermark.jpg?1673092062' alt='my avatar'/>
                             <h3 className={styles.friend_name}>Trinh Hai Son</h3>
                         </Link>
@@ -98,10 +98,12 @@ function HomePage () {
                     <div className={styles.line}></div>
                     <div className={styles.friends}>
                         <h3 className={styles.friends_header}>Nguời Liên Hệ</h3>
-                        <div className={styles.friend_element}>
-                            <img className={styles.avatar_friend} src='https://th.bing.com/th/id/OIP.2G92TvAtxNvFnKoDztsc8AHaKM?pid=ImgDet&w=184&h=253&c=7&dpr=1.3' alt='avatar friend'/>
-                            <span className={styles.friend_name}><b>Trinh Hai Son</b></span>
-                        </div>
+                        <Link to='/friend-info' className={styles.textdecoration_none}>
+                            <div className={styles.friend_element}>
+                                <img className={styles.avatar_friend} src='https://th.bing.com/th/id/OIP.2G92TvAtxNvFnKoDztsc8AHaKM?pid=ImgDet&w=184&h=253&c=7&dpr=1.3' alt='avatar friend'/>
+                                <span className={styles.friend_name}><b>Trinh Hai Son</b></span>
+                            </div>
+                        </Link>
                     </div>
                 </div>
             </div>

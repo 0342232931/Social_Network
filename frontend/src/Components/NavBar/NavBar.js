@@ -13,7 +13,9 @@ function NavBar(){
     <nav className={styles.navbar_container}>
         <section className={`d-flex ${styles.serch_form}`}>
           <div className={styles.logo_container}>
-            <img src="/img/logo.png" alt="logo" className={styles.logo} />
+            <Link to="/">
+              <img src="/img/logo.png" alt="logo" className={styles.logo} />
+            </Link>
           </div>
           <div>
             <form className="d-flex" role="search">
@@ -32,7 +34,7 @@ function NavBar(){
           <Link to="#" className={styles.element_children}>
             <img className={styles.icon} src="/img/notification-bell.png"alt="bell"/>
           </Link>
-          <Link to="/my_info" className={styles.element_children}>
+          <Link to="/my-info" className={styles.element_children}>
             <img className={styles.avatar} alt="info" src="https://cdna.artstation.com/p/assets/images/images/057/968/226/large/isula-perera-pepsi-final-color-graded-with-watermark.jpg?1673092062"/>
           </Link>
         </section>

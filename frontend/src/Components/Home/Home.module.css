@@ -86,6 +86,7 @@
     color: rgb(249, 247, 247);
     margin-left: 10px;
     margin-top: 10px;
+    text-decoration: none;
 }
 .my_info {
     display: flex;
@@ -96,7 +97,7 @@
     box-shadow: 0.3s ease;
 }
 .my_info:hover {
-    transform: scale(1.05); /* Phóng to nhẹ khi hover */
+    transform: scale(1.02); /* Phóng to nhẹ khi hover */
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Tạo đổ bóng nổi bật */
 }
 .util_element {
@@ -104,14 +105,17 @@
     margin-top: 10px;
     margin-left: 15px;
     margin-bottom: 10px;
-    transition: transform 0.3s ease;
-    box-shadow: 0.3s ease;
+    transition: transform 0.2s ease;
+    box-shadow: 0.2s ease;
 }
 .util_element:hover {
-    transform: scale(1.05); /* Phóng to nhẹ khi hover */
+    transform: scale(1.02); /* Phóng to nhẹ khi hover */
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Tạo đổ bóng nổi bật */
 }
 .link {
-    text-decoration: none;
     display: flex;
+    text-decoration: none;
+}
+.textdecoration_none {
+    text-decoration: none;
 }

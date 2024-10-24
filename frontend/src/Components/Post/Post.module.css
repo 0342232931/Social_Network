@@ -11,7 +11,7 @@
     margin-bottom: 20px;
 }
 .line {
-    border-bottom: 2px solid rgb(247, 247, 250);
+    border-bottom: 1px solid rgb(247, 247, 250);
     margin-bottom: 10px;
 }
 .line_col {
@@ -29,9 +29,6 @@
     font-size: 18px;
     margin-left: 10px;
     margin-top: 15px;
-    color: rgb(249, 247, 247);
-}
-.text_color {
     color: rgb(249, 247, 247);
 }
 .content {
@@ -54,20 +51,19 @@
 }
 .data_child {
     padding: 10px;
-    color: rgb(249, 247, 247);
+    color: #b7b5b8;
 }
 .footer_container {
     display: flex;
     justify-content: space-between;
     height: 35px;
+    color: #b7b5b8;
 }
 .margin_left {
     margin-left: 50px;
-    color: rgb(249, 247, 247);
 }
 .margin_right {
     margin-right: 50px;
-    color: rgb(249, 247, 247);
 }
 .interact {
     width: 20px;

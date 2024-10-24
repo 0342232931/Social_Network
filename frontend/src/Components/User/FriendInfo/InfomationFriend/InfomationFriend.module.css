@@ -1,0 +1,29 @@
+.container {
+    background-color: #343338;
+    height: 100%;
+    width: 800px;
+    color: aliceblue;
+    margin-top: 20px;
+    border-radius: 10px;
+    margin-left: 11%;
+    margin-bottom: 10px;
+    padding: 10px;
+    display: flex;
+}
+.title {
+    font-size: 18px;
+}
+.about_container {
+    width: 48%;
+    margin-left: 2%;
+}
+.icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+}
+.button_config_infomation {
+    margin-bottom: 10px;
+    width: 350px;
+    text-align: center;
+}
