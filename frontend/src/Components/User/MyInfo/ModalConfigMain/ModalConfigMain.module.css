@@ -6,3 +6,67 @@
 .title {
     margin-left: 230px;
 }
+.avatar {
+    margin-top: 10px;
+}
+.margin_right {
+    left: 0;
+    margin-left: 15px;
+}
+.img_avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin-top: 10px;
+    margin-left: 40%;
+    margin-bottom: 15px;
+}
+.config_about {
+    right: 0;
+    margin-right: 15px;
+    color: blue;
+    margin-top: 5px;
+    margin-left: 36%;
+}
+.config_avatar {
+    right: 0;
+    margin-right: 15px;
+    color: blue;
+    margin-top: 5px;
+    margin-left: 60%;
+}
+.config_contact {
+    right: 0;
+    margin-right: 15px;
+    color: blue;
+    margin-top: 5px;
+    margin-left: 41%;
+}
+.text {
+    color: lightgray;
+    margin-left: 15px;
+}
+.text_footer {
+    color: lightgray;
+    margin-left: 15px;
+}
+.icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+}
+.history {
+    width: 100%;
+    height: 120px;
+    border-radius: 5px;
+    background-color: #343338;
+    color: aliceblue;
+    padding: 15px;
+}
+.display_none {
+    display: none;
+}
+.btn_save_img {
+    margin-left: 120px;
+    margin-top: 120px;
+}

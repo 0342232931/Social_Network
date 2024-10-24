@@ -1,0 +1,32 @@
+.container {
+    background-color: #343338;
+    height: 100%;
+    width: 800px;
+    color: aliceblue;
+    margin-top: 20px;
+    border-radius: 10px;
+    margin-left: 11%;
+    margin-bottom: 10px;
+    padding: 10px;
+}
+.title {
+    font-size: 20px;
+    margin-left: 10px;
+}
+.friend_list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between; 
+    width: 100%; 
+    padding: 10px;
+}
+.friend_item {
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+.friend_avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 5px;
+}
