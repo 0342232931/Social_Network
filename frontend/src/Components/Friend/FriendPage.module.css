@@ -1,0 +1,90 @@
+.container {
+    display: flex;
+}
+.util {
+    background-color: #343338;
+    width: 25%;
+    height: 90vh;
+    margin-top: 70px;
+    padding: 10px;
+    position: fixed;
+}
+.header {
+    color: aliceblue;
+    margin-left: 15px;
+    font-size: 22px;
+    margin-bottom: 20px;
+}
+.item_component {
+    display: flex;
+    text-decoration: none;
+    color: inherit;
+    margin-left: 15px;
+    margin-top: 10px;
+    transition: transform 0.2s ease;
+    box-shadow: 0.2s ease;
+}
+.item_component:hover {
+    transform: scale(1.02); /* Phóng to nhẹ khi hover */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Tạo đổ bóng nổi bật */
+}
+.icon {
+    width: 30px;
+    height: 30px;
+    margin-right: 15px;
+    border-radius: 5px;
+}
+.header_style {
+    color: aliceblue;
+    font-size: 18px;
+    margin-left: 10px;
+    margin-top: 5px;
+}
+.content {
+    width: 75%;
+    margin-top:70px;
+    padding: 20px;
+    margin-left: 25%;
+}
+.header_friend_request {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.header_title {
+    color: aliceblue;
+    margin-left: 15px;
+    font-size: 22px;
+    margin-bottom: 20px;
+    float: left;
+}
+.see_all_request {
+    text-decoration: none;
+    float: right;
+    margin-right: 20px;
+}
+.container_friend_request {
+    display: flex;
+    flex-wrap: wrap; 
+    justify-content: flex-start;
+}
+.element_child{
+    width: 19%;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    background-color: #343338;
+}
+.button_card {
+    display: flex;
+    flex-direction: column; 
+    gap: 10px;
+}
+.card_title {
+    color: aliceblue;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+.img_card {
+    width: 205px;
+    height: 230px;
+}

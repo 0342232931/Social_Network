@@ -86,7 +86,6 @@
     color: rgb(249, 247, 247);
     margin-left: 10px;
     margin-top: 10px;
-    text-decoration: none;
 }
 .my_info {
     display: flex;
@@ -118,4 +117,10 @@
 }
 .textdecoration_none {
     text-decoration: none;
+}
+.btn_modal {
+    display: flex;
+    background-color: #242329;
+    border: none;
+    margin-left: -5px;
 }

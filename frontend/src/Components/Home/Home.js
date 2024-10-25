@@ -2,6 +2,7 @@ import styles from './Home.module.css';
 import Navbar from "../NavBar/NavBar";
 import Post from "../Post/PostForm";
 import { Link } from 'react-router-dom';
+import ModalPost from './ModalPost/ModalPost';
 
 function HomePage () {
 
@@ -19,13 +20,13 @@ function HomePage () {
                     </div>
                     <div className={styles.line}></div>
                     <div className={styles.util_element}>
-                        <Link to="#" className={styles.link}>
+                        <button type='button' className={styles.btn_modal} data-bs-toggle="modal" data-bs-target="#modal_post">
                             <img className={styles.avatar_friend} src='/img/add.png' alt='my avatar'/>
                             <h3 className={styles.friend_name}>Đăng Bài Viết</h3>
-                        </Link>
+                        </button>
                     </div>
                     <div className={styles.util_element}>
-                        <Link to="#" className={styles.link}>
+                        <Link to="/friend-page" className={styles.link}>
                             <img className={styles.avatar_friend} src="/img/high-five.png" alt='my avatar'/>
                             <h3 className={styles.friend_name}>Bạn Bè</h3>
                         </Link>
@@ -80,8 +81,8 @@ function HomePage () {
                     </div>
                 </div>
                 <div className={styles.post_content}>
-                    <Post />
-                    <Post />
+                    <Post atr='5'/>
+                    <Post atr='9'/>
                 </div>
                 <div className={styles.list_friend}>
                     <div className={styles.ads}>
@@ -107,6 +108,7 @@ function HomePage () {
                     </div>
                 </div>
             </div>
+            <ModalPost />
         </div>
     )
 }

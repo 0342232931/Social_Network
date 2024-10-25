@@ -38,7 +38,7 @@ function ModalConfigMain() {
                                 <div className='d-flex'>
                                     <h4 className={styles.margin_right}>Ảnh đại diện</h4>
                                     <label htmlFor='uploadImg' className={styles.config_avatar}>Chỉnh sửa</label>
-                                    <input type="file" id='uploadImg' name="photo" className={styles.display_none} multiple accept="image/*" onChange={handlUploadImg} />   
+                                    <input type="file" id='uploadImg' name="photo" className={styles.display_none} accept="image/*" onChange={handlUploadImg} />   
                                 </div>
                                 <img src={src} id='preview' className={styles.img_avatar} alt='img avatar'/>
                                 <button type='submit' className={`btn btn-secondary ${styles.btn_save_img}`}>Lưu ảnh</button>

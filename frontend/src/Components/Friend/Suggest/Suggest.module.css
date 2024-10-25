@@ -1,0 +1,41 @@
+.container {
+    display: flex;;
+}
+.request_container {
+    background-color: #343338;
+    width: 25%;
+    height: 90vh;
+    margin-top: 70px;
+    padding: 10px;
+    position: fixed;
+}
+.title_request_container {
+    color: aliceblue;
+    font-size: 20px;
+    margin-left: 15px;
+    margin-top: 20px;
+}
+.request_item {
+    padding: 10px;
+    display: flex;
+    text-decoration: none;
+    color: inherit;
+    margin-top: 10px;
+}
+.avatar_request_item {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 15px;
+    margin-top: 10px;
+}
+.friend_name_accept {
+    font-size: 18px;
+    color: aliceblue;
+    margin-top: 5px;
+}
+.btn {
+    margin-right: 5px;
+    width: 130px;
+    height: 40px
+}
