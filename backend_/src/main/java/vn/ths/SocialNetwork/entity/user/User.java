@@ -3,13 +3,8 @@ package vn.ths.SocialNetwork.entity.user;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import vn.ths.SocialNetwork.entity.post.Comment;
-import vn.ths.SocialNetwork.entity.post.Interaction;
-import vn.ths.SocialNetwork.entity.post.Post;
 
-import java.sql.Blob;
 import java.sql.Date;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -46,8 +41,17 @@ public class User {
     @Column(name = "address")
     String address;
 
-    @Column(name = "education")
-    String education;
+    @Column(name = "hometown")
+    String hometown;
+
+    @Column(name = "university")
+    String university;
+
+    @Column(name = "high_school")
+    String highSchool;
+
+    @Column(name = "phone_number")
+    String phoneNumber;
 
     @Column(name = "job")
     String job;

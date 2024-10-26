@@ -17,6 +17,9 @@ public class UserUpdateRequest {
     String lastName;
     Date dob;
     String address;
-    String education;
+    String hometown;
+    String university;
+    String highSchool;
+    String phoneNumber;
     String job;
 }

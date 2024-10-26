@@ -23,7 +23,10 @@ public class UserResponse {
     String lastName;
     Date dob;
     String address;
-    String education;
+    String hometown;
+    String university;
+    String highSchool;
+    String phoneNumber;
     String job;
     Set<Role> roles;
 }
