@@ -34,9 +34,42 @@ function NavBar(){
           <Link to="#" className={styles.element_children}>
             <img className={styles.icon} src="/img/notification-bell.png"alt="bell"/>
           </Link>
-          <Link to="/my-info" className={styles.element_children}>
-            <img className={styles.avatar} alt="info" src="https://cdna.artstation.com/p/assets/images/images/057/968/226/large/isula-perera-pepsi-final-color-graded-with-watermark.jpg?1673092062"/>
-          </Link>
+          <div className={`dropdown ${styles.element_children}`}>
+            <img className={`dropdown-item ${styles.avatar}`} alt="info" data-bs-toggle="dropdown" aria-expanded="false" src="https://cdna.artstation.com/p/assets/images/images/057/968/226/large/isula-perera-pepsi-final-color-graded-with-watermark.jpg?1673092062"/>
+            <ul className={`dropdown-menu ${styles.util_container}`}>
+              <li>
+                <Link to='/my-info' className={`d-flex dropdown-item ${styles.info_container}`}>
+                  <img className={`${styles.avatar_info}`} alt="info" src="https://cdna.artstation.com/p/assets/images/images/057/968/226/large/isula-perera-pepsi-final-color-graded-with-watermark.jpg?1673092062"/>
+                  <h4 className={styles.view_info}>Xem trang cá nhân</h4>
+                </Link>
+              </li>
+              <hr />
+              <li className={`dropdown-item ${styles.margin_top}`}>
+                <div className={`d-flex`}> 
+                  <img className={`${styles.icon_info}`} alt="info" src="/img/navbar/settings.png"/>
+                  <h4 className={`${styles.logout_txt}`}>Cài đặt</h4>
+                </div>
+              </li>
+              <li className={`dropdown-item ${styles.margin_top}`}>
+                <div className={`d-flex`}> 
+                  <img className={`${styles.icon_info}`} alt="info" src="/img/navbar/help.png"/>
+                  <h4 className={`${styles.logout_txt}`}>Trợ giúp</h4>
+                </div>
+              </li>
+              <li className={`dropdown-item ${styles.margin_top}`}>
+                <div className={`d-flex`}> 
+                  <img className={`${styles.icon_info}`} alt="info" src="/img/navbar/public-opinion.png"/>
+                  <h4 className={`${styles.logout_txt}`}>Phản hồi</h4>
+                </div>
+              </li>
+              <li className={`dropdown-item ${styles.margin_top}`}>
+                <div className={`d-flex`}> 
+                  <img className={`${styles.icon_info}`} alt="info" src="/img/navbar/logout.png"/>
+                  <h4 className={`${styles.logout_txt}`}>Đăng xuất</h4>
+                </div>
+              </li>
+            </ul>
+          </div>
         </section>
     </nav>
   )

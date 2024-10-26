@@ -42,3 +42,40 @@
     width: 35px;
     height: 35px;
 }
+.util_container {
+    background-color: #343338;
+    width: 300px;
+    color: aliceblue;
+}
+.avatar_info {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+.icon_info {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+}
+.info_container {
+    text-decoration: none;
+    color: inherit;
+    align-items: center;
+}
+.view_info{
+    margin-left: 15px;
+    font-size: 20px;
+    color: aliceblue;
+}
+.logout_txt{
+    margin-left: 20px;
+    font-size: 18px;
+    color: aliceblue;
+}
+.logout_txt {
+    font-size: 16px;
+    margin-top: 10px;
+}
+.margin-top {
+    align-items: center;
+}

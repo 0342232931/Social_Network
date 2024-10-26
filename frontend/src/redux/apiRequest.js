@@ -7,7 +7,7 @@ import { loginFailed, loginStart, loginSuccess,
 import { getUsersFalied, getUsersStart, getUsersSuccess } from "./userSlice";
 
 
-export const loginUser = async(user, dispatch, navigate) => {
+export const loginUser = async(user, dispatch, navigate) => {  // test login api successfully
     dispatch(loginStart());
     try{
         const res = await axios.post("http://localhost:8080/auth/login", user);
@@ -18,7 +18,7 @@ export const loginUser = async(user, dispatch, navigate) => {
     }
 } 
  
-export const registerUser = async (user, dispatch, navigate) => {
+export const registerUser = async (user, dispatch, navigate) => {  //test register api successfully
     dispatch(registerStart());
     try{
         await axios.post("http://localhost:8080/users", user);
@@ -26,20 +26,6 @@ export const registerUser = async (user, dispatch, navigate) => {
         navigate("/login");
     } catch (err){
         dispatch(registerFailed());
-    }
-}
-
-export const getAllUsers = async (token, dispatch) => {
-    dispatch(getUsersStart());
-    try {
-        const res = await axios.get("http://localhost:8080/users", {
-            headers: {
-                Authorization : `Bearer ${token}`
-            }
-        });
-        dispatch(getUsersSuccess(res.data));
-    } catch (err) {
-        dispatch(getUsersFalied());
     }
 }
 

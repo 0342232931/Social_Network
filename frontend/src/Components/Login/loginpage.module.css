@@ -53,11 +53,11 @@ body {
     outline: none;
     border: none;
 }
-.form_login .h3_field{
-    font-size: 32px;
-    font-weight: 500;
-    line-height: 42px;
-    text-align: center;
+.form_login .logo{
+    align-items: center;
+    width: 50px;
+    height: 50px;
+    margin-left: 43%;
 }
 
 .label_field{
@@ -112,4 +112,8 @@ body {
 }
 .social i{
   margin-right: 4px;
+}
+.icon{
+    width: 20px;
+    height: 20px;
 }

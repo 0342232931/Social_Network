@@ -3,8 +3,14 @@ import Navbar from "../NavBar/NavBar";
 import Post from "../Post/PostForm";
 import { Link } from 'react-router-dom';
 import ModalPost from './ModalPost/ModalPost';
+import { useSelector } from 'react-redux';
 
 function HomePage () {
+
+    const data = useSelector((state) => state.auth.login?.currentUser.result);
+
+    const user = data.userResponse;
+    const token = data.token;
 
     return (
         <div className={styles.container}>
@@ -15,7 +21,7 @@ function HomePage () {
                     <div className={styles.my_info}>
                         <Link className={styles.link} to="/my-info">
                             <img className={styles.avatar_friend} src='https://cdna.artstation.com/p/assets/images/images/057/968/226/large/isula-perera-pepsi-final-color-graded-with-watermark.jpg?1673092062' alt='my avatar'/>
-                            <h3 className={styles.friend_name}>Trinh Hai Son</h3>
+                            <h3 className={styles.friend_name}>{user.username}</h3>
                         </Link>
                     </div>
                     <div className={styles.line}></div>

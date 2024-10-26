@@ -8,8 +8,14 @@ import ModalConfigMain from './ModalConfigMain/ModalConfigMain';
 import AllFriend from './AllFriend/AllFriend';
 import Image from './Image/Image';
 import Infomation from './Infomation/Infomation';
+import { useSelector } from 'react-redux';
 
 function MyInfo () {
+    
+    const data = useSelector((state) => state.auth.login.currentUser.result);
+
+    const user = data.userResponse;
+    const token = data.token;
 
     return (
         <div className={styles.container}>
