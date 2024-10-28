@@ -34,8 +34,9 @@ export const logoutUser = async(request, dispatch , navigate) => {
     dispatch(logoutStart());
     try{
         await axios.post("http://localhost:8080/auth/logout", request);
-        dispatch(logoutSuccess());
         navigate("/login")
+        dispatch(logoutSuccess());
+
     } catch (err) {
         console.log("msg err: " + err);
         

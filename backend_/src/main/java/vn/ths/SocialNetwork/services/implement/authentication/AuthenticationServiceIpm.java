@@ -181,11 +181,9 @@ public class AuthenticationServiceIpm implements AuthenticationService {
 
         var username = signedJWT.getJWTClaimsSet().getSubject();
 
-        System.out.println("username: " + username);
         var user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
-        System.out.println("user: " + user.toString());
         return userMapper.toUserResponse(user);
     }
 

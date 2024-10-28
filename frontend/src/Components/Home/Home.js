@@ -1,16 +1,19 @@
 import styles from './Home.module.css';
 import Navbar from "../NavBar/NavBar";
 import Post from "../Post/PostForm";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import ModalPost from './ModalPost/ModalPost';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
 
 function HomePage () {
 
-    const data = useSelector((state) => state.auth.login?.currentUser.result);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
-    const user = data.userResponse;
-    const token = data.token;
+    const data = useSelector((state) => state.auth.login.currentUser);
+    
+    const user = data.result.userResponse;
 
     return (
         <div className={styles.container}>

@@ -2,21 +2,25 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import styles from "./navbar.module.css";
 import { logoutUser } from '../../redux/apiRequest'
+import { useEffect } from "react";
 
 function NavBar(){ 
-
-  const data = useSelector((state) => state.auth.login.currentUser?.result)
-
-  const token = data.token
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const data = useSelector((state) => state.auth.login.currentUser)
+
+  const token = data.result.token
+
+  const request = {
+    token: token
+  }
+
   const handleLogout = () => {
-    logoutUser(token, dispatch, navigate)
+    logoutUser(request, dispatch, navigate)
   }
   
-
   return (
     <nav className={styles.navbar_container}>
         <section className={`d-flex ${styles.serch_form}`}>
@@ -43,7 +47,9 @@ function NavBar(){
             <img className={styles.icon} src="/img/notification-bell.png"alt="bell"/>
           </Link>
           <div className={`dropdown ${styles.element_children}`}>
-            <img className={`dropdown-item ${styles.avatar}`} alt="info" data-bs-toggle="dropdown" aria-expanded="false" src="https://cdna.artstation.com/p/assets/images/images/057/968/226/large/isula-perera-pepsi-final-color-graded-with-watermark.jpg?1673092062"/>
+            <div data-bs-toggle="dropdown" aria-expanded="false">
+              <img className={`dropdown-item ${styles.avatar}`} alt="info" src="https://cdna.artstation.com/p/assets/images/images/057/968/226/large/isula-perera-pepsi-final-color-graded-with-watermark.jpg?1673092062"/>
+            </div>
             <ul className={`dropdown-menu ${styles.util_container}`}>
               <li>
                 <Link to='/my-info' className={`d-flex dropdown-item ${styles.info_container}`}>
