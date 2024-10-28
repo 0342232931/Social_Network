@@ -9,6 +9,7 @@ function Register() {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [cfPassword, setCfPassword] = useState("");
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -44,11 +45,11 @@ function Register() {
             <label className={styles.label_field}>Password</label>
           </div>
           <div className={styles.txt_field}>
-            <input className={styles.input_field} type="password" name="cpassword" />
+            <input className={styles.input_field} type="password" name="cpassword" onChange={(e) => setCfPassword(e.target.value)}/>
             <span></span>
             <label className={styles.label_field}>Confirm Password</label>
           </div>
-          <input name="submit" type="Submit" value="Sign Up" className={styles.submit_register}/>
+          <button name="submit" type="Submit" className={styles.submit_register}>Sign Up</button>
           <div className={styles.signup_link}>
             <Link to={"/login"}>Have an Account ?</Link>
           </div>

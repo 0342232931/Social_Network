@@ -11,8 +11,6 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.*;
 import org.springframework.util.CollectionUtils;
@@ -64,9 +62,9 @@ public class AuthenticationServiceIpm implements AuthenticationService {
     PasswordEncoder passwordEncoder;
 
     @Override
-    public AuthenticationResponse authenticate(AuthenticationRequest request) throws ParseException, JOSEException {
+    public AuthenticationResponse authenticate(AuthenticationRequest request) throws Exception {
 
-        var user  = userRepository.findByUsername(request.getUsername())
+        var user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         var authenticated = passwordEncoder.matches(request.getPassword(), user.getPassword());
@@ -165,11 +163,6 @@ public class AuthenticationServiceIpm implements AuthenticationService {
                         .plus(REFRESHABLE_DURATION,ChronoUnit.SECONDS).toEpochMilli())
                 : signedJWT.getJWTClaimsSet().getExpirationTime();
 
-        if (isRefresh){
-            log.info("Refreshable time: " + REFRESHABLE_DURATION);
-            log.info("Expiry time: " + expiryTime);
-        }
-
         // Kiểm tra token có hợp lệ không
         var verified = signedJWT.verify(verifier);
 
@@ -188,9 +181,11 @@ public class AuthenticationServiceIpm implements AuthenticationService {
 
         var username = signedJWT.getJWTClaimsSet().getSubject();
 
+        System.out.println("username: " + username);
         var user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
+        System.out.println("user: " + user.toString());
         return userMapper.toUserResponse(user);
     }
 
@@ -207,9 +202,6 @@ public class AuthenticationServiceIpm implements AuthenticationService {
                 .jwtID(UUID.randomUUID().toString())
                 .claim("scope", buildScope(user))
                 .build();
-
-        log.info("Valid time: " + VALID_DURATION);
-        log.info("Expiry time: " + jwtClaimsSet.getExpirationTime());
 
         Payload payload = new Payload(jwtClaimsSet.toJSONObject());
 

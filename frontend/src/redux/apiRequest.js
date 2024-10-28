@@ -4,7 +4,6 @@ import { loginFailed, loginStart, loginSuccess,
     logoutStart, 
     logoutSuccess, 
     registerFailed, registerStart, registerSuccess } from "./authSlice";
-import { getUsersFalied, getUsersStart, getUsersSuccess } from "./userSlice";
 
 
 export const loginUser = async(user, dispatch, navigate) => {  // test login api successfully
@@ -14,6 +13,8 @@ export const loginUser = async(user, dispatch, navigate) => {  // test login api
         dispatch(loginSuccess(res.data));
         navigate("/");
     } catch (err){
+        console.log("err" + err);
+        
         dispatch(loginFailed());
     }
 } 
@@ -29,11 +30,10 @@ export const registerUser = async (user, dispatch, navigate) => {  //test regist
     }
 }
 
-export const logoutUsers = async(request, dispatch , navigate, axiosJWT) => {
+export const logoutUser = async(request, dispatch , navigate) => {
     dispatch(logoutStart());
-    let strRequest = request.toString();
     try{
-        await axiosJWT.post("http://localhost:8080/auth/logout", strRequest);
+        await axios.post("http://localhost:8080/auth/logout", request);
         dispatch(logoutSuccess());
         navigate("/login")
     } catch (err) {

@@ -1,13 +1,21 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import styles from "./navbar.module.css";
+import { logoutUser } from '../../redux/apiRequest'
 
 function NavBar(){ 
 
-  const user = useSelector((state) => state.auth.login.currentUser?.result.userResponse)
+  const data = useSelector((state) => state.auth.login.currentUser?.result)
+
+  const token = data.token
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logoutUser(token, dispatch, navigate)
+  }
+  
 
   return (
     <nav className={styles.navbar_container}>
@@ -62,7 +70,7 @@ function NavBar(){
                   <h4 className={`${styles.logout_txt}`}>Phản hồi</h4>
                 </div>
               </li>
-              <li className={`dropdown-item ${styles.margin_top}`}>
+              <li className={`dropdown-item ${styles.margin_top}`} onClick={handleLogout}>
                 <div className={`d-flex`}> 
                   <img className={`${styles.icon_info}`} alt="info" src="/img/navbar/logout.png"/>
                   <h4 className={`${styles.logout_txt}`}>Đăng xuất</h4>

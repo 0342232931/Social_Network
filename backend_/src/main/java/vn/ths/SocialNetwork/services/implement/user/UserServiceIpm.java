@@ -73,7 +73,11 @@ public class UserServiceIpm implements UserService {
         System.out.println("request: " + request.toString() + " id: " + id);
         User user = userRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
+        log.info("user before update: " + user.getUsername());
+
         userMapper.updateUser(user, request);
+
+        log.info("user after update" + user.getUsername());
 
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 

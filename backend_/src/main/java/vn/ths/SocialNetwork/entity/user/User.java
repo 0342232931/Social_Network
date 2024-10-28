@@ -15,6 +15,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
+@ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class User {
     @Id
@@ -57,6 +58,7 @@ public class User {
     String job;
 
     @ManyToMany
+    @ToString.Exclude
     Set<Role> roles;
 
 }
