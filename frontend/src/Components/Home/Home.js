@@ -4,17 +4,89 @@ import Post from "../Post/PostForm";
 import { Link, useNavigate } from 'react-router-dom';
 import ModalPost from './ModalPost/ModalPost';
 import { useDispatch, useSelector } from 'react-redux';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { createAxios } from '../../createInstance';
+import { loginSuccess } from '../../redux/authSlice';
+import axios from 'axios';
 
 function HomePage () {
 
+    const data = useSelector((state) => state.auth.login?.currentUser);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    let axiosJwt = createAxios(data, dispatch, loginSuccess);
 
-    const data = useSelector((state) => state.auth.login.currentUser);
-    
-    const user = data.result.userResponse;
+    const user = useSelector((state) => state.auth.login?.currentUser?.result.userResponse);
+    const token = useSelector((state) => state.auth.login?.currentUser?.result.token);
+    const [url, setUrl] = useState("/img/user.png");
+    const [friends, setFriends] = useState([]);
+    const [post, setPost] = useState([]);
 
+    // Call api get Avatar User
+    const getAvatarUser = async (userId, axiosJwt) => {
+        try {
+            const res = await axiosJwt.get("http://localhost:8080/avatar/get-by-user-id/" + userId);
+            
+            const img = res.data.body;
+            setUrl(URL.createObjectURL(img));
+            
+        } catch (error) {
+            console.log("error: " + error);
+            
+        }
+
+    }
+
+    // Get Friends
+    const getFriends = async (userId, axiosJwt) => {
+        try {
+            const res = await axiosJwt.get('http://localhost:8080/relations/get-friends-by-user-id/' + userId);
+
+            setFriends(res.data.result);
+        } catch (error) {
+            console.log("err: " + error);
+            
+        }
+    }
+
+    // Get Posts
+    const getPost = async (userId, axiosJwt) => {
+         
+    }
+
+    // Render Friends
+    const renderFriends = () => {
+        if (friends.length > 0){
+            return friends.map((friend) => {
+                return (
+                    <Link key={friend.id} to='/friend-info' className={styles.textdecoration_none}>
+                        <div className={styles.friend_element}>
+                            <img className={styles.avatar_friend} src='/img/user.png' alt='avatar friend'/>
+                            <span className={styles.friend_name}><b>{friend?.firstName == null && friend?.lastName == null ? friend?.username : `${friend?.firstName} ${friend?.lastName}` }</b></span>
+                        </div>
+                    </Link>
+                )
+            })
+        } else {
+            return (
+                <div>
+                    <h3 className={styles.friend_name}>Bạn không có bạn bè nào</h3>
+                </div>
+            )
+        }
+    }
+
+    // Check User is authenticated
+    useEffect(() => {
+        if(!data){
+            navigate('/login');
+        }else {
+            getAvatarUser(user?.id, axiosJwt);
+            getFriends(user?.id, axiosJwt);
+        }
+    }, [data, user?.id, axiosJwt])
+
+   
     return (
         <div className={styles.container}>
             <Navbar />
@@ -23,8 +95,8 @@ function HomePage () {
                 <div className={styles.util}>
                     <div className={styles.my_info}>
                         <Link className={styles.link} to="/my-info">
-                            <img className={styles.avatar_friend} src='https://cdna.artstation.com/p/assets/images/images/057/968/226/large/isula-perera-pepsi-final-color-graded-with-watermark.jpg?1673092062' alt='my avatar'/>
-                            <h3 className={styles.friend_name}>{user.username}</h3>
+                            <img className={styles.avatar_friend} src={url} alt='my avatar'/>
+                            <h3 className={styles.friend_name}>{user?.firstName == null && user?.lastName == null ? user?.username : `${user?.firstName} ${user?.lastName}` }</h3>
                         </Link>
                     </div>
                     <div className={styles.line}></div>
@@ -108,12 +180,7 @@ function HomePage () {
                     <div className={styles.line}></div>
                     <div className={styles.friends}>
                         <h3 className={styles.friends_header}>Nguời Liên Hệ</h3>
-                        <Link to='/friend-info' className={styles.textdecoration_none}>
-                            <div className={styles.friend_element}>
-                                <img className={styles.avatar_friend} src='https://th.bing.com/th/id/OIP.2G92TvAtxNvFnKoDztsc8AHaKM?pid=ImgDet&w=184&h=253&c=7&dpr=1.3' alt='avatar friend'/>
-                                <span className={styles.friend_name}><b>Trinh Hai Son</b></span>
-                            </div>
-                        </Link>
+                        {renderFriends()}
                     </div>
                 </div>
             </div>

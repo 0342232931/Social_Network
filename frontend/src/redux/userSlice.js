@@ -3,27 +3,30 @@ import { createSlice } from "@reduxjs/toolkit"
 const userSilce = createSlice({
     name: "user",
     initialState: {
-        users: {
-            allUsers: null,
+        avatars: {
+            data: null,
             isFetching: false,
             error: false
         }
     },
     reducers: {
-        getUsersStart: (state) => {
-            state.users.isFetching = true;
+        getAvatarStart: (state) => {
+            state.avatars.isFetching = true;
+            state.avatars.error = false;
         },
-        getUsersSuccess: (state, action) => {
-            state.users.isFetching = false;
-            state.users.allUsers = action.payload;
+        getAvatarSuccess: (state, action) => {
+            state.avatars.isFetching = false;
+            state.avatars.data = action.payload;
+            state.avatars.error = false;
         },
-        getUsersFalied: (state) => {
-            state.users.isFetching = false;
-            state.users.error = true;
+        getAvatarFailed: (state) => {
+            state.avatars.isFetching = false;
+            state.avatars.error = true;
         }
     }
 })
 
 
-export const { getUsersStart, getUsersSuccess, getUsersFalied } = userSilce.actions;
+export const {  getUsersStart, getUsersSuccess, getUsersFalied, 
+                getAvatarStart, getAvatarSuccess, getAvatarFailed } = userSilce.actions;
 export default userSilce.reducer;

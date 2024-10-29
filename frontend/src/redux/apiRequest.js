@@ -4,6 +4,7 @@ import { loginFailed, loginStart, loginSuccess,
     logoutStart, 
     logoutSuccess, 
     registerFailed, registerStart, registerSuccess } from "./authSlice";
+import { getAvatarFailed, getAvatarStart, getAvatarSuccess } from "./userSlice";
 
 
 export const loginUser = async(user, dispatch, navigate) => {  // test login api successfully
@@ -41,5 +42,16 @@ export const logoutUser = async(request, dispatch , navigate) => {
         console.log("msg err: " + err);
         
         dispatch(logoutFailed());
+    }
+}
+
+export const getAvatarUser = async(userId, dispatch, axiosJwt) => {
+    dispatch(getAvatarStart());
+    try {
+        const res = await axiosJwt.get('http://localhost:8080/avatar/get-by-user-id/' + userId)
+        dispatch(getAvatarSuccess(res.data));
+    } catch (error) {
+        console.log("Error getting: " + error);
+        dispatch(getAvatarFailed());
     }
 }

@@ -2,16 +2,47 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import styles from "./navbar.module.css";
 import { logoutUser } from '../../redux/apiRequest'
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { createAxios } from "../../createInstance";
+import { loginSuccess } from "../../redux/authSlice";
 
 function NavBar(){ 
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const data = useSelector((state) => state.auth.login.currentUser)
+  const data = useSelector((state) => state.auth.login?.currentUser);
+  const user = useSelector((state) => state.auth.login?.currentUser?.result.userResponse);
+  let axiosJwt = createAxios(data, dispatch, loginSuccess);
 
-  const token = data.result.token
+  const [url, setUrl] = useState("/img/user.png")
+
+  const getAvatarUser = async (userId, axiosJwt) => {
+    try {
+        const res = await axiosJwt.get("http://localhost:8080/avatar/get-by-user-id/" + userId);
+        console.log("data: " + res.data);
+        
+        const img = res.data.body;
+        setUrl(URL.createObjectURL(img));
+
+        console.log("url: " + url);
+        
+    } catch (error) {
+        console.log("error: " + error);
+        
+    }
+
+}
+
+  useEffect(() => {
+      if(!data) {
+        navigate('/login')
+      } else {
+        getAvatarUser(user?.id, axiosJwt)
+      }
+  }, [])
+
+  const token = useSelector((state) => state.auth.login?.currentUser?.result.token)
 
   const request = {
     token: token
@@ -48,12 +79,12 @@ function NavBar(){
           </Link>
           <div className={`dropdown ${styles.element_children}`}>
             <div data-bs-toggle="dropdown" aria-expanded="false">
-              <img className={`dropdown-item ${styles.avatar}`} alt="info" src="https://cdna.artstation.com/p/assets/images/images/057/968/226/large/isula-perera-pepsi-final-color-graded-with-watermark.jpg?1673092062"/>
+              <img className={`dropdown-item ${styles.avatar}`} alt="info" src={url}/>
             </div>
             <ul className={`dropdown-menu ${styles.util_container}`}>
               <li>
                 <Link to='/my-info' className={`d-flex dropdown-item ${styles.info_container}`}>
-                  <img className={`${styles.avatar_info}`} alt="info" src="https://cdna.artstation.com/p/assets/images/images/057/968/226/large/isula-perera-pepsi-final-color-graded-with-watermark.jpg?1673092062"/>
+                  <img className={`${styles.avatar_info}`} alt="info" src={url}/>
                   <h4 className={styles.view_info}>Xem trang cá nhân</h4>
                 </Link>
               </li>
