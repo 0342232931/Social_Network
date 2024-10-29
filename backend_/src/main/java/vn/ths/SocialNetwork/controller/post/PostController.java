@@ -40,6 +40,13 @@ public class PostController {
         return ApiResponse.<List<Post>>builder().result(postService.getByUserId(id)).build();
     }
 
+    @GetMapping("/get-new-post-by-user-auth/{id}")
+    public ApiResponse<List<Post>> getNewPostByFriendForUserAuth(@PathVariable("id") String id){
+        return ApiResponse.<List<Post>>builder()
+                .result(postService.getAllNewPostForFriendsOfUserAuthenticated(id))
+                .build();
+    }
+
     @PostMapping()
     public ApiResponse<PostResponse> createPost(@RequestBody PostCreationRequest request){
         return ApiResponse.<PostResponse>builder()

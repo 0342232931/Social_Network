@@ -17,8 +17,11 @@ import vn.ths.SocialNetwork.mapper.post.PostMapper;
 import vn.ths.SocialNetwork.repository.post.PostRepository;
 import vn.ths.SocialNetwork.repository.user.UserRepository;
 import vn.ths.SocialNetwork.services.service.post.PostService;
+import vn.ths.SocialNetwork.services.service.user.RelationService;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
 
@@ -31,6 +34,7 @@ public class PostServiceIpm implements PostService {
     UserRepository userRepository;
     PostRepository postRepository;
     PostMapper postMapper;
+    RelationService relationService;
 
     @Transactional
     @Override
@@ -69,6 +73,29 @@ public class PostServiceIpm implements PostService {
         post.setUpdateAt(currentDate);
 
         return postMapper.toPostResponse(postRepository.saveAndFlush(post));
+    }
+
+    @Override
+    public List<Post> getAllNewPostForFriendsOfUserAuthenticated(String userId) {
+
+        List<User> friends = relationService.getFriendsByUserId(userId);
+        List<Post> posts = null;
+
+        for (User friend : friends) {
+            List<Post> allPost = postRepository.findPostByUser(friend);
+            addPostInPosts(allPost, posts);
+        }
+
+        return posts;
+    }
+
+    public void addPostInPosts(List<Post> posts, List<Post> result) {
+        LocalDateTime now = LocalDateTime.now();
+        for (Post post: posts) {
+            if (post.getCreateAt() != null && ChronoUnit.DAYS.between(post.getCreateAt(), now) <= 3){
+                result.add(post);
+            }
+        }
     }
 
     @Override
