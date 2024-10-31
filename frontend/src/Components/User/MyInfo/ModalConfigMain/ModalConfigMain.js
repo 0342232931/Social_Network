@@ -80,7 +80,6 @@ function ModalConfigMain() {
                     </div>
                     <div className="modal-footer">
                         <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                        <button type="button" className="btn btn-primary">Lưu Thay Đổi</button>
                     </div>
                 </div>
             </div>

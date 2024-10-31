@@ -20,12 +20,9 @@ function NavBar(){
   const getAvatarUser = async (userId, axiosJwt) => {
     try {
         const res = await axiosJwt.get("http://localhost:8080/avatar/get-by-user-id/" + userId);
-        console.log("data: " + res.data);
         
         const img = res.data.body;
         setUrl(URL.createObjectURL(img));
-
-        console.log("url: " + url);
         
     } catch (error) {
         console.log("error: " + error);

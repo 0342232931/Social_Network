@@ -7,7 +7,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { createAxios } from '../../createInstance';
 import { loginSuccess } from '../../redux/authSlice';
-import axios from 'axios';
 
 function HomePage () {
 
@@ -51,7 +50,14 @@ function HomePage () {
 
     // Get Posts
     const getPost = async (userId, axiosJwt) => {
-         
+         try {
+            const res = await axiosJwt.get('http://localhost:8080/posts/get-new-post-by-user-auth' + userId);
+
+            setPost(res.data.result);
+         } catch (error) {
+            console.log("err: " + error);
+            
+         }
     }
 
     // Render Friends
@@ -76,6 +82,23 @@ function HomePage () {
         }
     }
 
+    // Render Posts
+    const renderPosts = () => {
+        if (!post.length > 0) {
+            return(
+                <div>
+                    <h3 className={styles.friend_name}>Không có bài viết mới nào được tạo</h3>
+                </div>
+            )
+        }
+        return post.map((post) => {
+            return (
+                <Post key={post?.id} postId={post?.id} content={post?.content} createAt={post?.createAt} user={post?.user}/>
+            )
+        })
+   
+    }
+
     // Check User is authenticated
     useEffect(() => {
         if(!data){
@@ -83,6 +106,7 @@ function HomePage () {
         }else {
             getAvatarUser(user?.id, axiosJwt);
             getFriends(user?.id, axiosJwt);
+            getPost(user?.id, axiosJwt);
         }
     }, [data, user?.id, axiosJwt])
 
@@ -162,8 +186,7 @@ function HomePage () {
                     </div>
                 </div>
                 <div className={styles.post_content}>
-                    <Post atr='5'/>
-                    <Post atr='9'/>
+                    {renderPosts()}
                 </div>
                 <div className={styles.list_friend}>
                     <div className={styles.ads}>

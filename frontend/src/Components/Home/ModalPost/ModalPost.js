@@ -1,9 +1,20 @@
+import { useDispatch, useSelector } from 'react-redux';
 import styles from './ModalPost.module.css';
 import { useState } from 'react';
+import { loginSuccess } from '../../../redux/authSlice';
+import { createAxios } from '../../../createInstance';
 
 function ModalPost() {
 
+    const data = useSelector((state) => state.auth.login?.currentUser);
+    const dispatch = useDispatch();
+    let axiosJwt = createAxios(data, dispatch, loginSuccess);
+
+    const user = useSelector((state) => state.auth.login?.currentUser?.result.userReponse);
+
+    const [content, setContent] = useState('');
     const [imgs, setImgs] = useState([]);
+
 
     function handleOnclikFile(e) {
         setImgs(e.target.files);     
@@ -19,9 +30,34 @@ function ModalPost() {
         
     }
 
-    const handleSubmitForm = (e) => {
+    const handleSubmitForm = async (e) => {
+
         e.preventDefault();
-        
+        try {
+
+            const postCreationRequest = {
+                content: content,
+                userId: user?.id
+            }
+
+            const res = await axiosJwt.post('http://localhost:8080/posts', postCreationRequest);
+            if(res.status === 200) {
+                alert('Success');
+            } else {
+                alert('Fail');
+            }
+
+            const response = await axiosJwt.post('http://localhost:8080/images/' + res.data?.result.id);
+            if (response.status === 200) {
+                alert('Success');
+            }else {
+                alert('Fail');
+            }
+
+        } catch (error) {
+            console.log(error);
+            
+        }
     }
 
     return (
@@ -36,9 +72,9 @@ function ModalPost() {
                         <div className="modal-body">
                             <div className={styles.user_info}>
                                 <img src='/img/game-controller.png' alt='...' className={styles.avatar}/>
-                                <p className={styles.username}>User name</p>
+                                <p className={styles.username}>{` ${user?.firstName} ${user?.lastName}`}</p>
                             </div>
-                            <textarea placeholder='Bạn đang nghĩ gì?' className={styles.textarea_style}></textarea>
+                            <textarea placeholder='Bạn đang nghĩ gì?' className={styles.textarea_style} onChange={(e) => setContent(e.target.value)}></textarea>
                             <div className='d-flex'>
                                 {handleUploadImgs()}
                             </div>

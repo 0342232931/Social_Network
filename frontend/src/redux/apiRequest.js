@@ -31,6 +31,16 @@ export const registerUser = async (user, dispatch, navigate) => {  //test regist
     }
 }
 
+export const updateUser = async (userId, request, dispatch, axiosJwt) => { 
+    dispatch(registerStart());
+    try{
+        await axiosJwt.put("http://localhost:8080/users/" + userId, request);
+        dispatch(loginSuccess());
+    } catch (err){
+        dispatch(loginFailed());
+    }
+}
+
 export const logoutUser = async(request, dispatch , navigate) => {
     dispatch(logoutStart());
     try{
