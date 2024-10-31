@@ -34,9 +34,9 @@ public class ImageController {
     ImageService imageService;
     DataSource dataSource;
 
-    @PostMapping()
-    ApiResponse<List<ImageResponse>> create(@RequestParam("postId") String postId,
-                                            @RequestParam("image")MultipartFile[] images) throws Exception {
+    @PostMapping("/{id}")
+    ApiResponse<List<ImageResponse>> create(@PathVariable("id") String postId,
+                                            MultipartFile[] images) throws Exception {
 
         List<ImageResponse> list = new ArrayList<>();
 
