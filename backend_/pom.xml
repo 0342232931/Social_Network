@@ -124,6 +124,13 @@
 			<version>2.3.3</version>
 		</dependency>
 		<!--	End Socket	-->
+		<!--	Mock	-->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!--	End Mock	-->
 	</dependencies>
 
 	<build>

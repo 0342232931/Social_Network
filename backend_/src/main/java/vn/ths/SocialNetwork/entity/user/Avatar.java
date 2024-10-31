@@ -22,8 +22,14 @@ public class Avatar {
 
     @Column(name = "photo")
     @Lob
-    Blob photo;
+    byte[] data;
 
-    @OneToOne()
+    @Column(name = "file_name")
+    String fileName;
+
+    @Column(name = "file_type")
+    String fileType;
+
+    @OneToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     User user;
 }

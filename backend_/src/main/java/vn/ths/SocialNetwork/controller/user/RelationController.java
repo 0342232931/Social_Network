@@ -47,17 +47,18 @@ public class RelationController {
     }
 
     @PostMapping()
-    ApiResponse<RelationResponse> create(@RequestBody RelationCreationRequest request){
-        return ApiResponse.<RelationResponse>builder()
+    ApiResponse<Relation> create(@RequestBody RelationCreationRequest request){
+        return ApiResponse.<Relation>builder()
                 .result(relationService.create(request))
                 .build();
     }
 
     @PutMapping("/add-friend/{id}")
-    ApiResponse<RelationResponse> addFriend(@PathVariable("id") String userId,
+    ApiResponse<Relation> addFriend(@PathVariable("id") String userId,
                                             @RequestBody RelationAddFriendRequest request){
-        return ApiResponse.<RelationResponse>builder()
-                .result(relationService.addFriend(userId, request))
+        var result = relationService.addFriend(userId, request);
+        return ApiResponse.<Relation>builder()
+                .result(result)
                 .build();
     }
 

@@ -22,7 +22,6 @@ import java.util.List;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class PostController {
 
-    ImageService imageService;
     PostService postService;
 
     @GetMapping("/{id}")

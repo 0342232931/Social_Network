@@ -1,12 +1,11 @@
 package vn.ths.SocialNetwork.services.service.user;
 
-import vn.ths.SocialNetwork.dto.request.user.AvatarCreationRequest;
-import vn.ths.SocialNetwork.dto.request.user.AvatarUpdateRequest;
-import vn.ths.SocialNetwork.dto.response.user.AvatarResponse;
+import org.springframework.web.multipart.MultipartFile;
+import vn.ths.SocialNetwork.entity.user.Avatar;
+
+import java.io.IOException;
 
 public interface AvatarService {
-    public AvatarResponse create(AvatarCreationRequest request);
-    public AvatarResponse updateByUserId(String userId, AvatarUpdateRequest request);
-    public AvatarResponse getByUserId(String userId);
+    public Avatar save(String userId,MultipartFile file) throws IOException;
     public void deleteByUserId(String userId);
 }

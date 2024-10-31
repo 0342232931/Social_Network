@@ -58,46 +58,53 @@ public class RelationServiceIpm implements RelationService {
 
     @Transactional
     @Override
-    public RelationResponse create(RelationCreationRequest request) {
+    public Relation create(RelationCreationRequest request) {
 
-        Relation relation = relationMapper.toRelation(request);
+        Relation relation = new Relation();
 
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         List<User> friends = userRepository.findAllById(request.getFriendIds());
 
-        relation.builder()
-                .user(user)
-                .friends(friends)
-                .build();
-
-        return relationMapper.toRelationResponse(relationRepository.saveAndFlush(relation));
+        relation.setFriends(friends);
+        relation.setUser(user);
+        System.out.println("relation create: " + relation.toString());
+        return relationRepository.saveAndFlush(relation);
     }
 
     @Transactional
     @Override
-    public RelationResponse addFriend(String userId, RelationAddFriendRequest request) {
+    public Relation addFriend(String userId, RelationAddFriendRequest request) {
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
-        User friend = userRepository.findById(request.getFriendId())
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        Relation relation = relationRepository.getRelationByUserId(userId);
 
-        Relation relation = relationRepository.getByUser(user)
-                .orElseThrow(() -> new AppException(ErrorCode.RELATION_NOT_EXISTED));
+        if (relation == null){
 
-        List<User> friends = relation.getFriends();
+            List<String> friendsRq = List.of(request.getFriendId());
+            RelationCreationRequest creationRequest = new RelationCreationRequest(userId, friendsRq);
 
-        if (!friends.contains(friend))
-            friends.add(friend);
-        else
-            throw new RuntimeException("Friend existed");
+            return create(creationRequest);
+        }else {
 
-        relation.setFriends(friends);
+            User friend = userRepository.findById(request.getFriendId())
+                    .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
-        return relationMapper.toRelationResponse(relationRepository.saveAndFlush(relation));
+            List<User> friends = relation.getFriends();
+
+            if (!friends.contains(friend)) {
+                friends.add(friend);
+            } else {
+                throw new RuntimeException("Friend existed");
+            }
+
+            relation.setFriends(friends);
+
+            return relationRepository.saveAndFlush(relation);
+        }
     }
 
     @Transactional

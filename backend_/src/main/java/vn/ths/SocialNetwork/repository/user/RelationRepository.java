@@ -11,5 +11,6 @@ import java.util.Optional;
 public interface RelationRepository extends JpaRepository<Relation, String> {
 
     public Optional<Relation> getByUser(User user);
+    public Relation getRelationByUserId(String userId);
 
 }

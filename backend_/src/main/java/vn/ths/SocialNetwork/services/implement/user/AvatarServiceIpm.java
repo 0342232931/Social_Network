@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import vn.ths.SocialNetwork.dto.request.user.AvatarCreationRequest;
 import vn.ths.SocialNetwork.dto.request.user.AvatarUpdateRequest;
 import vn.ths.SocialNetwork.dto.response.user.AvatarResponse;
@@ -17,6 +18,8 @@ import vn.ths.SocialNetwork.mapper.user.AvatarMapper;
 import vn.ths.SocialNetwork.repository.user.AvatarRepository;
 import vn.ths.SocialNetwork.repository.user.UserRepository;
 import vn.ths.SocialNetwork.services.service.user.AvatarService;
+
+import java.io.IOException;
 
 @Service
 @Slf4j
@@ -30,41 +33,18 @@ public class AvatarServiceIpm implements AvatarService {
 
     @Transactional
     @Override
-    public AvatarResponse create(AvatarCreationRequest request) {
+    public Avatar save( String userId, MultipartFile file) throws IOException {
+        Avatar avatar = new Avatar();
 
-        Avatar avatar = avatarMapper.toAvatar(request);
-
-        User user = userRepository.findById(request.getUserId())
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         avatar.setUser(user);
+        avatar.setFileName(file.getOriginalFilename());
+        avatar.setFileType(file.getContentType());
+        avatar.setData(file.getBytes());
 
-        return avatarMapper.toAvatarResponse(avatarRepository.saveAndFlush(avatar));
-    }
-
-    @Transactional
-    @Override
-    public AvatarResponse updateByUserId(String userId, AvatarUpdateRequest request) {
-
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-
-        Avatar avatar = avatarRepository.getByUser(user)
-                .orElseThrow(() -> new AppException(ErrorCode.AVATAR_NOT_EXISTED));
-
-        return avatarMapper.toAvatarResponse(avatarRepository.saveAndFlush(avatar));
-    }
-
-    @Override
-    public AvatarResponse getByUserId(String userId) {
-
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-
-        Avatar avatar = avatarRepository.getByUser(user)
-                .orElseThrow(() -> new AppException(ErrorCode.AVATAR_NOT_EXISTED));
-
-        return avatarMapper.toAvatarResponse(avatar);
+        return avatarRepository.saveAndFlush(avatar);
     }
 
     @Transactional

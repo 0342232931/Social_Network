@@ -13,6 +13,8 @@ import java.sql.Blob;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AvatarResponse {
     String id;
-    Blob avatar;
+    String fileName;
+    String fileType;
+    byte [] data;
     User user;
 }

@@ -13,8 +13,8 @@ public interface RelationService {
     public RelationResponse getById(String id);
     public List<User> getFriendsByUserId(String userId);
     public List<Relation> getAll();
-    public RelationResponse create(RelationCreationRequest request);
-    public RelationResponse addFriend(String userId, RelationAddFriendRequest request);
+    public Relation create(RelationCreationRequest request);
+    public Relation addFriend(String userId, RelationAddFriendRequest request);
     public RelationResponse deleteFriend(String userId, RelationDeleteFriendRequest request);
     public void deleteRelationById(String relationId);
 }
