@@ -13,6 +13,8 @@ import java.sql.Blob;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ImageResponse {
     String id;
-    Blob image;
+    String fileName;
+    String fileType;
+    String data;
     Post post;
 }

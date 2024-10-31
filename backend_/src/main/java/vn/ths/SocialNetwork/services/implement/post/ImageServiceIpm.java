@@ -6,6 +6,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import vn.ths.SocialNetwork.dto.response.post.ImageResponse;
 import vn.ths.SocialNetwork.entity.post.Image;
 import vn.ths.SocialNetwork.entity.post.Post;
 import vn.ths.SocialNetwork.exception.AppException;
@@ -15,6 +16,9 @@ import vn.ths.SocialNetwork.repository.post.PostRepository;
 import vn.ths.SocialNetwork.services.service.post.ImageService;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -45,5 +49,30 @@ public class ImageServiceIpm implements ImageService {
         imageRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.IMAGE_NOT_EXISTED));
 
         imageRepository.deleteById(id);
+    }
+
+    @Override
+    public List<ImageResponse> getImagesByPostId(String postId) {
+
+        List<Image> images = imageRepository.getAllImageByPostId(postId);
+
+        if (images.isEmpty())
+            return null;
+
+        List<ImageResponse> responses = new ArrayList<>();
+
+        for (Image image : images) {
+            String data = Base64.getEncoder().encodeToString(image.getData());
+
+            responses.add(ImageResponse.builder()
+                            .id(image.getId())
+                            .fileName(image.getFileName())
+                            .fileType(image.getFileType())
+                            .data(data)
+                            .post(image.getPost())
+                            .build());
+        }
+
+        return responses;
     }
 }

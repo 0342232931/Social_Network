@@ -9,6 +9,6 @@ import java.util.Optional;
 
 @Repository
 public interface AvatarRepository extends JpaRepository<Avatar, String> {
-    public Optional<Avatar> getByUser(User user);
+    public Optional<Avatar> getByUserId(String userId);
     public void deleteByUser(User user);
 }

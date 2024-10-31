@@ -11,4 +11,5 @@ import java.util.List;
 public interface ImageService {
     public Image create(String postId, MultipartFile file) throws IOException;
     public void deleteById(String id);
+    public List<ImageResponse> getImagesByPostId(String postId);
 }

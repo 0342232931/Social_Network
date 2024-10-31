@@ -7,6 +7,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import vn.ths.SocialNetwork.dto.response.user.AvatarResponse;
 import vn.ths.SocialNetwork.entity.user.Avatar;
 import vn.ths.SocialNetwork.entity.user.User;
 import vn.ths.SocialNetwork.exception.AppException;
@@ -16,6 +17,7 @@ import vn.ths.SocialNetwork.repository.user.UserRepository;
 import vn.ths.SocialNetwork.services.service.user.AvatarService;
 
 import java.io.IOException;
+import java.util.Base64;
 
 @Service
 @Slf4j
@@ -49,5 +51,21 @@ public class AvatarServiceIpm implements AvatarService {
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         avatarRepository.deleteByUser(user);
+    }
+
+    @Override
+    public AvatarResponse getByUserId(String userId) {
+        Avatar avatar = avatarRepository.getByUserId(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.AVATAR_NOT_EXISTED));
+
+        String dataEncode = Base64.getEncoder().encodeToString(avatar.getData());
+
+        return AvatarResponse.builder()
+                .id(avatar.getId())
+                .fileName(avatar.getFileName())
+                .fileType(avatar.getFileType())
+                .data(dataEncode)
+                .user(avatar.getUser())
+                .build();
     }
 }

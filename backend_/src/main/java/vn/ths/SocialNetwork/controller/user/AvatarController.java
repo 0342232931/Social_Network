@@ -9,6 +9,8 @@ import org.springframework.web.multipart.MultipartFile;
 import vn.ths.SocialNetwork.config.CustomMultipartFile;
 import vn.ths.SocialNetwork.dto.request.user.AvatarCreationRequest;
 import vn.ths.SocialNetwork.dto.response.ApiResponse;
+import vn.ths.SocialNetwork.dto.response.user.AvatarResponse;
+import vn.ths.SocialNetwork.entity.user.Avatar;
 import vn.ths.SocialNetwork.services.service.user.AvatarService;
 
 import java.util.Base64;
@@ -37,13 +39,20 @@ public class AvatarController {
             boolean isActive =  (result != null);
 
             return ApiResponse.builder()
-                    .result("Save Avatar: " + isActive)
+                    .message("Save Avatar: " + isActive)
                     .build();
         } catch (Exception e) {
             return ApiResponse.builder()
-                    .result("error: " + e.getMessage())
+                    .message("error: " + e.getMessage())
                     .build();
         }
+    }
+
+    @GetMapping("/get-by-user-id/{id}")
+    ApiResponse<AvatarResponse> getAvatarByUserId (@PathVariable("id") String userId){
+        return ApiResponse.<AvatarResponse>builder()
+                .result(avatarService.getByUserId(userId))
+                .build();
     }
 
     @DeleteMapping("/delete-by-user-id/{id}")

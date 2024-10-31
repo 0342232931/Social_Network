@@ -4,8 +4,6 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import vn.ths.SocialNetwork.entity.user.User;
 
-import java.sql.Blob;
-
 @Data
 @Builder
 @NoArgsConstructor
@@ -15,6 +13,6 @@ public class AvatarResponse {
     String id;
     String fileName;
     String fileType;
-    byte [] data;
+    String data;
     User user;
 }

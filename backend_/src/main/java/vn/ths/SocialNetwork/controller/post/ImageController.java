@@ -33,7 +33,6 @@ import java.util.List;
 public class ImageController {
 
     ImageService imageService;
-    DataSource dataSource;
 
     @PostMapping("/{id}")
     ApiResponse<?> create(@PathVariable("id") String postId,
@@ -62,6 +61,14 @@ public class ImageController {
                     .build();
         }
 
+    }
+
+    @GetMapping("/get-images-by-post-id/{id}")
+    ApiResponse<List<ImageResponse>> getImagesByPostId(@PathVariable("id") String postId){
+
+        return ApiResponse.<List<ImageResponse>>builder()
+                .result(imageService.getImagesByPostId(postId))
+                .build();
     }
 
     @DeleteMapping("/{id}")
