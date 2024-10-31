@@ -22,19 +22,20 @@ export const createAxios = (currentUser, dispatch, stateSuccess) => {
           let currentTime = new Date();
           const decodedToken = jwtDecode(currentUser?.result.token);
           config.headers.Authorization = `Bearer ${currentUser.result.token}`;
-          if (decodedToken < currentTime.getTime()/1000){
+          if (decodedToken.exp < currentTime.getTime()/1000){
             const data = await refreshToken(currentUser.result.token);
             const refreshUser = {
-              ...currentUser,
+              ...data,
               result: {
-                ...currentUser.result,
-                token: data.token
+                ...data.result,
+                token: data.result.token
               }
             }
             console.log("data : " + data);
+            console.log("refreshToken : Success");
             
             dispatch(stateSuccess(refreshUser));
-            config.headers.Authorization = `Bearer ${data.token}`;
+            config.headers.Authorization = `Bearer ${data.result.token}`;
           }
           return config;
         }, (err) => {
