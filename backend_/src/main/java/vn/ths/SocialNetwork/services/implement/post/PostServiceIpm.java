@@ -40,19 +40,15 @@ public class PostServiceIpm implements PostService {
     @Override
     public PostResponse create(PostCreationRequest request) {
 
-        Post post = postMapper.toPost(request);
-
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         LocalDate currentDate = LocalDate.now();
-
-        post.builder()
-                .createAt(currentDate)
-                .user(user)
-                .build();
-
-        return postMapper.toPostResponse(postRepository.saveAndFlush(post));
+        return postMapper.toPostResponse(postRepository.saveAndFlush(Post.builder()
+                        .createAt(currentDate)
+                        .content(request.getContent())
+                        .user(user)
+                        .build()));
     }
 
     @Override
@@ -89,7 +85,7 @@ public class PostServiceIpm implements PostService {
         return posts;
     }
 
-    public void addPostInPosts(List<Post> posts, List<Post> result) {
+    private void addPostInPosts(List<Post> posts, List<Post> result) {
         LocalDateTime now = LocalDateTime.now();
         for (Post post: posts) {
             if (post.getCreateAt() != null && ChronoUnit.DAYS.between(post.getCreateAt(), now) <= 3){

@@ -48,8 +48,9 @@ public class PostController {
 
     @PostMapping()
     public ApiResponse<PostResponse> createPost(@RequestBody PostCreationRequest request){
+        var result = postService.create(request);
         return ApiResponse.<PostResponse>builder()
-                .result(postService.create(request))
+                .result(result)
                 .build();
     }
 

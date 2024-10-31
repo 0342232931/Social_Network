@@ -52,15 +52,11 @@ public class InteractionServiceIpm implements InteractionService {
         if (interactionRepository.existsByInteractAndUserAndPost( interact, user, post))
             throw new AppException(ErrorCode.INTERACTION_EXISTED);
 
-        Interaction interaction = interactionMapper.toInteraction(request);
-
-        interaction.builder()
-                .interact(interact)
-                .user(user)
-                .post(post)
-                .build();
-
-        return interactionMapper.toInteractionResponse(interactionRepository.saveAndFlush(interaction));
+        return interactionMapper.toInteractionResponse(interactionRepository.saveAndFlush(Interaction.builder()
+                        .post(post)
+                        .interact(interact)
+                        .user(user)
+                        .build()));
     }
 
     @Override

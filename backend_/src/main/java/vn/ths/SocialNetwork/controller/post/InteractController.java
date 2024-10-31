@@ -23,14 +23,10 @@ public class InteractController {
     InteractService interactService;
 
     @PostMapping()
-    ApiResponse<InteractResponse> create(@RequestParam("interactType") String interactType){
-
-        InteractRequest interactRequest = InteractRequest.builder()
-                                                            .interactType(interactType)
-                                                            .build();
+    ApiResponse<InteractResponse> create(@RequestBody InteractRequest request){
 
         return ApiResponse.<InteractResponse>builder()
-                .result(interactService.create(interactRequest))
+                .result(interactService.create(request))
                 .build();
     }
 

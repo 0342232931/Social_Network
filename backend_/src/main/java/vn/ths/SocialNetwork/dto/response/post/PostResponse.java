@@ -7,6 +7,7 @@ import vn.ths.SocialNetwork.entity.post.Image;
 import vn.ths.SocialNetwork.entity.post.Interaction;
 import vn.ths.SocialNetwork.entity.user.User;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -17,5 +18,7 @@ import java.util.List;
 public class PostResponse {
     String id;
     String content;
+    LocalDate createAt;
+    LocalDate updateAt;
     User user;
 }

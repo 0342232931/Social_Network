@@ -22,4 +22,5 @@ public class Interact {
 
     @Column(name = "interact_type")
     String interactType;
+
 }
