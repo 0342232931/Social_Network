@@ -36,7 +36,7 @@ public class ImageController {
 
     @PostMapping("/{id}")
     ApiResponse<List<ImageResponse>> create(@PathVariable("id") String postId,
-                                            MultipartFile[] images) throws Exception {
+                                            @RequestBody  MultipartFile[] images) throws Exception {
 
         List<ImageResponse> list = new ArrayList<>();
 
