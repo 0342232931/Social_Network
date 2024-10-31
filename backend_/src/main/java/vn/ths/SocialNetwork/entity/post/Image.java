@@ -22,7 +22,13 @@ public class Image {
 
     @Column(name = "image")
     @Lob
-    Blob image;
+    byte [] data;
+
+    @Column(name = "file_name")
+    String fileName;
+
+    @Column(name = "file_type")
+    String fileType;
 
     @ManyToOne()
     Post post;

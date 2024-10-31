@@ -5,18 +5,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import vn.ths.SocialNetwork.dto.request.post.ImageRequest;
-import vn.ths.SocialNetwork.dto.response.post.ImageResponse;
+import org.springframework.web.multipart.MultipartFile;
 import vn.ths.SocialNetwork.entity.post.Image;
 import vn.ths.SocialNetwork.entity.post.Post;
 import vn.ths.SocialNetwork.exception.AppException;
 import vn.ths.SocialNetwork.exception.ErrorCode;
-import vn.ths.SocialNetwork.mapper.post.ImageMapper;
 import vn.ths.SocialNetwork.repository.post.ImageRepository;
 import vn.ths.SocialNetwork.repository.post.PostRepository;
 import vn.ths.SocialNetwork.services.service.post.ImageService;
 
-import java.util.List;
+import java.io.IOException;
 
 @Service
 @Slf4j
@@ -26,38 +24,19 @@ public class ImageServiceIpm implements ImageService {
 
     PostRepository postRepository;
     ImageRepository imageRepository;
-    ImageMapper imageMapper;
 
     @Override
-    public ImageResponse create(ImageRequest request) {
+    public Image create(String postId, MultipartFile file) throws IOException {
 
-        Image image = imageMapper.toImage(request);
-
-        Post post = postRepository.findById(request.getPostId())
+        Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new AppException(ErrorCode.POST_NOT_EXISTED));
 
-        image.setPost(post);
-
-        return imageMapper.toImageResponse(imageRepository.saveAndFlush(image));
-    }
-
-    @Override
-    public ImageResponse findById(String id) {
-
-        Image image = imageRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.IMAGE_NOT_EXISTED));
-
-        return imageMapper.toImageResponse(image);
-    }
-
-    @Override
-    public List<Image> getAll() {
-        return imageRepository.findAll();
-    }
-
-    @Override
-    public List<Image> getByPostId(String postId) {
-        Post post = postRepository.findById(postId).orElseThrow(() -> new AppException(ErrorCode.POST_NOT_EXISTED));
-        return imageRepository.getByPost(post);
+        return imageRepository.saveAndFlush(Image.builder()
+                        .fileName(file.getOriginalFilename())
+                        .fileType(file.getContentType())
+                        .data(file.getBytes())
+                        .post(post)
+                        .build());
     }
 
     @Override

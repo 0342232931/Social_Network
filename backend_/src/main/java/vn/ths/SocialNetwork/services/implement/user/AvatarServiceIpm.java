@@ -7,14 +7,10 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import vn.ths.SocialNetwork.dto.request.user.AvatarCreationRequest;
-import vn.ths.SocialNetwork.dto.request.user.AvatarUpdateRequest;
-import vn.ths.SocialNetwork.dto.response.user.AvatarResponse;
 import vn.ths.SocialNetwork.entity.user.Avatar;
 import vn.ths.SocialNetwork.entity.user.User;
 import vn.ths.SocialNetwork.exception.AppException;
 import vn.ths.SocialNetwork.exception.ErrorCode;
-import vn.ths.SocialNetwork.mapper.user.AvatarMapper;
 import vn.ths.SocialNetwork.repository.user.AvatarRepository;
 import vn.ths.SocialNetwork.repository.user.UserRepository;
 import vn.ths.SocialNetwork.services.service.user.AvatarService;
@@ -29,7 +25,6 @@ public class AvatarServiceIpm implements AvatarService {
 
     UserRepository userRepository;
     AvatarRepository avatarRepository;
-    AvatarMapper avatarMapper;
 
     @Transactional
     @Override

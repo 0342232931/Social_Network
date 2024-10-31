@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.sql.Blob;
 import java.util.UUID;
 
 @Entity
@@ -30,6 +29,6 @@ public class Avatar {
     @Column(name = "file_type")
     String fileType;
 
-    @OneToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToOne()
     User user;
 }

@@ -10,7 +10,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import vn.ths.SocialNetwork.dto.request.user.RoleCreationRequest;
+import vn.ths.SocialNetwork.entity.user.Role;
 import vn.ths.SocialNetwork.entity.user.User;
+import vn.ths.SocialNetwork.mapper.user.RoleMapper;
+import vn.ths.SocialNetwork.repository.user.RoleRepository;
 import vn.ths.SocialNetwork.repository.user.UserRepository;
 import vn.ths.SocialNetwork.services.service.user.RoleService;
 
@@ -26,6 +30,7 @@ public class ApplicationInitConfig {
     @Bean
     ApplicationRunner applicationRunner(UserRepository userRepository) {
         return args -> {
+
             if (userRepository.findByUsername("admin").isEmpty()) {
 
                 User user = User.builder()

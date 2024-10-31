@@ -12,6 +12,7 @@ import java.sql.Blob;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ImageRequest {
-    Blob image;
-    String postId;
+    String fileType;
+    String fileName;
+    String data;
 }

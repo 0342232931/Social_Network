@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import vn.ths.SocialNetwork.config.CustomMultipartFile;
 import vn.ths.SocialNetwork.dto.request.post.ImageRequest;
 import vn.ths.SocialNetwork.dto.response.ApiResponse;
 import vn.ths.SocialNetwork.dto.response.post.ImageResponse;
@@ -35,66 +36,32 @@ public class ImageController {
     DataSource dataSource;
 
     @PostMapping("/{id}")
-    ApiResponse<List<ImageResponse>> create(@PathVariable("id") String postId,
-                                            @RequestBody  MultipartFile[] images) throws Exception {
+    ApiResponse<?> create(@PathVariable("id") String postId,
+                                            @RequestBody  ImageRequest[] request) throws Exception {
+        System.out.println("Already Created");
 
-        List<ImageResponse> list = new ArrayList<>();
+        try {
+            for (ImageRequest req : request) {
+                try{
+                    byte[] data = Base64.getDecoder().decode(req.getData());
 
-        ImageRequest request = new ImageRequest();
-
-        request.setPostId(postId);
-
-        for (MultipartFile file : images){
-            try{
-                byte[] imageBytes = file.getBytes();
-                Connection connection = dataSource.getConnection();
-                Blob image = connection.createBlob();
-                image.setBytes(1,imageBytes);
-
-                request.setImage(image);
-                list.add(imageService.create(request));
-
-            }catch (Exception e){
-                throw new Exception(e.getMessage());
+                    MultipartFile file = new CustomMultipartFile(req.getFileName(), req.getFileType(), data);
+                    imageService.create(postId, file);
+                } catch (Exception e) {
+                    return ApiResponse.builder()
+                            .result("Cannot save image, error: " + e.getMessage())
+                            .build();
+                }
             }
-        }
-        return ApiResponse.<List<ImageResponse>>builder()
-                .result(list)
-                .build();
-    }
-
-    @GetMapping("/{id}")
-    ResponseEntity<byte[]> getImageById(@PathVariable("id") String id) throws SQLException {
-
-        ImageResponse imageResponse = imageService.findById(id);
-
-        byte[] imageBytes = imageResponse.getImage().getBytes(1, (int)imageResponse.getImage().length());
-
-        return ResponseEntity.ok()
-                    .contentType(MediaType.IMAGE_JPEG)
-                    .body(imageBytes);
-    }
-
-    @GetMapping("/get-images-post/{id}")
-    public ResponseEntity<List<String>> returnImage(@PathVariable("id") String postId) throws SQLException {
-
-        List<Image> images = imageService.getByPostId(postId);
-        if (images == null)
-            throw new AppException(ErrorCode.IMAGE_NOT_EXISTED);
-
-        List<String> imageList = new ArrayList<>();
-        for(Image image : images){
-
-            byte[] imageData = image.getImage().getBytes(1, (int)image.getImage().length());
-
-            // convert to base64
-            String base64Image = Base64.getEncoder().encodeToString(imageData);
-            imageList.add(base64Image);
+            return ApiResponse.builder()
+                    .result("Save Images Success")
+                    .build();
+        } catch (Exception e){
+            return ApiResponse.builder()
+                    .result("Cannot save image, error: " + e.getMessage() )
+                    .build();
         }
 
-        return ResponseEntity.ok()
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(imageList);
     }
 
     @DeleteMapping("/{id}")
