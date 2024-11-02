@@ -19,16 +19,15 @@ function NavBar(){
 
   const getAvatarUser = async (userId, axiosJwt) => {
     try {
-        const res = await axiosJwt.get("http://localhost:8080/avatar/get-by-user-id/" + userId);
-        
-        const img = res.data.body;
-        setUrl(URL.createObjectURL(img));
-        
-    } catch (error) {
-        console.log("error: " + error);
-        
-    }
+      const res = await axiosJwt.get("http://localhost:8080/avatar/get-by-user-id/" + userId);
+      
+      const img = res.data?.result.data;
 
+      setUrl(`data:image/png;base64,${img}`)
+  } catch (error) {
+      console.log("error: " + error);
+      
+  }
 }
 
   useEffect(() => {

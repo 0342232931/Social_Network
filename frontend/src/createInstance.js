@@ -2,21 +2,16 @@ import axios from "axios";
 import { jwtDecode } from "jwt-decode"; 
 
 async function refreshToken(token) {
-    try{
-      let tokenRefresh = {
+      let refreshRequest = {
         token: token
       };
-
-      const res = await axios.post("http://localhost:8080/auth/refresh", tokenRefresh);
-      return res.data;
-    } catch (err) {
-      console.log(err);
       
-    }
+      const res = await axios.post("http://localhost:8080/auth/refresh", refreshRequest);      
+      return res.data;
   }
 
 export const createAxios = (currentUser, dispatch, stateSuccess) => {
-    const newInstance = axios.create();
+    let newInstance = axios.create();
     newInstance.interceptors.request.use(
         async(config) => {
           let currentTime = new Date();
@@ -27,13 +22,11 @@ export const createAxios = (currentUser, dispatch, stateSuccess) => {
             const refreshUser = {
               ...data,
               result: {
+                token: data.result.token,
                 ...data.result,
-                token: data.result.token
+                
               }
-            }
-            console.log("data : " + data);
-            console.log("refreshToken : Success");
-            
+            }            
             dispatch(stateSuccess(refreshUser));
             config.headers.Authorization = `Bearer ${data.result.token}`;
           }

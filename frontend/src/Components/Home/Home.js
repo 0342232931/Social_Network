@@ -17,7 +17,8 @@ function HomePage () {
 
     const user = useSelector((state) => state.auth.login?.currentUser?.result.userResponse);
     const token = useSelector((state) => state.auth.login?.currentUser?.result.token);
-    const [url, setUrl] = useState("/img/user.png");
+    const url = useState("/img/user.png");
+    const [imgData, setImgData] = useState(null);
     const [friends, setFriends] = useState([]);
     const [post, setPost] = useState([]);
 
@@ -26,9 +27,9 @@ function HomePage () {
         try {
             const res = await axiosJwt.get("http://localhost:8080/avatar/get-by-user-id/" + userId);
             
-            const img = res.data.body;
-            setUrl(URL.createObjectURL(img));
-            
+            const img = res.data?.result.data;
+
+            setImgData(`data:image/png;base64,${img}`)
         } catch (error) {
             console.log("error: " + error);
             
@@ -119,7 +120,7 @@ function HomePage () {
                 <div className={styles.util}>
                     <div className={styles.my_info}>
                         <Link className={styles.link} to="/my-info">
-                            <img className={styles.avatar_friend} src={url} alt='my avatar'/>
+                            <img className={styles.avatar_friend} src={imgData == null ? url : imgData} alt='my avatar'/>
                             <h3 className={styles.friend_name}>{user?.firstName == null && user?.lastName == null ? user?.username : `${user?.firstName} ${user?.lastName}` }</h3>
                         </Link>
                     </div>

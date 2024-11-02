@@ -20,15 +20,17 @@ function MyInfo () {
     let axiosJwt = createAxios(data, dispatch, loginSuccess);
 
     const user = useSelector((state) => state.auth.login?.currentUser?.result.userResponse);
-
     const [url, setUrl] = useState('/img/user.png');
+
     const getAvatar = async (userId, axiosJwt) => {
         try {
-            const res = await axiosJwt.get('http://localhost:8080/avatar/get-by-user-id/' + userId);
+            const res = await axiosJwt.get("http://localhost:8080/avatar/get-by-user-id/" + userId);
             
-            setUrl(URL.createObjectURL(res.data.body));
+            const img = res.data?.result.data;
+
+            setUrl(`data:image/png;base64,${img}`)
         } catch (error) {
-            console.log(error);
+            console.log("error: " + error);
             
         }
     }

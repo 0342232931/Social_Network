@@ -2,22 +2,59 @@ import styles from './ModalConfigMain.module.css';
 import ModalAbout from '../ModalAbout/ModalAbout';
 import ModalContact from '../ModalContact/ModalContact';
 import {useState} from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+import { createAxios } from '../../../../createInstance';
+import { loginSuccess } from '../../../../redux/authSlice';
 
 function ModalConfigMain() {
 
+    const data = useSelector((state) => state.auth.login?.currentUser);
+    const dispatch = useDispatch();
+    let axiosJwt = createAxios(data, dispatch, loginSuccess);
+    const user = useSelector((state) => state.auth.login?.currentUser?.result.userResponse);
+
     const [src, setSrc] = useState('/img/high-five.png');
+    const [file, setFile] = useState(null)
 
     function handlUploadImg(e) {
-        const file = e.target.files[0];
-
-        if(file) {
-            const src = URL.createObjectURL(file);
+        
+        let crurentImg = e.target.files[0]; 
+        console.log(crurentImg);
+        
+        if(crurentImg) {
+            setFile(crurentImg);
+            const src = URL.createObjectURL(crurentImg);
             setSrc(src);
         }
     }
 
-    const handleSaveAvatar = (e) => {
+    const handleSaveAvatar = async(e) => {
         e.preventDefault();
+                
+        if (file === null) {
+            console.log("file null");
+            return;            
+        };
+        
+        const reader = new FileReader();
+
+        reader.onloadend = async () => {
+            const base64data = reader.result.split(',')[1];
+            const payload = {
+                fileName: file.name,
+                fileType: file.type,
+                data: base64data,
+            };
+            
+            try {
+                await axiosJwt.post("http://localhost:8080/avatar/" + user?.id, payload);
+                                
+            } catch (error) {                
+                console.log(error);
+                
+            }
+        }
+        reader.readAsDataURL(file);
     }
 
     const handleSaveHistory = (e) => {
