@@ -33,34 +33,24 @@ import java.util.List;
 public class ImageController {
 
     ImageService imageService;
-
+    
     @PostMapping("/{id}")
     ApiResponse<?> create(@PathVariable("id") String postId,
-                                            @RequestBody  ImageRequest[] request) throws Exception {
+                          @RequestBody  ImageRequest request) throws Exception {
         System.out.println("Already Created");
+        try{
+            byte[] data = Base64.getDecoder().decode(request.getData());
 
-        try {
-            for (ImageRequest req : request) {
-                try{
-                    byte[] data = Base64.getDecoder().decode(req.getData());
-
-                    MultipartFile file = new CustomMultipartFile(req.getFileName(), req.getFileType(), data);
-                    imageService.create(postId, file);
-                } catch (Exception e) {
-                    return ApiResponse.builder()
-                            .result("Cannot save image, error: " + e.getMessage())
-                            .build();
-                }
-            }
+            MultipartFile file = new CustomMultipartFile(request.getFileName(), request.getFileType(), data);
+            imageService.create(postId, file);
+        } catch (Exception e) {
             return ApiResponse.builder()
-                    .result("Save Images Success")
-                    .build();
-        } catch (Exception e){
-            return ApiResponse.builder()
-                    .result("Cannot save image, error: " + e.getMessage() )
+                    .result("Cannot save image, error: " + e.getMessage())
                     .build();
         }
-
+        return ApiResponse.builder()
+                .result("Save Image Success")
+                .build();
     }
 
     @GetMapping("/get-images-by-post-id/{id}")

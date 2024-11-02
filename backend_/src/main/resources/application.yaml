@@ -10,7 +10,7 @@ spring:
     password: root
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
 
 jwt:
   signerKey: "qNNw/9z5dmLKbWYrvkibteO4btbWq0gCqM8RQQLwUBG3arvNndeikq5y/cpV3B7o"
