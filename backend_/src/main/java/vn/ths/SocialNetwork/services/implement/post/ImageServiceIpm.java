@@ -75,4 +75,33 @@ public class ImageServiceIpm implements ImageService {
 
         return responses;
     }
+
+    private void handleAddImageToResponse(List<ImageResponse> response, Post post){
+
+        List<Image> images = imageRepository.getAllImageByPostId(post.getId());
+
+        for (Image image: images) {
+            String dataEncode = Base64.getEncoder().encodeToString(image.getData());
+            response.add(ImageResponse.builder()
+                            .id(image.getId())
+                            .fileName(image.getFileName())
+                            .fileType(image.getFileType())
+                            .data(dataEncode)
+                            .post(image.getPost())
+                            .build());
+        }
+    }
+
+    @Override
+    public List<ImageResponse> getByUserId(String userId) {
+
+        List<Post> posts = postRepository.findPostByUserId(userId);
+        List<ImageResponse> response = new ArrayList<>();
+
+        for (Post post: posts){
+            handleAddImageToResponse(response, post);
+        }
+
+        return response;
+    }
 }

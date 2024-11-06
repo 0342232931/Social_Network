@@ -37,11 +37,19 @@ public class AboutServiceIpm implements AboutService {
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
-        About about = aboutMapper.toAbout(request);
+        About currentAbout = aboutRepository.getByUserId(request.getUserId());
+        if (currentAbout != null){
 
-        about.setUser(user);
+            return updateById(currentAbout.getId(),new AboutUpdateRequest(request.getDescription()));
 
-        return aboutMapper.toAboutResponse(aboutRepository.saveAndFlush(about));
+        }  else {
+
+            About about = aboutMapper.toAbout(request);
+
+            about.setUser(user);
+
+            return aboutMapper.toAboutResponse(aboutRepository.saveAndFlush(about));
+        }
     }
 
     @Transactional

@@ -17,7 +17,9 @@ import vn.ths.SocialNetwork.repository.user.UserRepository;
 import vn.ths.SocialNetwork.services.service.user.AvatarService;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -46,11 +48,8 @@ public class AvatarServiceIpm implements AvatarService {
 
     @Transactional
     @Override
-    public void deleteByUserId(String userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-
-        avatarRepository.deleteByUser(user);
+    public void deleteById(String id) {
+        avatarRepository.deleteById(id);
     }
 
     @Override
@@ -67,5 +66,29 @@ public class AvatarServiceIpm implements AvatarService {
                 .data(dataEncode)
                 .user(avatar.getUser())
                 .build();
+    }
+
+    @Override
+    public List<AvatarResponse> getAllByUserId(String userId) {
+        System.out.println("userId : " + userId);
+        List<Avatar> avatars = avatarRepository.getAvatarsByUserId(userId);
+
+        if (avatars.isEmpty())
+            return null;
+
+        List<AvatarResponse> responses = new ArrayList<>();
+
+        for (Avatar avatar : avatars){
+            String dataEncode = Base64.getEncoder().encodeToString(avatar.getData());
+            responses.add(AvatarResponse.builder()
+                            .user(avatar.getUser())
+                            .id(avatar.getId())
+                            .fileName(avatar.getFileName())
+                            .fileType(avatar.getFileType())
+                            .data(dataEncode)
+                            .build());
+        }
+        System.out.println(responses.toString());
+        return responses;
     }
 }

@@ -61,6 +61,14 @@ public class ImageController {
                 .build();
     }
 
+    @GetMapping("/get-images-by-user-id/{id}")
+    ApiResponse<List<ImageResponse>> getByUserId(@PathVariable("id") String userId){
+
+        return ApiResponse.<List<ImageResponse>>builder()
+                .result(imageService.getByUserId(userId))
+                .build();
+    }
+
     @DeleteMapping("/{id}")
     ApiResponse<Void> deleteImage(@PathVariable("id") String id) throws Exception {
 

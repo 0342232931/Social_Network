@@ -14,6 +14,7 @@ import vn.ths.SocialNetwork.entity.user.Avatar;
 import vn.ths.SocialNetwork.services.service.user.AvatarService;
 
 import java.util.Base64;
+import java.util.List;
 
 @RestController
 @RequestMapping("/avatar")
@@ -55,9 +56,17 @@ public class AvatarController {
                 .build();
     }
 
-    @DeleteMapping("/delete-by-user-id/{id}")
-    ApiResponse<?> deleteAvatarByUserId(@PathVariable("id") String userId) {
-        avatarService.deleteByUserId(userId);
+    @GetMapping("/get-all-avatar/{id}")
+    ApiResponse<List<AvatarResponse>> getAll (@PathVariable("id") String userId){
+        System.out.println("userId controller: " + userId);
+        return ApiResponse.<List<AvatarResponse>>builder()
+                .result(avatarService.getAllByUserId(userId))
+                .build();
+    }
+
+    @DeleteMapping("/delete-by-id/{id}")
+    ApiResponse<?> deleteAvatarByUserId(@PathVariable("id") String id) {
+        avatarService.deleteById(id);
         return ApiResponse.builder()
                .result("Delete Success!")
                .build();

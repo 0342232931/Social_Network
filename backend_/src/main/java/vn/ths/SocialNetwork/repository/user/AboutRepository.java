@@ -10,4 +10,5 @@ import java.util.Optional;
 @Repository
 public interface AboutRepository extends JpaRepository<About, String> {
    Optional<About> getByUser(User user);
+   About getByUserId(String userId);
 }
