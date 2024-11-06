@@ -72,7 +72,7 @@ function NavBar(){
           </Link>
           <Link to="#" className={styles.element_children}>
             <img className={styles.icon} src="/img/notification-bell.png"alt="bell"/>
-          </Link>
+          </Link> 
           <div className={`dropdown ${styles.element_children}`}>
             <div data-bs-toggle="dropdown" aria-expanded="false">
               <img className={`dropdown-item ${styles.avatar}`} alt="info" src={url}/>

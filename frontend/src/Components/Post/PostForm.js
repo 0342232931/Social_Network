@@ -4,89 +4,118 @@ import { useDispatch, useSelector } from "react-redux";
 import { loginSuccess } from "../../redux/authSlice";
 import { createAxios } from "../../createInstance";
 
-function Post({...props}){
-
-    const postId = props.postId;
-    const user = props.user;
-    const content = props.content;
-    const createAt = props.createAt;
-
+function Post({post}){
+        
     const dispatch = useDispatch();
 
     const data = useSelector((state) => state.auth.login?.currentUser);
-    const [imgString, setImgString] = useState([]);
-    const [imgObj, setImgObj] = useState([])
+    const [imgObj, setImgObj] = useState(null)
+    const [avatar, setAvatar] = useState(null)
+    const avtSrc = "/img/user.png";
     let axiosJwt = createAxios(data, dispatch, loginSuccess);
 
-    
-
-    // Call Api get image from post by post id
-    const getImage = async (postId, axiosJwt) => {
+    // Get avatar user
+    const getAvatar = async (userId, axiosJwt) => {
         try {
-            const res = await axiosJwt.get('http://localhost:8080/images/get-images-post/' + postId);
-
-            setImgString(res.data.body);
+            const res = await axiosJwt.get("http://localhost:8080/avatar/get-by-user-id/" + userId);
             
-            imgString.map((img) => {
-                setImgObj(
-                    ...imgObj,
-                    URL.createObjectURL(img)
-                )
-            })
+            const img = res.data?.result.data;
 
+            setAvatar(`data:image/png;base64,${img}`)
         } catch (error) {
             console.log("error: " + error);
             
         }
     }
 
-    const handleRenderButton = () => {
-        for( let i = 0; i < imgObj.length; i++) {
-            return (
-                <button type="button" data-bs-target={`#carouselExampleIndicators${i}`} data-bs-slide-to={i} className="active" aria-current="true" aria-label={`Slide ${i}`}></button>
-            )
+    const getImagesForPost = async (postId, axiosJwt) => {
+        try {
+            const res = await axiosJwt.get('http://localhost:8080/images/get-images-by-post-id/' + postId);
+            if (res.data != null) 
+                setImgObj(res.data?.result)
+
+        } catch (error) {
+            console.log(error);
+            
+        }
+    }
+
+    useEffect(() => {
+        getAvatar(post?.user.id, axiosJwt);
+        getImagesForPost(post?.id, axiosJwt);
+    }, [])
+
+    const renderImages = () => {
+
+        let isActive = true;
+
+        const ChangeResultIsActive = () => {
+            const result = "active";
+            isActive = false;
+
+            return result;
+        }
+
+        if (imgObj != null) {
+            return(
+                <div className="carousel-inner">
+                    {
+                        imgObj.map((img) => {
+                            return (
+                                <div className={`carousel-item ${ isActive ? ChangeResultIsActive() : '' }`} key={img.id}>
+                                    <img src={`data:image/${img.fileType};base64,${img.data}`} className={`d-block w-100 ${styles.img_post}`} alt="..." />
+                                </div>
+                            )
+                        })
+                    }
+                </div>
+            ) 
+        } else {
+            <div className={`carousel-inner ${styles.display_none}`}>
+
+            </div>
         }
         
     }
 
-    useEffect(() => {
-        getImage(postId, axiosJwt);
-    }, [])
+    const hanleRenderCarousel = () => {
+        if (imgObj!= null) {
+            return(
+                <div className={styles.img_container}>
+                    <div id={`carouselExampleIndicators${post?.id}`} className="carousel slide">
+                        {renderImages()}
+                        <button className="carousel-control-prev" type="button" data-bs-target={`#carouselExampleIndicators${post?.id}`} data-bs-slide="prev">
+                            <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span className="visually-hidden">Previous</span>
+                        </button>
+                        <button className="carousel-control-next" type="button" data-bs-target={`#carouselExampleIndicators${post?.id}`} data-bs-slide="next">
+                            <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span className="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                </div>
+            )
+        } else {
+            return(
+                <div className={styles.display_none}>
 
+                </div>
+            )
+        }
+    }
     return (
         <div className={styles.container}>
             <div className={styles.header_container}>
-                <img className={styles.avatar} src="https://th.bing.com/th/id/OIP.mlrLAYZ6zAd3uigeyf0fnAHaED?w=269&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7" alt=""/>
+                <img className={styles.avatar} src={avatar != null ? avatar : avtSrc} alt="..."/>
                 <div className={styles.header_info_post}>
-                    <h3 className={styles.username}><b>{`${user?.firstName} ${user?.lastName}`}</b></h3>
-                    <p className={styles.time}>{`${createAt}`}</p>
+                    <h3 className={styles.username}><b>{`${post?.user.firstName} ${post?.user.lastName}`}</b></h3>
+                    <p className={styles.time}>{`${post?.createAt}`}</p>
                 </div>
             </div>
-            <span className={styles.content}>{content}</span>
-            <div className={styles.img_container}>
-                <div id={`carouselExampleIndicators${postId}`} className="carousel slide">
-                    <div className="carousel-indicators">
-                        {handleRenderButton()}
-                    </div>
-                    <div className="carousel-inner">
-                        {imgObj.map(img => {
-                            return (
-                                <div className="carousel-item active" key={Math.random()}>
-                                    <img src={img} className={`d-block w-100 ${styles.img_post}`} alt="..." />
-                                </div>
-                            )
-                        })}
-                    </div>
-                    <button className="carousel-control-prev" type="button" data-bs-target={`#carouselExampleIndicators${postId}`} data-bs-slide="prev">
-                        <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span className="visually-hidden">Previous</span>
-                    </button>
-                    <button className="carousel-control-next" type="button" data-bs-target={`#carouselExampleIndicators${postId}`} data-bs-slide="next">
-                        <span className="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span className="visually-hidden">Next</span>
-                    </button>
-                </div>
+            <div className={styles.content_container}>
+                <span className={styles.content}>{post?.content}</span>
             </div>
+            { hanleRenderCarousel() }
             <div className={styles.data}>
                     <span className={styles.data_child}>Likes: 100</span>
                     <span className={styles.data_child}>Comments: 50</span>

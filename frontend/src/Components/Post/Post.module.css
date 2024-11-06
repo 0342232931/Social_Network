@@ -31,8 +31,12 @@
     margin-top: 15px;
     color: rgb(249, 247, 247);
 }
+.content_container {
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 10px;
+}
 .content {
-    padding: 20px;
     margin-top: 20px;
     margin-bottom: 50px;
     color: rgb(249, 247, 247);
@@ -45,7 +49,8 @@
 }
 .img_post {
     width: 550px;
-    height: auto;}
+    height: auto;
+}
 .data {
     padding: 10px;
 }
@@ -76,4 +81,7 @@
 }
 .header_info_post {
     margin-left: 10px;
+}
+.display_none {
+    display: none;
 }

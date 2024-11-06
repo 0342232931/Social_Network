@@ -52,6 +52,11 @@
     color: lightgray;
     margin-left: 10px;
 }
+.text_bio {
+    color: lightgray;
+    margin-top: 20px;
+    margin-left: 10px;
+}
 .button_config {
     margin-top: 140px;
     margin-left: auto;
@@ -111,4 +116,7 @@
     color: #b7b5b884;
     margin-left: 30%;
     margin-top: 100px;
+}
+.display_none{
+    display: none;
 }

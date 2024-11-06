@@ -95,7 +95,7 @@ function FriendInfo () {
                                 <AllFriend />
                             </div>
                             <div className="tab-pane fade" id="image-tab-pane" role="tabpanel" aria-labelledby="image-tab" tabIndex="0">
-                                <Image/>
+                                {/* <Image/> */}
                             </div>
                             <div className="tab-pane fade" id="video-tab-pane" role="tabpanel" aria-labelledby="video-tab" tabIndex="0">
                                 <h3 className={styles.update_function}>Chức năng đang được cập nhật</h3>

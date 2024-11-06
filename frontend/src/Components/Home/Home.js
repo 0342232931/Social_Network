@@ -4,7 +4,7 @@ import Post from "../Post/PostForm";
 import { Link, useNavigate } from 'react-router-dom';
 import ModalPost from './ModalPost/ModalPost';
 import { useDispatch, useSelector } from 'react-redux';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { createAxios } from '../../createInstance';
 import { loginSuccess } from '../../redux/authSlice';
 
@@ -109,7 +109,7 @@ function HomePage () {
             getFriends(user?.id, axiosJwt);
             getPost(user?.id, axiosJwt);
         }
-    }, [data, user?.id, axiosJwt])
+    }, [data, user?.id, axiosJwt, imgData])
 
    
     return (

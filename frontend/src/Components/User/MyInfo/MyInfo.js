@@ -20,27 +20,62 @@ function MyInfo () {
     let axiosJwt = createAxios(data, dispatch, loginSuccess);
 
     const user = useSelector((state) => state.auth.login?.currentUser?.result.userResponse);
+
+    const [bio, setBio] = useState('');
     const [url, setUrl] = useState('/img/user.png');
+    const [posts, setPosts] = useState([]);
 
     const getAvatar = async (userId, axiosJwt) => {
         try {
             const res = await axiosJwt.get("http://localhost:8080/avatar/get-by-user-id/" + userId);
             
-            const img = res.data?.result.data;
+            const img = res.data?.result;
 
-            setUrl(`data:image/png;base64,${img}`)
+            setUrl(`data:image/${img?.fileType};base64,${img?.data}`)
         } catch (error) {
             console.log("error: " + error);
             
         }
     }
 
+    const getPost = async (userId, axiosJwt) => {
+        try {
+            const response = await axiosJwt.get("http://localhost:8080/posts/get-by-user-id/" + userId)
+            if (response != null) {
+                setPosts(response.data?.result);
+
+            } else {
+                console.log("get posts failed");
+                
+            }
+        } catch (error) {
+            console.log(error);
+            
+        }
+    }
+
+    const getBio = async (userId, axiosJwt) => {
+        try {
+            const response = await axiosJwt.get('http://localhost:8080/abouts/get-by-user/' + userId);
+            if (response != null) {
+                setBio(response.data?.result.description);
+                console.log("get bio sueccess");
+                
+            }
+        } catch (error) {
+            console.log(error);
+            
+        }
+    }
+
     useEffect(() => {
         getAvatar(user?.id, axiosJwt);
+        getPost(user?.id, axiosJwt);
+        getBio(user?.id, axiosJwt);
     }, [])
 
     const renderAbout = () => {
-        if (user?.job == null && user?.university == null && user?.highSchool == null && user?.hometown == null && user?.dob == null) {
+        if (user?.job == null && user?.university == null && user?.highSchool == null && user?.address == null && user?.dob == null) {
             return (
                 <div className={styles.about}>
                     <h3 className={styles.text_header}>Giới Thiệu</h3>
@@ -52,23 +87,25 @@ function MyInfo () {
                 </div>
             )
         } else {
-            <div className={styles.about}>
-                        <h3 className={styles.text_header}>Giới Thiệu</h3>
-                        <button type="button" className={`btn btn-secondary ${styles.button_config_infomation}`} data-bs-toggle="modal" data-bs-target="#modal_about">
-                            <img src='/img/myinfo/write.png' alt='icon' className={styles.icon} />
-                            Chỉnh sửa chi tiết</button>
-                        {user?.job == null ? (<></>) : (<p className={styles.text}><img src='/img/myinfo/briefcase.png' alt='phone'className={styles.icon}/> Làm việc tại {user?.job}</p>)}
-                        {user?.university == null ? (<></>) : (<p className={styles.text}><img src='/img/myinfo/education-cap.png' alt='phone'className={styles.icon}/> {user?.university}</p>)}
-                        {user?.highSchool == null ? (<></>) : (<p className={styles.text}><img src='/img/myinfo/education-cap.png' alt='phone'className={styles.icon}/> {user?.highSchool}</p>)}
-                        {user?.hometown == null ? (<></>) : (<p className={styles.text}><img src='/img/myinfo/location.png' alt='phone'className={styles.icon}/> Đến từ {user?.hometown}</p>)}
-                        {user?.dob == null ? (<></>) : (<p className={styles.text}><img src='/img/myinfo/cake.png' alt='phone'className={styles.icon}/> Ngày sinh {user?.dob}</p>)}
-                        <p className={styles.text_footer}><img src='/img/clock.png' alt='phone'className={styles.icon}/> Tham gia vào tháng 3 năm 2019</p>
-                    </div>
+            return (
+                <div className={styles.about}>
+                    <h3 className={styles.text_header}>Giới Thiệu</h3>
+                    <button type="button" className={`btn btn-secondary ${styles.button_config_infomation}`} data-bs-toggle="modal" data-bs-target="#modal_about">
+                        <img src='/img/myinfo/write.png' alt='icon' className={styles.icon} />
+                        Chỉnh sửa chi tiết</button>
+                    {user?.job == null ? (<></>) : (<p className={styles.text}><img src='/img/myinfo/briefcase.png' alt='phone'className={styles.icon}/> Làm việc tại {user?.job}</p>)}
+                    {user?.university == null ? (<></>) : (<p className={styles.text}><img src='/img/myinfo/education-cap.png' alt='phone'className={styles.icon}/> {user?.university}</p>)}
+                    {user?.highSchool == null ? (<></>) : (<p className={styles.text}><img src='/img/myinfo/education-cap.png' alt='phone'className={styles.icon}/> {user?.highSchool}</p>)}
+                    {user?.address == null ? (<></>) : (<p className={styles.text}><img src='/img/myinfo/location.png' alt='phone'className={styles.icon}/> Đến từ {user?.address}</p>)}
+                    {user?.dob == null ? (<></>) : (<p className={styles.text}><img src='/img/myinfo/cake.png' alt='phone'className={styles.icon}/> Ngày sinh {user?.dob}</p>)}
+                    <p className={styles.text_footer}><img src='/img/clock.png' alt='phone'className={styles.icon}/> Tham gia vào tháng 3 năm 2019</p>
+                </div>
+            )
         }
     }
 
     const renderContact  = () => {
-        if (user?.phoneNumber == null && user?.email == null && user?.adderss == null) {
+        if (user?.phoneNumber == null && user?.email == null && user?.hometown == null) {
             return (
                 <div className={styles.information_child}>
                     <h3 className={styles.text_header}>Liên Hệ</h3>
@@ -85,11 +122,30 @@ function MyInfo () {
                     <button type="button" className={`btn btn-secondary ${styles.button_config_infomation}`} data-bs-toggle="modal" data-bs-target="#modal_contact">
                         <img src='/img/myinfo/write.png' alt='icon' className={styles.icon} />
                         Chỉnh sửa chi tiết</button>  
-                    {user?.phoneNumber == null ? (<></>) : (<p className={styles.text}><img src='/img/myinfo/phone.png' alt='phone'className={styles.icon}/> {user?.phoneNumber}</p>)}\
+                    {user?.phoneNumber == null ? (<></>) : (<p className={styles.text}><img src='/img/myinfo/phone.png' alt='phone'className={styles.icon}/> {user?.phoneNumber}</p>)}
                     {user?.email == null ? (<></>) : (<p className={styles.text}><img src='/img/myinfo/mail.png' alt='phone'className={styles.icon}/> {user?.email}</p>)}
-                    {user?.adderss == null ? (<></>) : (<p className={styles.text}><img src='/img/myinfo/location.png' alt='phone'className={styles.icon}/> {user?.address}</p>)}
+                    {user?.hometown == null ? (<></>) : (<p className={styles.text}><img src='/img/myinfo/location.png' alt='phone'className={styles.icon}/> {user?.hometown}</p>)}
                 </div>
             )
+        }
+    }
+
+    const handleRenderPost = () => {
+        
+        return posts.map((post) => {
+            return (
+                <Post key={post?.id} post={post} />
+            )
+        })
+    }
+
+    const renderBio = () => {
+        if (bio === '') {
+            return (
+                <span className={styles.display_none}></span>
+            )
+        } else {
+            return <span className={styles.text_bio}>{bio}</span>
         }
     }
 
@@ -121,7 +177,8 @@ function MyInfo () {
                         </div>
                         <div className={styles.name_container}>
                             <h2 className={styles.text}>{`${user?.firstName} ${user?.lastName}`}</h2>
-                            <span className={styles.text}>727 người bạn</span>
+                            <span className={styles.text}>727 người bạn</span><br/>
+                            {renderBio()}
                         </div>
                         <div className={styles.button_config}>
                             <button type="button" className="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal_config_main">
@@ -163,18 +220,17 @@ function MyInfo () {
                         <div className="tab-content" id="myTabContent">
                             <div className="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabIndex="0">
                                 <div className={styles.post_container}>
-                                    <Post atr="1"/>
-                                    <Post atr="2"/>
+                                    {handleRenderPost()}
                                 </div>
                             </div>
                             <div className="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabIndex="0">
-                                <Infomation />
+                                <Infomation userId={user?.id}/>
                             </div>
                             <div className="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabIndex="0">
                                 <AllFriend />
                             </div>
                             <div className="tab-pane fade" id="image-tab-pane" role="tabpanel" aria-labelledby="image-tab" tabIndex="0">
-                                <Image/>
+                                <Image userId={user?.id}/>
                             </div>
                             <div className="tab-pane fade" id="video-tab-pane" role="tabpanel" aria-labelledby="video-tab" tabIndex="0">
                                 <h3 className={styles.update_function}>Chức năng đang được cập nhật</h3>
@@ -188,7 +244,7 @@ function MyInfo () {
             </div>
             <ModalAbout />
             <ModalContact />
-            <ModalConfigMain />
+            <ModalConfigMain userId={user?.id}/>
         </div>
     )
 }

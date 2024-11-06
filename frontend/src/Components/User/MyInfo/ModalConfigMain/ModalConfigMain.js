@@ -1,31 +1,31 @@
 import styles from './ModalConfigMain.module.css';
 import ModalAbout from '../ModalAbout/ModalAbout';
 import ModalContact from '../ModalContact/ModalContact';
-import {useState} from 'react'
+import {useEffect, useMemo, useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { createAxios } from '../../../../createInstance';
 import { loginSuccess } from '../../../../redux/authSlice';
 
-function ModalConfigMain() {
+function ModalConfigMain({userId}) {
 
     const data = useSelector((state) => state.auth.login?.currentUser);
     const dispatch = useDispatch();
     let axiosJwt = createAxios(data, dispatch, loginSuccess);
-    const user = useSelector((state) => state.auth.login?.currentUser?.result.userResponse);
 
+    const [bio, setBio] = useState();
     const [src, setSrc] = useState('/img/high-five.png');
     const [file, setFile] = useState(null)
 
-    function handlUploadImg(e) {
+    const handlUploadImg = (e) => {
         
         let crurentImg = e.target.files[0]; 
         console.log(crurentImg);
-        
         if(crurentImg) {
             setFile(crurentImg);
             const src = URL.createObjectURL(crurentImg);
             setSrc(src);
         }
+        
     }
 
     const handleSaveAvatar = async(e) => {
@@ -47,7 +47,7 @@ function ModalConfigMain() {
             };
             
             try {
-                await axiosJwt.post("http://localhost:8080/avatar/" + user?.id, payload);
+                await axiosJwt.post("http://localhost:8080/avatar/" + userId, payload);
                                 
             } catch (error) {                
                 console.log(error);
@@ -57,8 +57,40 @@ function ModalConfigMain() {
         reader.readAsDataURL(file);
     }
 
-    const handleSaveHistory = (e) => {
+    const getAvatar = async (userId, axiosJwt) => {
+        try {
+            const res = await axiosJwt.get("http://localhost:8080/avatar/get-by-user-id/" + userId);
+            
+            const img = res.data?.result;
+
+            setSrc(`data:image/${img?.fileType};base64,${img?.data}`)
+        } catch (error) {
+            console.log("error: " + error);
+            
+        }
+    }
+
+    useEffect(() => {
+        getAvatar(userId, axiosJwt);
+    }, [])
+
+    const handleSaveHistory = async (e) => {
         e.preventDefault();
+        const request = {
+            description: bio,
+            userId: userId,
+        }
+        try {
+            const res = await axiosJwt.post('http://localhost:8080/abouts',request)
+            if(res.status === 200) {
+                console.log('Success');
+            } else {
+                console.log('Fail');
+            }
+        } catch (error) {
+            console.log(error);
+            
+        }
     }
 
     return (
@@ -87,7 +119,7 @@ function ModalConfigMain() {
                             </div>
                             <div>
                                 <form onSubmit={handleSaveHistory}>
-                                    <textarea rows='4' cols='50' className={styles.history} placeholder='Mô tả về bạn'/> 
+                                    <textarea rows='4' cols='50' onChange={(e) => setBio(e.target.value)} className={styles.history} placeholder='Mô tả về bạn'/> 
                                     <button type='submit' className='btn btn-secondary'>Lưu thay đổi</button>
                                 </form>
                             </div> 
