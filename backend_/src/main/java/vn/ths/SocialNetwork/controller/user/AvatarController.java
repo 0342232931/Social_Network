@@ -58,7 +58,6 @@ public class AvatarController {
 
     @GetMapping("/get-all-avatar/{id}")
     ApiResponse<List<AvatarResponse>> getAll (@PathVariable("id") String userId){
-        System.out.println("userId controller: " + userId);
         return ApiResponse.<List<AvatarResponse>>builder()
                 .result(avatarService.getAllByUserId(userId))
                 .build();

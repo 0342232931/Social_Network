@@ -70,7 +70,6 @@ public class AvatarServiceIpm implements AvatarService {
 
     @Override
     public List<AvatarResponse> getAllByUserId(String userId) {
-        System.out.println("userId : " + userId);
         List<Avatar> avatars = avatarRepository.getAvatarsByUserId(userId);
 
         if (avatars.isEmpty())
