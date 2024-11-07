@@ -9,7 +9,7 @@ function Suggest() {
             <NavBar />
             <div className={styles.container}>
                 <div className={styles.request_container}>
-                    <h4 className={styles.title_request_container} >Lời mời kết bạn</h4>
+                    <h4 className={styles.title_request_container} >Gợi ý</h4>
                     <Link className={styles.request_item}>
                         <img src='/img/logo.png' alt='...' className={styles.avatar_request_item} />
                         <div>

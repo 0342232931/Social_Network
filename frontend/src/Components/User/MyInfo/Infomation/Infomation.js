@@ -7,7 +7,6 @@ import { useEffect, useState } from 'react';
 
 function Infomation({userId}) {
     const data = useSelector((state) => state.auth.login?.currentUser);
-
     const dispatch = useDispatch();
     let axiosJwt = createAxios(data, dispatch, loginSuccess);
 
@@ -107,7 +106,7 @@ function Infomation({userId}) {
                 {renderAboutContainer()}
                 {renderContact()}
             </div> 
-            <Image />
+            <Image userId={userId} />
         </div>
     )
 }

@@ -14,7 +14,8 @@ function ModalConfigMain({userId}) {
 
     const [bio, setBio] = useState();
     const [src, setSrc] = useState('/img/high-five.png');
-    const [file, setFile] = useState(null)
+    const [file, setFile] = useState(null);
+    const [user, setUser] = useState(null);
 
     const handlUploadImg = (e) => {
         
@@ -70,8 +71,24 @@ function ModalConfigMain({userId}) {
         }
     }
 
+    const getUser = async (userId, axiosJwt) => {
+        try {
+            const res = await axiosJwt.get('http://localhost:8080/users/' + userId);
+            if (res != null) {
+                console.log("get user in component configmain success");
+                setUser(res.data?.result);
+            } else {
+                console.log("get user in component configmain fail");
+            }
+        } catch (error) {
+            console.log(error);
+            
+        }
+    }
+
     useEffect(() => {
         getAvatar(userId, axiosJwt);
+        getUser(userId, axiosJwt);
     }, [])
 
     const handleSaveHistory = async (e) => {
@@ -90,6 +107,69 @@ function ModalConfigMain({userId}) {
         } catch (error) {
             console.log(error);
             
+        }
+    }
+
+    const renderAbout = () => {
+        if (user?.job == null && user?.university == null && user?.highSchool == null && user?.address == null && user?.dob == null) {
+            return (
+                <div className={styles.avatar}>
+                    <div className='d-flex'>
+                        <h4 className={styles.margin_right}>Chỉnh sửa phần giới thiệu</h4>
+                        <p className={styles.config_about} data-bs-toggle="modal" data-bs-target="#modal_about">Chỉnh sửa</p>
+                    </div>
+                    <div>
+                        <p className={styles.text_center}>Chưa có thông tin</p>
+                    </div> 
+                </div>
+            )
+        } else {
+            return (
+                <div className={styles.avatar}>
+                    <div className='d-flex'>
+                        <h4 className={styles.margin_right}>Chỉnh sửa phần giới thiệu</h4>
+                        <p className={styles.config_about} data-bs-toggle="modal" data-bs-target="#modal_about">Chỉnh sửa</p>
+                    </div>
+                    <div>
+                        {user?.job == null ? (<></>) : (<p className={styles.text}><img src='/img/myinfo/briefcase.png' alt='phone'className={styles.icon}/> Làm việc tại {user?.job}</p>)}
+                        {user?.university == null ? (<></>) : (<p className={styles.text}><img src='/img/myinfo/education-cap.png' alt='phone'className={styles.icon}/> {user?.university}</p>)}
+                        {user?.highSchool == null ? (<></>) : (<p className={styles.text}><img src='/img/myinfo/education-cap.png' alt='phone'className={styles.icon}/> {user?.highSchool}</p>)}
+                        {user?.address == null ? (<></>) : (<p className={styles.text}><img src='/img/myinfo/location.png' alt='phone'className={styles.icon}/> Đến từ {user?.address}</p>)}
+                        {user?.dob == null ? (<></>) : (<p className={styles.text}><img src='/img/myinfo/cake.png' alt='phone'className={styles.icon}/> Ngày sinh {user?.dob}</p>)}
+                        <p className={styles.text_footer}><img src='/img/clock.png' alt='phone'className={styles.icon}/> Tham gia vào tháng 3 năm 2019</p>
+                    </div> 
+                </div>
+            )
+        }
+    }
+
+    const renderContact  = () => {
+        if (user?.phoneNumber == null && user?.email == null && user?.hometown == null) {
+            return (
+                <div className={styles.avatar}>
+                    <div className='d-flex'>
+                        <h4 className={styles.margin_right}>Chỉnh sửa phần liên hệ</h4>
+                        <p className={styles.config_contact} data-bs-toggle="modal" data-bs-target="#modal_contact">Chỉnh sửa</p>
+                    </div>
+                    <div>
+                        <p className={styles.text_center}>Chưa có thông tin</p>
+                    </div>
+                </div>
+            )
+        } else {
+            return (
+                <div className={styles.avatar}>
+                    <div className='d-flex'>
+                        <h4 className={styles.margin_right}>Chỉnh sửa phần liên hệ</h4>
+                        <p className={styles.config_contact} data-bs-toggle="modal" data-bs-target="#modal_contact">Chỉnh sửa</p>
+                    </div>
+                    <div>
+                        {user?.phoneNumber == null ? (<></>) : (<p className={styles.text}><img src='/img/myinfo/phone.png' alt='phone'className={styles.icon}/> {user?.phoneNumber}</p>)}
+                        {user?.email == null ? (<></>) : (<p className={styles.text}><img src='/img/myinfo/mail.png' alt='phone'className={styles.icon}/> {user?.email}</p>)}
+                        {user?.hometown == null ? (<></>) : (<p className={styles.text}><img src='/img/myinfo/location.png' alt='phone'className={styles.icon}/> {user?.hometown}</p>)}
+                    </div>
+                </div>
+            )
         }
     }
 
@@ -124,28 +204,8 @@ function ModalConfigMain({userId}) {
                                 </form>
                             </div> 
                         </div>
-                        <div className={styles.avatar}>
-                            <div className='d-flex'>
-                                <h4 className={styles.margin_right}>Chỉnh sửa phần giới thiệu</h4>
-                                <p className={styles.config_about} data-bs-toggle="modal" data-bs-target="#modal_about">Chỉnh sửa</p>
-                            </div>
-                            <div>
-                                <p className={styles.text}><img src='/img/myinfo/education-cap.png' alt='phone'className={styles.icon}/> Trường Đại học Kinh Doanh và Công Nghệ Hà Nội</p>
-                                <p className={styles.text}><img src='/img/myinfo/education-cap.png' alt='phone'className={styles.icon}/> Trường Trung học Phổ Thông A Duy Tiên</p>
-                                <p className={styles.text_footer}><img src='/img/myinfo/location.png' alt='phone'className={styles.icon}/> Đến Từ Hà Nam</p>
-                            </div> 
-                        </div>
-                        <div className={styles.avatar}>
-                            <div className='d-flex'>
-                                <h4 className={styles.margin_right}>Chỉnh sửa phần liên hệ</h4>
-                                <p className={styles.config_contact} data-bs-toggle="modal" data-bs-target="#modal_contact">Chỉnh sửa</p>
-                            </div>
-                            <div>
-                                <p className={styles.text}><img src='/img/myinfo/phone.png' alt='phone'className={styles.icon}/> 0342232931</p>
-                                <p className={styles.text}><img src='/img/myinfo/mail.png' alt='phone'className={styles.icon}/> trinhhaison2004@gmail.com</p>
-                                <p className={styles.text_footer}><img src='/img/myinfo/location.png' alt='phone'className={styles.icon}/> Yên Sở - Hoàng Mai - Hà Nội</p>  
-                            </div>
-                        </div>
+                        {renderAbout()}
+                        {renderContact()}
                     </div>
                     <div className="modal-footer">
                         <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>

@@ -77,7 +77,7 @@ function HomePage () {
         } else {
             return (
                 <div>
-                    <h3 className={styles.friend_name}>Bạn không có bạn bè nào</h3>
+                    <h3 className={styles.not_element}>Bạn chưa có bạn bè</h3>
                 </div>
             )
         }
@@ -88,7 +88,7 @@ function HomePage () {
         if (!post.length > 0) {
             return(
                 <div>
-                    <h3 className={styles.friend_name}>Không có bài viết mới nào được tạo</h3>
+                    <h3 className={styles.not_element}>-----  Không có bài viết mới nào được tạo  -----</h3>
                 </div>
             )
         }

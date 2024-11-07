@@ -1,7 +1,7 @@
 .me_container {
-    width: 73%;
+    width: auto;
     right: 0;
-    margin-left: auto;
+    margin-left: 20px;
 }
 .post_container {
     display: grid;
@@ -9,7 +9,7 @@
 }
 .me {
     display: flex;
-    margin-top: 100px;
+    margin-top: 10px;
 }
 .avatar_container {
     margin-left: 80px;

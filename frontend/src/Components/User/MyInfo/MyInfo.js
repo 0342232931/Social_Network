@@ -24,6 +24,7 @@ function MyInfo () {
     const [bio, setBio] = useState('');
     const [url, setUrl] = useState('/img/user.png');
     const [posts, setPosts] = useState([]);
+    const [friends, setFriends] = useState([]);
 
     const getAvatar = async (userId, axiosJwt) => {
         try {
@@ -68,10 +69,27 @@ function MyInfo () {
         }
     }
 
+    const getFriends = async(userId, axiosJwt) => {
+        try {
+            const response = await axiosJwt.get('http://localhost:8080/relations/get-friends-by-user-id/' + userId);
+            if (response != null) {
+                console.log("get friends success");
+                setFriends(response.data?.result);
+            } else {
+                console.log("get friends fail");
+                
+            }
+        } catch (error) {
+            console.log(error);
+            
+        }
+    }
+
     useEffect(() => {
         getAvatar(user?.id, axiosJwt);
         getPost(user?.id, axiosJwt);
         getBio(user?.id, axiosJwt);
+        getFriends(user?.id, axiosJwt);
     }, [])
 
     const renderAbout = () => {
@@ -177,7 +195,7 @@ function MyInfo () {
                         </div>
                         <div className={styles.name_container}>
                             <h2 className={styles.text}>{`${user?.firstName} ${user?.lastName}`}</h2>
-                            <span className={styles.text}>727 người bạn</span><br/>
+                            <span className={styles.text}>{friends.length === 0 ? `Chưa có bạn bè` : `${friends.length} người bạn`}</span><br/>
                             {renderBio()}
                         </div>
                         <div className={styles.button_config}>
@@ -227,7 +245,7 @@ function MyInfo () {
                                 <Infomation userId={user?.id}/>
                             </div>
                             <div className="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabIndex="0">
-                                <AllFriend />
+                                <AllFriend friends={friends} />
                             </div>
                             <div className="tab-pane fade" id="image-tab-pane" role="tabpanel" aria-labelledby="image-tab" tabIndex="0">
                                 <Image userId={user?.id}/>

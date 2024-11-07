@@ -84,15 +84,15 @@ function FriendInfo () {
                         <div className="tab-content" id="myTabContent">
                             <div className="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabIndex="0">
                                 <div className={styles.post_container}>
-                                    <Post atr="1"/>
-                                    <Post atr="2"/>
+                                    {/* <Post atr="1"/>
+                                    <Post atr="2"/> */}
                                 </div>
                             </div>
                             <div className="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabIndex="0">
-                                <InfomationFriend />
+                                {/* <InfomationFriend /> */}
                             </div>
                             <div className="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabIndex="0">
-                                <AllFriend />
+                                {/* <AllFriend /> */}
                             </div>
                             <div className="tab-pane fade" id="image-tab-pane" role="tabpanel" aria-labelledby="image-tab" tabIndex="0">
                                 {/* <Image/> */}

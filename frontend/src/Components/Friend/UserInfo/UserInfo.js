@@ -5,7 +5,7 @@ import Image from '../../User/MyInfo/Image/Image';
 import Post from '../../Post/PostForm';
 import { Link } from 'react-router-dom';
 
-function UserInfo () {
+function UserInfo ({user}) {
 
     return (
                 <div className={styles.me_container}>
@@ -57,10 +57,10 @@ function UserInfo () {
                                 </div>
                             </div>
                             <div className="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabIndex="0">
-                                <InfomationFriend />
+                                {/* <InfomationFriend /> */}
                             </div>
                             <div className="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabIndex="0">
-                                <AllFriend />
+                                {/* <AllFriend /> */}
                             </div>
                             <div className="tab-pane fade" id="image-tab-pane" role="tabpanel" aria-labelledby="image-tab" tabIndex="0">
                                 {/* <Image/> */}

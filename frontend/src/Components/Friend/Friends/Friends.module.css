@@ -1,11 +1,12 @@
 .container {
-    display: flex;;
+    display: flex;
+    padding-top: 0px;
+    margin-top: 70px;
 }
 .request_container {
     background-color: #343338;
     width: 25%;
     height: 90vh;
-    margin-top: 70px;
     padding: 10px;
     position: fixed;
 }
@@ -35,4 +36,23 @@
     margin-top: 5px;
     align-items: center;
     margin-top: 20px;
+}
+.text_center {
+    color: aliceblue;
+    margin-left: 30%;
+    font-size: 16px;
+    font-style: italic;
+    opacity: 0.5;    
+}
+.text_center_info {
+    color: aliceblue;
+    margin-left: 35%;
+    right: 0;
+    font-size: 18px;
+    font-style: italic;
+    opacity: 0.5;
+}
+.info_container {
+    margin-left: auto;
+    width: 75%;
 }
