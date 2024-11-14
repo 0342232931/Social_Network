@@ -61,6 +61,9 @@
     outline: none;
     opacity: 0.90;
 }
+.input_message::placeholder{
+    color: rgb(120, 119, 117);
+}
 .send_icon {
     width: 40px;
     height: 40px;

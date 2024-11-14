@@ -62,7 +62,8 @@ function NavBar(){
                 <button className="btn btn-outline-primary" type="submit">Search</button>
             </form>
           </div>
-        </section>       
+        </section>
+        <img alt="..." src="/img/navbar/Banner.png" className={styles.banner}/>       
         <section className={styles.tag}>
           <Link to="/" className={styles.element_children} >
             <img className={styles.icon} src="/img/house.png" alt="home"/>

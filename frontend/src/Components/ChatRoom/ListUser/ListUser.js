@@ -10,11 +10,17 @@ function ListUser(){
                 <img src='/img/Messenger/chat-bubble.png' alt='...' className={styles.navbar_img}/>
                 <h3 className={styles.navbar_title}>Danh sách đoạn chat</h3>
             </div>
+            <div className={styles.search_container}>
+                <input className={styles.search_input} type='text' placeholder="Tìm kiếm đoạn chat" />
+                <div className={styles.btn_search_container}>
+                    <img src='/img/Messenger/search.png' alt='...' className={styles.search_icon}/>
+                </div>
+            </div>
             <div className={styles.users_container}>
                 {
                     listUser.map((username) => {
                         return (
-                            <div className={styles.user_element}>
+                            <div key={username} className={styles.user_element}>
                                 <img src='/img/user.png' alt='...' className={styles.user_img}/>
                                 <h4 className={styles.user_name}>{username}</h4>
                             </div>

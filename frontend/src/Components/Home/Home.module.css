@@ -13,6 +13,11 @@
     left: 0;
     margin-right: auto;
     position: fixed;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+.util::-webkit-scrollbar {
+    display: none;
 }
 .list_friend {
     width: 25%;
@@ -30,6 +35,11 @@
     align-items: center;
     justify-content: center;
     margin-top: 90px;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+.post_content::-webkit-scrollbar{
+    display: none;
 }
 .line {
     border-bottom: 1px solid rgb(254, 251, 251);
@@ -63,6 +73,11 @@
 }
 .friends {
     margin-left: 15px;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+.friends::-webkit-scrollbar {
+    display: none;
 }
 .friends_header {
     margin-top: 20px;
