@@ -8,6 +8,7 @@ import FriendPage from '../Components/Friend/FriendPage';
 import FriendRequest from '../Components/Friend/FriendRequest/FriendRequest';
 import Suggest from '../Components/Friend/Suggest/Suggest';
 import Friends from '../Components/Friend/Friends/Friends';
+import ChatRoom from '../Components/ChatRoom/ChatRoom';
 
 function AppRoutes() {
 
@@ -23,6 +24,7 @@ function AppRoutes() {
                 <Route path='/friend-request' element={<FriendRequest />} />
                 <Route path='/suggest' element={<Suggest />} />
                 <Route path='/friends' element={<Friends />} />
+                <Route path='/chat' element={<ChatRoom />}/>
             </Routes>
         </Router>
     )

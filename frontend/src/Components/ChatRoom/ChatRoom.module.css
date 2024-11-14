@@ -1,0 +1,53 @@
+.container {
+    margin-top: 70px;
+    display: flex;
+}
+
+.menu_container {
+    width: 4%;
+    height: 90.5vh;
+    background-color: rgb(80, 82, 82);
+    left: 0;
+}
+
+.list_container {
+    width: 30%;
+    height: 90.5vh;
+    background-color: #29282c;
+}
+
+.content_container {
+    width: 66%;
+    height: 90.5vh;
+    background-color: rgb(66, 57, 47);
+}
+
+.icon {
+    margin-top: 10px;
+    margin-left: 8px;
+    width: 40px;
+    height: 40px;
+}
+.icon:hover {
+    color: #007bff; /* Thay đổi màu khi hover */
+    transform: scale(1.2);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+.nothing_chat_selected {
+    display: flex;
+    margin-top: 30%;
+    margin-left: 40%;
+    opacity: 0.5;
+}
+.text {
+    color: rgb(236, 240, 244);
+    font-size: 20px;
+    margin-top: 35px;
+    margin-left: 10px;
+    font-family: 'Times New Roman', Times, serif;
+}
+.icon_nothing_chat_selected {
+    width: 100px;
+    height: 100px;
+}

@@ -67,7 +67,7 @@ function NavBar(){
           <Link to="/" className={styles.element_children} >
             <img className={styles.icon} src="/img/house.png" alt="home"/>
           </Link>
-          <Link to="#" className={styles.element_children}>
+          <Link to="/chat" className={styles.element_children}>
             <img className={styles.icon} src="/img/notification.png" alt="message"/>
           </Link>
           <Link to="#" className={styles.element_children}>
