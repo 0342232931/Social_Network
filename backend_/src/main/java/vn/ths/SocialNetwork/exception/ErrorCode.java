@@ -28,6 +28,7 @@ public enum ErrorCode {
     ROLE_EXISTED(9002,"Role existed", HttpStatus.BAD_REQUEST),
     RELATION_NOT_EXISTED(1101,"Relation not existed", HttpStatus.NOT_FOUND),
     AVATAR_NOT_EXISTED(1201,"Avatar not existed", HttpStatus.NOT_FOUND),
+    CAN_NOT_SEND_MESSAGE(1301, "Can't send message to you", HttpStatus.BAD_REQUEST),
 ;
     private int code;
     private String message;

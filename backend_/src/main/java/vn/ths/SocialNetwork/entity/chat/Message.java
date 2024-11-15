@@ -1,4 +1,4 @@
-package vn.ths.SocialNetwork.entity.user;
+package vn.ths.SocialNetwork.entity.chat;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -6,7 +6,10 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.springframework.cglib.core.Local;
+import vn.ths.SocialNetwork.entity.user.User;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.UUID;
 
@@ -25,13 +28,13 @@ public class Message {
 
     String content;
 
-    Date timestamp = new Date();
+    LocalDateTime createAt = LocalDateTime.now();
 
-    boolean isSeen;
-
-    @ManyToOne
-    User userFrom;
+    Status status;
 
     @ManyToOne
-    User userTo;
+    User sender;
+
+    @ManyToOne
+    User receiver;
 }
