@@ -1,4 +1,4 @@
-package vn.ths.SocialNetwork.dto.request.chat;
+package vn.ths.SocialNetwork.dto.request.websocket;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;

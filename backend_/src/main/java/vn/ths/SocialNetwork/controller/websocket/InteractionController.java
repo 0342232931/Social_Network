@@ -1,4 +1,4 @@
-package vn.ths.SocialNetwork.controller.post;
+package vn.ths.SocialNetwork.controller.websocket;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +9,7 @@ import vn.ths.SocialNetwork.dto.request.post.InteractionCreationRequest;
 import vn.ths.SocialNetwork.dto.request.post.InteractionUpdateRequest;
 import vn.ths.SocialNetwork.dto.response.ApiResponse;
 import vn.ths.SocialNetwork.dto.response.post.InteractionResponse;
-import vn.ths.SocialNetwork.services.service.post.InteractionService;
+import vn.ths.SocialNetwork.services.service.websocket.InteractionService;
 
 @RestController
 @RequestMapping("interactions")

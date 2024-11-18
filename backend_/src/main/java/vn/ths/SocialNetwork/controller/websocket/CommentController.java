@@ -1,16 +1,16 @@
-package vn.ths.SocialNetwork.controller.post;
+package vn.ths.SocialNetwork.controller.websocket;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import vn.ths.SocialNetwork.dto.request.post.CommentCreationRequest;
-import vn.ths.SocialNetwork.dto.request.post.CommentUpdateRequest;
+import vn.ths.SocialNetwork.dto.request.websocket.CommentCreationRequest;
+import vn.ths.SocialNetwork.dto.request.websocket.CommentUpdateRequest;
 import vn.ths.SocialNetwork.dto.response.ApiResponse;
-import vn.ths.SocialNetwork.dto.response.post.CommentResponse;
-import vn.ths.SocialNetwork.entity.post.Comment;
-import vn.ths.SocialNetwork.services.service.post.CommentService;
+import vn.ths.SocialNetwork.dto.response.websocket.CommentResponse;
+import vn.ths.SocialNetwork.entity.websocket.Comment;
+import vn.ths.SocialNetwork.services.service.websocket.CommentService;
 
 import java.util.List;
 

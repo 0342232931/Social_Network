@@ -4,12 +4,11 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.*;
 import org.springframework.stereotype.Service;
-import vn.ths.SocialNetwork.dto.request.chat.GetUsersRequest;
+import vn.ths.SocialNetwork.dto.request.websocket.GetUsersRequest;
 import vn.ths.SocialNetwork.dto.request.user.UserCreationRequest;
 import vn.ths.SocialNetwork.dto.request.user.UserUpdateRequest;
 import vn.ths.SocialNetwork.dto.response.user.UserResponse;
@@ -109,20 +108,16 @@ public class UserServiceIpm implements UserService {
     }
 
     @Override
-    public List<UserResponse> getUsersHaveMessageWithUserDetailId(GetUsersRequest request) {
+    public List<UserResponse> searchUsersByKeyword(String keyword) {
 
-        List<User> receivers = userRepository.getReceiverHaveMessageWithSenderId(request.getUserDetailId());
-        List<User> senders = userRepository.getSenderHaveMessageWithReceiverId(request.getUserDetailId());
+        List<User> users = userRepository.searchUserByKeyword(keyword);
 
-        Set<User> users = new HashSet<>();
-        users.addAll(receivers);
-        users.addAll(senders);
+        List<UserResponse> responses = new ArrayList<>();
 
-        List<UserResponse> userResponses = new ArrayList<>();
-        users.forEach(user -> {
-            userResponses.add(userMapper.toUserResponse(user));
+        users.forEach((user) -> {
+            responses.add(userMapper.toUserResponse(user));
         });
 
-        return userResponses;
+        return responses;
     }
 }

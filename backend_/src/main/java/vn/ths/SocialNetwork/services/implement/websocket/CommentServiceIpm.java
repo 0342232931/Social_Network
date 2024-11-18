@@ -1,4 +1,4 @@
-package vn.ths.SocialNetwork.services.implement.post;
+package vn.ths.SocialNetwork.services.implement.websocket;
 
 import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
@@ -6,19 +6,19 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import vn.ths.SocialNetwork.dto.request.post.CommentCreationRequest;
-import vn.ths.SocialNetwork.dto.request.post.CommentUpdateRequest;
-import vn.ths.SocialNetwork.dto.response.post.CommentResponse;
-import vn.ths.SocialNetwork.entity.post.Comment;
+import vn.ths.SocialNetwork.dto.request.websocket.CommentCreationRequest;
+import vn.ths.SocialNetwork.dto.request.websocket.CommentUpdateRequest;
+import vn.ths.SocialNetwork.dto.response.websocket.CommentResponse;
+import vn.ths.SocialNetwork.entity.websocket.Comment;
 import vn.ths.SocialNetwork.entity.post.Post;
 import vn.ths.SocialNetwork.entity.user.User;
 import vn.ths.SocialNetwork.exception.AppException;
 import vn.ths.SocialNetwork.exception.ErrorCode;
-import vn.ths.SocialNetwork.mapper.post.CommentMapper;
-import vn.ths.SocialNetwork.repository.post.CommentRepository;
+import vn.ths.SocialNetwork.mapper.websocket.CommentMapper;
+import vn.ths.SocialNetwork.repository.websocket.CommentRepository;
 import vn.ths.SocialNetwork.repository.post.PostRepository;
 import vn.ths.SocialNetwork.repository.user.UserRepository;
-import vn.ths.SocialNetwork.services.service.post.CommentService;
+import vn.ths.SocialNetwork.services.service.websocket.CommentService;
 
 import java.time.LocalDate;
 import java.util.List;

@@ -1,8 +1,9 @@
-package vn.ths.SocialNetwork.entity.post;
+package vn.ths.SocialNetwork.entity.websocket;
 
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import vn.ths.SocialNetwork.entity.post.Post;
 import vn.ths.SocialNetwork.entity.user.User;
 
 import java.time.LocalDate;

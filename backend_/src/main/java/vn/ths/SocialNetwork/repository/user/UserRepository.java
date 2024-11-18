@@ -16,9 +16,8 @@ public interface UserRepository extends JpaRepository<User, String> {
     public boolean existsByEmail(String email);
     public Optional<User> findByUsername(String username);
 
-    @Query("SELECT DISTINCT m.receiver FROM Message m WHERE m.sender.id = :senderId")
-    public List<User> getReceiverHaveMessageWithSenderId(@Param("senderId") String senderId);
+    @Query("SELECT u FROM User u WHERE LOWER(u.firstName) LIKE(CONCAT('%', :keyword, '%'))" +
+            " OR LOWER(u.lastName) LIKE(CONCAT('%', :keyword, '%'))")
+    public List<User> searchUserByKeyword(@Param("keyword") String keyword);
 
-    @Query("SELECT DISTINCT m.sender FROM Message m WHERE m.receiver.id = :receiverId")
-    public List<User> getSenderHaveMessageWithReceiverId(@Param("receiverId") String receiverId);
 }

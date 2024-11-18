@@ -1,9 +1,9 @@
-package vn.ths.SocialNetwork.services.service.post;
+package vn.ths.SocialNetwork.services.service.websocket;
 
-import vn.ths.SocialNetwork.dto.request.post.CommentCreationRequest;
-import vn.ths.SocialNetwork.dto.request.post.CommentUpdateRequest;
-import vn.ths.SocialNetwork.dto.response.post.CommentResponse;
-import vn.ths.SocialNetwork.entity.post.Comment;
+import vn.ths.SocialNetwork.dto.request.websocket.CommentCreationRequest;
+import vn.ths.SocialNetwork.dto.request.websocket.CommentUpdateRequest;
+import vn.ths.SocialNetwork.dto.response.websocket.CommentResponse;
+import vn.ths.SocialNetwork.entity.websocket.Comment;
 
 import java.util.List;
 

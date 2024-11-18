@@ -1,12 +1,12 @@
-package vn.ths.SocialNetwork.mapper.post;
+package vn.ths.SocialNetwork.mapper.websocket;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-import vn.ths.SocialNetwork.dto.request.post.CommentCreationRequest;
-import vn.ths.SocialNetwork.dto.request.post.CommentUpdateRequest;
-import vn.ths.SocialNetwork.dto.response.post.CommentResponse;
-import vn.ths.SocialNetwork.entity.post.Comment;
+import vn.ths.SocialNetwork.dto.request.websocket.CommentCreationRequest;
+import vn.ths.SocialNetwork.dto.request.websocket.CommentUpdateRequest;
+import vn.ths.SocialNetwork.dto.response.websocket.CommentResponse;
+import vn.ths.SocialNetwork.entity.websocket.Comment;
 
 @Mapper(componentModel = "spring")
 public interface CommentMapper {

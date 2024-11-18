@@ -1,8 +1,7 @@
-package vn.ths.SocialNetwork.dto.request.chat;
+package vn.ths.SocialNetwork.dto.request.websocket;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import vn.ths.SocialNetwork.entity.chat.Status;
 
 @Getter
 @Setter
@@ -12,7 +11,6 @@ import vn.ths.SocialNetwork.entity.chat.Status;
 @NoArgsConstructor
 public class MessageCreationRequest {
     String content;
-    Status status;
     String senderUsername;
     String receiverUsername;
 }

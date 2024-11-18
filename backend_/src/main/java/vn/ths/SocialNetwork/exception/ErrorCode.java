@@ -29,6 +29,7 @@ public enum ErrorCode {
     RELATION_NOT_EXISTED(1101,"Relation not existed", HttpStatus.NOT_FOUND),
     AVATAR_NOT_EXISTED(1201,"Avatar not existed", HttpStatus.NOT_FOUND),
     CAN_NOT_SEND_MESSAGE(1301, "Can't send message to you", HttpStatus.BAD_REQUEST),
+    CAN_NOT_SEND_NOTIFICATION(1302, "Can't send notification to you", HttpStatus.BAD_REQUEST),
 ;
     private int code;
     private String message;

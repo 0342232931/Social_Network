@@ -1,9 +1,9 @@
-package vn.ths.SocialNetwork.services.service.post;
+package vn.ths.SocialNetwork.services.service.websocket;
 
 import vn.ths.SocialNetwork.dto.request.post.InteractionCreationRequest;
 import vn.ths.SocialNetwork.dto.request.post.InteractionUpdateRequest;
 import vn.ths.SocialNetwork.dto.response.post.InteractionResponse;
-import vn.ths.SocialNetwork.entity.post.Interaction;
+import vn.ths.SocialNetwork.entity.websocket.Interaction;
 
 import java.util.List;
 

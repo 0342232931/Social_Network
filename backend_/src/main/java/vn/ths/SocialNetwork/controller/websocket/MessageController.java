@@ -1,4 +1,4 @@
-package vn.ths.SocialNetwork.controller.chat;
+package vn.ths.SocialNetwork.controller.websocket;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -9,14 +9,14 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
-import vn.ths.SocialNetwork.dto.request.chat.AllMessageRequest;
-import vn.ths.SocialNetwork.dto.request.chat.GetUsersRequest;
-import vn.ths.SocialNetwork.dto.request.chat.MessageCreationRequest;
-import vn.ths.SocialNetwork.dto.response.chat.AllMessageResponse;
+import vn.ths.SocialNetwork.dto.request.websocket.AllMessageRequest;
+import vn.ths.SocialNetwork.dto.request.websocket.GetUsersRequest;
+import vn.ths.SocialNetwork.dto.request.websocket.MessageCreationRequest;
+import vn.ths.SocialNetwork.dto.response.websocket.AllMessageResponse;
 import vn.ths.SocialNetwork.dto.response.user.UserResponse;
 import vn.ths.SocialNetwork.exception.AppException;
 import vn.ths.SocialNetwork.exception.ErrorCode;
-import vn.ths.SocialNetwork.services.service.chat.MessageService;
+import vn.ths.SocialNetwork.services.service.websocket.MessageService;
 import vn.ths.SocialNetwork.services.service.user.UserService;
 
 import java.util.HashMap;
@@ -76,7 +76,8 @@ public class MessageController {
     @SendToUser("/topic/caller-users")
     public List<UserResponse> getUsers(@Payload GetUsersRequest request){
 
-        return userService.getUsersHaveMessageWithUserDetailId(request);
+        return messageService.getUsersHaveMessageWithUserDetailId(request);
+        
     }
 
     // Tạo tên nhóm chung giữa 2 người dùng để xác định các message trong cuộc trò chuyện

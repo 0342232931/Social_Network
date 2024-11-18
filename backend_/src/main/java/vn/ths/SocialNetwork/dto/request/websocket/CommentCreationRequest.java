@@ -1,9 +1,7 @@
-package vn.ths.SocialNetwork.dto.request.post;
+package vn.ths.SocialNetwork.dto.request.websocket;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import vn.ths.SocialNetwork.entity.post.Post;
-import vn.ths.SocialNetwork.entity.user.User;
 
 @Data
 @Builder

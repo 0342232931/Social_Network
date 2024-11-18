@@ -1,10 +1,10 @@
-package vn.ths.SocialNetwork.mapper.chat;
+package vn.ths.SocialNetwork.mapper.websocket;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import vn.ths.SocialNetwork.dto.request.chat.MessageCreationRequest;
-import vn.ths.SocialNetwork.dto.response.chat.MessageResponse;
-import vn.ths.SocialNetwork.entity.chat.Message;
+import vn.ths.SocialNetwork.dto.request.websocket.MessageCreationRequest;
+import vn.ths.SocialNetwork.dto.response.websocket.MessageResponse;
+import vn.ths.SocialNetwork.entity.websocket.Message;
 
 @Mapper(componentModel = "spring")
 public interface MessageMapper {

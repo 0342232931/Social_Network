@@ -1,4 +1,4 @@
-package vn.ths.SocialNetwork.services.implement.post;
+package vn.ths.SocialNetwork.services.implement.websocket;
 
 import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
@@ -10,17 +10,17 @@ import vn.ths.SocialNetwork.dto.request.post.InteractionCreationRequest;
 import vn.ths.SocialNetwork.dto.request.post.InteractionUpdateRequest;
 import vn.ths.SocialNetwork.dto.response.post.InteractionResponse;
 import vn.ths.SocialNetwork.entity.post.Interact;
-import vn.ths.SocialNetwork.entity.post.Interaction;
+import vn.ths.SocialNetwork.entity.websocket.Interaction;
 import vn.ths.SocialNetwork.entity.post.Post;
 import vn.ths.SocialNetwork.entity.user.User;
 import vn.ths.SocialNetwork.exception.AppException;
 import vn.ths.SocialNetwork.exception.ErrorCode;
-import vn.ths.SocialNetwork.mapper.post.InteractionMapper;
+import vn.ths.SocialNetwork.mapper.websocket.InteractionMapper;
 import vn.ths.SocialNetwork.repository.post.InteractRepository;
-import vn.ths.SocialNetwork.repository.post.InteractionRepository;
+import vn.ths.SocialNetwork.repository.websocket.InteractionRepository;
 import vn.ths.SocialNetwork.repository.post.PostRepository;
 import vn.ths.SocialNetwork.repository.user.UserRepository;
-import vn.ths.SocialNetwork.services.service.post.InteractionService;
+import vn.ths.SocialNetwork.services.service.websocket.InteractionService;
 
 import java.util.List;
 

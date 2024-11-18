@@ -1,4 +1,4 @@
-package vn.ths.SocialNetwork.dto.response.post;
+package vn.ths.SocialNetwork.dto.response.websocket;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
