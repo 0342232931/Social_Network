@@ -10,14 +10,17 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
 import vn.ths.SocialNetwork.dto.request.chat.AllMessageRequest;
+import vn.ths.SocialNetwork.dto.request.chat.GetUsersRequest;
 import vn.ths.SocialNetwork.dto.request.chat.MessageCreationRequest;
 import vn.ths.SocialNetwork.dto.response.chat.AllMessageResponse;
+import vn.ths.SocialNetwork.dto.response.user.UserResponse;
 import vn.ths.SocialNetwork.exception.AppException;
 import vn.ths.SocialNetwork.exception.ErrorCode;
 import vn.ths.SocialNetwork.services.service.chat.MessageService;
 import vn.ths.SocialNetwork.services.service.user.UserService;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -66,6 +69,14 @@ public class MessageController {
         var groupName = getGroupName(request.getSenderUsername(), request.getReceiverUsername());
 
         return new AllMessageResponse(groupName, messages);
+    }
+
+    // Tải người dùng đã nhắn tin với user detail
+    @MessageMapping("/user.loadUsers")
+    @SendToUser("/topic/caller-users")
+    public List<UserResponse> getUsers(@Payload GetUsersRequest request){
+
+        return userService.getUsersHaveMessageWithUserDetailId(request);
     }
 
     // Tạo tên nhóm chung giữa 2 người dùng để xác định các message trong cuộc trò chuyện

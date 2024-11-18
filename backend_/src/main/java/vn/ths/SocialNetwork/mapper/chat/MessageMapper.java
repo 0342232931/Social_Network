@@ -13,7 +13,7 @@ public interface MessageMapper {
     @Mapping(target = "receiver", ignore = true)
     Message toMessage(MessageCreationRequest request);
 
-    @Mapping(target = "senderUsername", ignore = true)
-    @Mapping(target = "receiverUsername", ignore = true)
+    @Mapping(target = "sender", ignore = true)
+    @Mapping(target = "receiver", ignore = true)
     MessageResponse toMessageResponse(Message message);
 }

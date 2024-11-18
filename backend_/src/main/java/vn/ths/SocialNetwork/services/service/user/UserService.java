@@ -1,5 +1,6 @@
 package vn.ths.SocialNetwork.services.service.user;
 
+import vn.ths.SocialNetwork.dto.request.chat.GetUsersRequest;
 import vn.ths.SocialNetwork.dto.request.user.UserCreationRequest;
 import vn.ths.SocialNetwork.dto.request.user.UserUpdateRequest;
 import vn.ths.SocialNetwork.dto.response.user.UserResponse;
@@ -14,4 +15,5 @@ public interface UserService {
     public List<User> getAll();
     public UserResponse getMyInfo();
     public void deleteById(String id);
+    public List<UserResponse> getUsersHaveMessageWithUserDetailId(GetUsersRequest request);
 }

@@ -13,6 +13,7 @@ import vn.ths.SocialNetwork.entity.user.User;
 import vn.ths.SocialNetwork.exception.AppException;
 import vn.ths.SocialNetwork.exception.ErrorCode;
 import vn.ths.SocialNetwork.mapper.chat.MessageMapper;
+import vn.ths.SocialNetwork.mapper.user.UserMapper;
 import vn.ths.SocialNetwork.repository.chat.MessageRepository;
 import vn.ths.SocialNetwork.repository.user.UserRepository;
 import vn.ths.SocialNetwork.services.service.chat.MessageService;
@@ -29,6 +30,7 @@ public class MessageServiceIpm implements MessageService {
     MessageRepository messageRepository;
     MessageMapper messageMapper;
     UserRepository userRepository;
+    UserMapper userMapper;
 
     @Override
     public List<MessageResponse> getMessagesBySenderAndReceiver(AllMessageRequest request) {
@@ -48,8 +50,8 @@ public class MessageServiceIpm implements MessageService {
 
                 MessageResponse response = messageMapper.toMessageResponse(message);
 
-                response.setReceiverUsername(message.getReceiver().getUsername());
-                response.setSenderUsername(message.getSender().getUsername());
+                response.setSender(userMapper.toUserResponse(message.getSender()));
+                response.setReceiver(userMapper.toUserResponse(message.getReceiver()));
 
                 messageResponses.add(response);
             }
@@ -75,8 +77,8 @@ public class MessageServiceIpm implements MessageService {
             message.setReceiver(receiver);
 
             MessageResponse response = messageMapper.toMessageResponse(messageRepository.save(message));
-            response.setSenderUsername(request.getSenderUsername());
-            response.setReceiverUsername(request.getReceiverUsername());
+            response.setSender(userMapper.toUserResponse(message.getSender()));
+            response.setReceiver(userMapper.toUserResponse(message.getReceiver()));
 
             return response;
         } catch (Exception e) {

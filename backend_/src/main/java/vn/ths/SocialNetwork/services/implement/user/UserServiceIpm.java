@@ -9,6 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.*;
 import org.springframework.stereotype.Service;
+import vn.ths.SocialNetwork.dto.request.chat.GetUsersRequest;
 import vn.ths.SocialNetwork.dto.request.user.UserCreationRequest;
 import vn.ths.SocialNetwork.dto.request.user.UserUpdateRequest;
 import vn.ths.SocialNetwork.dto.response.user.UserResponse;
@@ -21,6 +22,7 @@ import vn.ths.SocialNetwork.repository.user.RoleRepository;
 import vn.ths.SocialNetwork.repository.user.UserRepository;
 import vn.ths.SocialNetwork.services.service.user.UserService;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -104,5 +106,23 @@ public class UserServiceIpm implements UserService {
     public void deleteById(String id) {
         userRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         userRepository.deleteById(id);
+    }
+
+    @Override
+    public List<UserResponse> getUsersHaveMessageWithUserDetailId(GetUsersRequest request) {
+
+        List<User> receivers = userRepository.getReceiverHaveMessageWithSenderId(request.getUserDetailId());
+        List<User> senders = userRepository.getSenderHaveMessageWithReceiverId(request.getUserDetailId());
+
+        Set<User> users = new HashSet<>();
+        users.addAll(receivers);
+        users.addAll(senders);
+
+        List<UserResponse> userResponses = new ArrayList<>();
+        users.forEach(user -> {
+            userResponses.add(userMapper.toUserResponse(user));
+        });
+
+        return userResponses;
     }
 }

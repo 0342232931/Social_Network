@@ -2,6 +2,7 @@ package vn.ths.SocialNetwork.dto.response.chat;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import vn.ths.SocialNetwork.dto.response.user.UserResponse;
 import vn.ths.SocialNetwork.entity.chat.Status;
 
 import java.time.LocalDateTime;
@@ -17,6 +18,6 @@ public class MessageResponse {
     String content;
     Status status;
     LocalDateTime createAt;
-    String senderUsername;
-    String receiverUsername;
+    UserResponse sender;
+    UserResponse receiver;
 }
