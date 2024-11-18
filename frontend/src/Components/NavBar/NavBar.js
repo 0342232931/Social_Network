@@ -16,6 +16,7 @@ function NavBar(){
   let axiosJwt = createAxios(data, dispatch, loginSuccess);
 
   const [url, setUrl] = useState("/img/user.png")
+  const [keyword, setKeyword] = useState(null);
 
   const getAvatarUser = async (userId, axiosJwt) => {
     try {
@@ -58,8 +59,11 @@ function NavBar(){
           </div>
           <div>
             <form className="d-flex" role="search">
-                <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-                <button className="btn btn-outline-primary" type="submit">Search</button>
+                <input onChange={e => setKeyword(e.target.value)} className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+                <Link to={{
+                  pathname: "/search",
+                  state: {keyword: keyword}
+                }} className="btn btn-outline-primary" type="submit">Search</Link>
             </form>
           </div>
         </section>

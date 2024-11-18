@@ -30,8 +30,6 @@ public class Message {
 
     LocalDateTime createAt = LocalDateTime.now();
 
-    Status status;
-
     @ManyToOne
     User sender;
 

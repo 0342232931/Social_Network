@@ -50,7 +50,7 @@ const ChatComponent = ({receiver}) => {
         }
 
         const requestPayload = {
-        senderUsername: currentUser,
+        senderUsername: user?.username,
         receiverUsername: receiverUsername,
         };
 
