@@ -1,142 +1,131 @@
 import React, { useState, useEffect, useRef } from 'react';
-// import SockJS from 'sockjs-client';
-// import { Stomp } from '@stomp/stompjs';
+import SockJS from "sockjs-client";
+import { Stomp } from '@stomp/stompjs';
 import styles from './ChatComponent.module.css';
+import { useSelector } from 'react-redux';
 
-const ChatComponent = () => {
-    // const [messages, setMessages] = useState([]);
-    // const [input, setInput] = useState('');
-    // const [isConnected, setIsConnected] = useState(false);
-    // const stompClient = useRef(null);
+const ChatComponent = ({receiver}) => {
 
-    // useEffect(() => {
-    //     // Tạo kết nối WebSocket khi component được mount
-    //     const socket = new SockJS('http://localhost:8080/ws');  // URL backend WebSocket
-    //     stompClient.current = Stomp.over(socket);
-        
-    //     // Kết nối WebSocket
-    //     stompClient.current.connect({}, onConnected, onError);
-        
-    //     return () => {
-    //         // Ngắt kết nối khi component bị unmount
-    //         if (stompClient.current) {
-    //             stompClient.current.disconnect();
-    //         }
-    //     };
-    // }, []);
+    const user = useSelector((state) => state.auth.login?.currentUser?.result.userResponse);
+    const token = useSelector((state) => state.auth.login?.currentUser?.result.token);
 
-    // const onConnected = () => {
-    //     setIsConnected(true);
-        
-    //     // Đăng ký các channel để nhận tin nhắn
-    //     stompClient.current.subscribe('/user/queue/messages', onMessageReceived); // Đăng ký channel nhận tin nhắn cá nhân
-    //     stompClient.current.subscribe('/topic/broadcast', onBroadcastReceived); // Đăng ký channel broadcast
-        
-    //     // Gửi thông báo người dùng kết nối
-    //     stompClient.current.send('/app/user.onConnected', {}, {});
-    // };
+    const [messages, setMessages] = useState([]);
+    const [messageInput, setMessageInput] = useState('');
+    const stompClient = useRef(null);
 
-    // const onError = (error) => {
-    //     console.error('Could not connect to WebSocket server:', error);
-    // };
+    // Kết nối khi component được mount
+    useEffect(() => {
+        const socket = new SockJS('http://localhost:8080/ws'); // Kết nối đến endpoint
+        stompClient.current = Stomp.over(socket);
 
-    // const onMessageReceived = (message) => {
-    //     const messageData = JSON.parse(message.body);
-    //     setMessages((prevMessages) => [...prevMessages, messageData]);
-    // };
+        loadMessages(receiver?.username);
 
-    // const onBroadcastReceived = (message) => {
-    //     const broadcastData = JSON.parse(message.body);
-    //     console.log('Broadcast message:', broadcastData); // Xử lý nếu cần hiển thị broadcast message
-    // };
+        stompClient.current.connect(
+            {Authorization: `Bearer ${token}`},  // Thêm token vào header
+            () => {
+                console.log('Connected to WebSocket');
+                
+                // Đăng ký nhận tin nhắn từ server qua channel /queue/messages
+                stompClient.current.subcribe("/user/queue/messages", onReceivedMessage);
+            },
+            (error) => {
+                console.log("Websocket connection error: " + error);
+                
+            }
+        );
 
-    // const sendMessage = () => {
-    //     if (input.trim() && stompClient.current) {
-    //         const messagePayload = {
-    //             content: input,
-    //             recipientUsername: 'recipient_username', // Thay bằng tên người nhận thực tế
-    //         };
-            
-    //         stompClient.current.send('/app/user.sendMessage', {}, JSON.stringify(messagePayload));
-    //         setInput('');
-    //     }
-    // };
+        // Đóng kết nối khi component un mount
+        return () => {
+            if (stompClient.current) {
+                stompClient.current.disconnect();
+            }
+        }
+    }, [token]);
 
-    // return (
-    //     <div>
-    //         <h2>WebSocket Chat</h2>
-    //         {isConnected ? <p>Connected</p> : <p>Connecting...</p>}
-            
-    //         <div className="chat-box">
-    //             {messages.map((msg, index) => (
-    //                 <div key={index}>
-    //                     <strong>{msg.senderUser?.username}:</strong> {msg.message?.content}
-    //                 </div>
-    //             ))}
-    //         </div>
+    // Gọi API lấy danh sách tin nhắn giữa currentUser và receiver
+    const loadMessages = (receiverUsername) => {
+        if (!receiverUsername.trim()) {
+        alert("Receiver username cannot be empty!");
+        return;
+        }
 
-    //         <input
-    //             type="text"
-    //             value={input}
-    //             onChange={(e) => setInput(e.target.value)}
-    //             placeholder="Type a message..."
-    //         />
-    //         <button onClick={sendMessage}>Send</button>
-    //     </div>
-    // );
+        const requestPayload = {
+        senderUsername: currentUser,
+        receiverUsername: receiverUsername,
+        };
+
+        stompClient.current.send(
+        "/app/user.loadMessages", // Destination trên server
+        {
+            Authorization: `Bearer ${token}`,
+        },
+        JSON.stringify(requestPayload)
+        );
+
+        // Lắng nghe phản hồi từ server tại channel `/user/topic/caller`
+        stompClient.current.subscribe("/user/topic/caller", (message) => {
+        const response = JSON.parse(message.body);
+        setMessages(response.messages); // Cập nhật danh sách tin nhắn từ API
+        });
+
+    };
+
+
+    const onReceivedMessage = (message) => {
+        const messageData = JSON.parse(message.body);
+        setMessages((prevMessages) => [...prevMessages, messageData]);
+    }
+
+    const sendMessage = () => {
+
+        if (!messageInput.trim()) {
+            alert("Message input cannot be empty!")
+            return;   
+        }
+
+        const messagePayload = {
+            senderUsername: user?.username,
+            receiverUsername: receiver?.username,
+            content: messageInput,
+        }
+
+        stompClient.current.send(
+            "/app/user.sendMessage",
+            {
+                Authorization: `Bearer ${token}`,
+            },
+            JSON.stringify(messagePayload),
+        );
+
+        setMessageInput("");
+    }
+    
+    const renderMessages = () => {
+        return messages.map((message) => {
+            return (
+                <>
+                    <div key={message?.id} className={message?.sender.username === user?.username ? styles.message_container2 : styles.message_container}>
+                        <p className={message?.sender.username === user?.username ? styles.message_username2 : styles.message_username}>{`${message?.receiver.firstName} ${message?.receiver.lastName}`}</p>
+                        <p className={message?.sender.username === user?.username ? styles.message_content2 : styles.message_content}>{message?.content}</p>
+                    </div> <br />
+                </>
+            )
+        })
+    }
 
     return (
         <div className={styles.container}>
             <div className={styles.navbar}>
-                <img src='/img/bookmark.png' alt='...' className={styles.avatar} />
-                <h3 className={styles.username}>Robert Downey Jr</h3>
+                <img src='/img/user.png' alt='...' className={styles.avatar} />
+                <h3 className={styles.username}>{`${receiver?.firstName} ${receiver?.lastName}`}</h3>
             </div>
             <div className={styles.chat_container}>
                 <div className={styles.content_container}>
-                    <div className={styles.message_container}>
-                        <p className={styles.message_username}>Robert Downey Jr</p>
-                        <p className={styles.message_content}>Hello, Good morning</p>
-                    </div> <br />
-                    <div className={styles.message_container}>
-                        <p className={styles.message_username}>Robert Downey Jr</p>
-                        <p className={styles.message_content}>Hello, Good morning, Nice to meet you 1</p>
-                    </div> <br />
-                    <div className={styles.message_container}>
-                        <p className={styles.message_username}>Robert Downey Jr</p>
-                        <p className={styles.message_content}>Hello, Good morning, Nice to meet you2</p>
-                    </div> <br />
-                    <div className={styles.message_container}>
-                        <p className={styles.message_username}>Robert Downey Jr</p>
-                        <p className={styles.message_content}>Hello, Good morning, Nice to meet you3</p>
-                    </div> <br />
-                    <div className={styles.message_container}>
-                        <p className={styles.message_username}>Robert Downey Jr</p>
-                        <p className={styles.message_content}>Hello, Good morning, Nice to meet you4</p>
-                    </div> <br />
-                    <div className={styles.message_container}>
-                        <p className={styles.message_username}>Robert Downey Jr</p>
-                        <p className={styles.message_content}>Hello, Good morning, Nice to meet you5</p>
-                    </div> <br />
-                    <div className={styles.message_container}>
-                        <p className={styles.message_username}>Robert Downey Jr</p>
-                        <p className={styles.message_content}>Hello, Good morning, Nice to meet you6</p>
-                    </div> <br />
-                    <div className={styles.message_container}>
-                        <p className={styles.message_username}>Robert Downey Jr</p>
-                        <p className={styles.message_content}>Hello, Good morning, Nice to meet you7</p>
-                    </div> <br />
-                    <div className={styles.message_container}>
-                        <p className={styles.message_username}>Robert Downey Jr</p>
-                        <p className={styles.message_content}>Hello, Good morning, Nice to meet you8</p>
-                    </div> <br />
-                    <div className={styles.message_container}>
-                        <p className={styles.message_username}>Robert Downey Jr</p>
-                        <p className={styles.message_content}>Hello, Good morning, Nice to meet you9</p>
-                    </div> <br />
+                    {renderMessages()}
                 </div>
                 <div className={styles.send_container}>
-                    <input type='text' className={styles.input_message} placeholder='Trò chuyện tại đây ^^' />
-                    <img className={styles.send_icon} src='/img/Messenger/paper-plane.png' alt='...'/>
+                    <input type='text' className={styles.input_message} placeholder='Trò chuyện tại đây ^^' onChange={e => setMessageInput(e.target.value)}/>
+                    <img className={styles.send_icon} src='/img/Messenger/paper-plane.png' alt='...' onClick={sendMessage}/>
                 </div>
             </div>
         </div>

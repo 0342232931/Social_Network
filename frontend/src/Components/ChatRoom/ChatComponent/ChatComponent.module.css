@@ -94,9 +94,38 @@
     font-weight: bold;
     margin-bottom: 0px;
 }
-.message_content{
+.message_content {
     width: auto;
     color: rgb(39, 44, 47);
     font-size: 14px;
     margin-bottom: 0px;
+}
+.message_container2 {
+    margin-bottom: 10px;
+    display: inline-block;
+    z-index: 1;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    background-color: #888;
+    width: auto;
+    height: auto;
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 10px;
+    opacity: 0.85;
+    right: 0;
+}
+.message_username2 {
+    width: auto;
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 0px;
+    right: 0;
+}
+.message_content2 {
+    width: auto;
+    color: rgb(39, 44, 47);
+    font-size: 14px;
+    margin-bottom: 0px;
+    right: 0;
 }
