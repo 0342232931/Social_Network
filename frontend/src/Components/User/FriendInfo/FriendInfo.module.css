@@ -9,7 +9,8 @@
     left: 0;
     display: grid;
     place-items: center;
-    position: sticky;
+    position: fixed;
+    top: 0;
 }
 .me_container {
     width: 70%;
@@ -111,4 +112,30 @@
     color: #b7b5b884;
     margin-left: 30%;
     margin-top: 100px;
+}
+.display_none {
+    display: none;
+}
+.text_bio {
+    color: aliceblue;
+    font-size: 16px;
+    margin-left: 10px;
+}
+.button_add_friend {
+    right: 0;
+    margin-left: auto;
+    margin-right: 140px;
+    bottom: 0;
+    margin-top: auto;
+    margin-bottom: 30px;
+}
+.btn_add {
+    padding: 7px;
+    width: 200px;
+    border-radius: 10px;
+    background-color: #7fc6d6;
+    border: none;
+}
+.btn_add:hover{
+    background-color: #355258;
 }

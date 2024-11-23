@@ -1,6 +1,6 @@
 import styles from './SearchComponent.module.css';
 import Navbar from '../NavBar';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { createAxios } from '../../../createInstance';
 import { loginSuccess } from '../../../redux/authSlice';
@@ -8,51 +8,60 @@ import { useEffect, useState } from 'react';
 
 function SearchComponent() {
 
-    const data = useSelector((state) => state.auth.login?.currentUser?.result.userRepsonse);
+    const data = useSelector((state) => state.auth.login?.currentUser);
     const dispatch = useDispatch();
     let axiosJwt = createAxios(data, dispatch, loginSuccess);
 
     const location = useLocation();
-    const keyword = location.state?.keyword;
+    const queryParams = new URLSearchParams(location.search);
+    const keyword = queryParams.get('id');
 
-    const [userData, setUserData] = useState([]);
-
-    const users = ['Pele', 'Ronaldinho', 'Ronaldo Delima', 'Leonel Messi', 'Cristiano Ronaldo', 'Neymar Jr', 'Mohamed Salah', 'Mesult Ozil', 'Kyle Warker', 'Vicicius jr'];
+    const [userResponse, setUserReponse] = useState([]);
 
     const searchUsers = async (axiosJwt, keyword) => {
         try {
-            const res = await axiosJwt.get("http://localhost:8080/search-user/" + keyword)
-            if (res != null) {
-                console.log("get search user success");
-                setUserData(res.data?.result);
-            } else {
-                console.log(" res null");
-                
-            }
+            
+            const res = await axiosJwt.get("http://localhost:8080/users/search-user/" + keyword)
+            
+            let users = res.data?.result;
+
+            const updatedUsers = await Promise.all(
+                users?.map(async (user) => {
+                    try {
+                        const res = await axiosJwt.get("http://localhost:8080/avatar/get-by-user-id/" + user?.id);
+                        const img = res.data?.result;
+                        return {...user, avatarUrl: `data:image/${img.fileType};base64,${img?.data}`};
+                    } catch (error) {
+                        console.log(error);
+                        return {...user, avatarUrl: null}
+                    }
+                })
+            );  
+            setUserReponse(updatedUsers);
+
         } catch (error) {
             console.log(error);
-            
         }
     }
 
     useEffect(() => {
         searchUsers(axiosJwt, keyword);
-    },[])
+    },[keyword])
 
     const renderUsers = () => {
-
-        if (userData.length <= 0) {
+        
+        if (userResponse.length <= 0) {
             return (
                 <div className={styles.nothing_result}>---- Không tìm thấy kết quả nào ----</div>
             )
         }
-        return userData.map((user) => {
+        return userResponse.map((user) => {
             return (
-                <div key={user} className={styles.user_container}>
-                    <img src='/img/user.png' className={styles.avatar} alt='...'/>
-                    <span className={styles.username}>{user}</span>
+                <Link to={`/friend-info?id=${user?.id}`} key={user?.id} className={styles.user_container}>
+                    <img src={user?.avatarUrl != null ? user?.avatarUrl : `/img/user.png` } className={styles.avatar} alt='...'/>
+                    <span className={styles.username}>{`${user?.firstName} ${user?.lastName}`}</span>
                     <div className={styles.decor}><p style={{fontSize: 30}}>...</p></div>
-                </div>
+                </Link>
             )
         })
     }

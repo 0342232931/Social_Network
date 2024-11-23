@@ -110,8 +110,7 @@ public class UserServiceIpm implements UserService {
     @Override
     public List<UserResponse> searchUsersByKeyword(String keyword) {
 
-        List<User> users = userRepository.searchUserByKeyword(keyword);
-
+        List<User> users = userRepository.searchUserByKeyword(keyword.toLowerCase());
         List<UserResponse> responses = new ArrayList<>();
 
         users.forEach((user) -> {

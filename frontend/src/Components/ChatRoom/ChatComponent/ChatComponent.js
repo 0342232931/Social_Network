@@ -5,7 +5,6 @@ import styles from './ChatComponent.module.css';
 import { useSelector } from 'react-redux';
 
 const ChatComponent = ({receiver}) => {
-
     const user = useSelector((state) => state.auth.login?.currentUser?.result.userResponse);
     const token = useSelector((state) => state.auth.login?.currentUser?.result.token);
 
@@ -15,89 +14,89 @@ const ChatComponent = ({receiver}) => {
 
     // Kết nối khi component được mount
     useEffect(() => {
-        const socket = new SockJS('http://localhost:8080/ws'); // Kết nối đến endpoint
-        stompClient.current = Stomp.over(socket);
+        // const socket = new SockJS('http://localhost:8080/ws'); // Kết nối đến endpoint
+        // stompClient.current = Stomp.over(socket);
 
-        loadMessages(receiver?.username);
+        // loadMessages(receiver?.username);
 
-        stompClient.current.connect(
-            {Authorization: `Bearer ${token}`},  // Thêm token vào header
-            () => {
-                console.log('Connected to WebSocket');
+        // stompClient.current.connect(
+        //     {Authorization: `Bearer ${token}`},  // Thêm token vào header
+        //     () => {
+        //         console.log('Connected to WebSocket');
                 
-                // Đăng ký nhận tin nhắn từ server qua channel /queue/messages
-                stompClient.current.subcribe("/user/queue/messages", onReceivedMessage);
-            },
-            (error) => {
-                console.log("Websocket connection error: " + error);
+        //         // Đăng ký nhận tin nhắn từ server qua channel /queue/messages
+        //         stompClient.current.subcribe("/user/queue/messages", onReceivedMessage);
+        //     },
+        //     (error) => {
+        //         console.log("Websocket connection error: " + error);
                 
-            }
-        );
+        //     }
+        // );
 
-        // Đóng kết nối khi component un mount
-        return () => {
-            if (stompClient.current) {
-                stompClient.current.disconnect();
-            }
-        }
-    }, [token]);
+        // // Đóng kết nối khi component un mount
+        // return () => {
+        //     if (stompClient.current) {
+        //         stompClient.current.disconnect();
+        //     }
+        // }
+    }, [token, receiver]);
 
     // Gọi API lấy danh sách tin nhắn giữa currentUser và receiver
     const loadMessages = (receiverUsername) => {
-        if (!receiverUsername.trim()) {
-        alert("Receiver username cannot be empty!");
-        return;
-        }
+        // if (!receiverUsername.trim()) {
+        // alert("Receiver username cannot be empty!");
+        // return;
+        // }
 
-        const requestPayload = {
-        senderUsername: user?.username,
-        receiverUsername: receiverUsername,
-        };
+        // const requestPayload = {
+        // senderUsername: user?.username,
+        // receiverUsername: receiverUsername,
+        // };
 
-        stompClient.current.send(
-        "/app/user.loadMessages", // Destination trên server
-        {
-            Authorization: `Bearer ${token}`,
-        },
-        JSON.stringify(requestPayload)
-        );
+        // stompClient.current.send(
+        // "/app/user.loadMessages", // Destination trên server
+        // {
+        //     Authorization: `Bearer ${token}`,
+        // },
+        // JSON.stringify(requestPayload)
+        // );
 
-        // Lắng nghe phản hồi từ server tại channel `/user/topic/caller`
-        stompClient.current.subscribe("/user/topic/caller", (message) => {
-        const response = JSON.parse(message.body);
-        setMessages(response.messages); // Cập nhật danh sách tin nhắn từ API
-        });
+        // // Lắng nghe phản hồi từ server tại channel `/user/topic/caller`
+        // stompClient.current.subscribe("/user/topic/caller", (message) => {
+        // const response = JSON.parse(message.body);
+        // setMessages(response.messages); // Cập nhật danh sách tin nhắn từ API
+        // });
 
     };
 
 
     const onReceivedMessage = (message) => {
-        const messageData = JSON.parse(message.body);
-        setMessages((prevMessages) => [...prevMessages, messageData]);
+        // const messageData = JSON.parse(message.body);
+        // setMessages((prevMessages) => [...prevMessages, messageData]);
     }
 
     const sendMessage = () => {
 
-        if (!messageInput.trim()) {
-            alert("Message input cannot be empty!")
-            return;   
-        }
+        // if (!messageInput.trim()) {
+        //     alert("Message input cannot be empty!")
+        //     return;   
+        // }
 
-        const messagePayload = {
-            senderUsername: user?.username,
-            receiverUsername: receiver?.username,
-            content: messageInput,
-        }
+        // const messagePayload = {
+        //     senderUsername: user?.username,
+        //     receiverUsername: receiver?.username,
+        //     content: messageInput,
+        // }
 
-        stompClient.current.send(
-            "/app/user.sendMessage",
-            {
-                Authorization: `Bearer ${token}`,
-            },
-            JSON.stringify(messagePayload),
-        );
+        // stompClient.current.send(
+        //     "/app/user.sendMessage",
+        //     {
+        //         Authorization: `Bearer ${token}`,
+        //     },
+        //     JSON.stringify(messagePayload),
+        // );
 
-        setMessageInput("");
+        // setMessageInput("");
     }
     
     const renderMessages = () => {
@@ -116,7 +115,7 @@ const ChatComponent = ({receiver}) => {
     return (
         <div className={styles.container}>
             <div className={styles.navbar}>
-                <img src='/img/user.png' alt='...' className={styles.avatar} />
+                <img src={receiver?.avatarUrl != null ? receiver?.avatarUrl : '/img/user.png'} alt='...' className={styles.avatar} />
                 <h3 className={styles.username}>{`${receiver?.firstName} ${receiver?.lastName}`}</h3>
             </div>
             <div className={styles.chat_container}>

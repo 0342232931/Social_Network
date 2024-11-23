@@ -49,6 +49,11 @@ function NavBar(){
     logoutUser(request, dispatch, navigate)
   }
   
+  const handleSubmitSearch = (e) => {
+    e.preventDefault();
+    navigate(`/search?id=${keyword}`)
+  }
+
   return (
     <nav className={styles.navbar_container}>
         <section className={`d-flex ${styles.serch_form}`}>
@@ -58,12 +63,9 @@ function NavBar(){
             </Link>
           </div>
           <div>
-            <form className="d-flex" role="search">
+            <form className="d-flex" role="search" onSubmit={handleSubmitSearch}>
                 <input onChange={e => setKeyword(e.target.value)} className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-                <Link to={{
-                  pathname: "/search",
-                  state: {keyword: keyword}
-                }} className="btn btn-outline-primary" type="submit">Search</Link>
+                <button className="btn btn-outline-primary" type="submit">Search</button>
             </form>
           </div>
         </section>

@@ -1,53 +1,193 @@
 import styles from './FriendInfo.module.css'
 import NavBar from '../../NavBar/NavBar';
 import Post from '../../Post/PostForm';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import AllFriend from '../MyInfo/AllFriend/AllFriend';
 import Image from "../MyInfo/Image/Image";
 import InfomationFriend from './InfomationFriend/InfomationFriend';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { createAxios } from '../../../createInstance';
+import { loginSuccess } from '../../../redux/authSlice';
 
 function FriendInfo () {
+
+    const data = useSelector((state) => state.auth.login?.currentUser);
+    const dispatch = useDispatch();
+    let axiosJwt = createAxios(data, dispatch, loginSuccess);
+
+    const userDetail = useSelector((state) => state.auth.login?.currentUser?.result.userResponse);
+    const navigate = useNavigate();
+
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const id = queryParams.get('id');
+    const [user, setInfo] = useState();
+    const [avatar, setAvatar] = useState(null);
+    const [posts, setPosts] = useState([]);
+    const [friends, setFriends] = useState([]);
+    const [bio, setBio] = useState(null);
+
+    const getInfoUser = async (axiosJwt, userId) => {
+        try {
+            const res = await axiosJwt.get("http://localhost:8080/users/" + userId);
+            setInfo(res.data?.result)
+            console.log("user: ");
+            console.log(res.data?.result);
+            
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const getAvatarUser = async (axiosJwt, userId) => {
+        try {
+            const res = await axiosJwt.get("http://localhost:8080/avatar/get-by-user-id/" + userId);
+
+            const img = res.data?.result;
+
+            setAvatar(`data:image/${img.fileType};base64,${img.data}`);
+        } catch (error) {
+            console.log(error);
+            
+        }
+    }
+
+    const getPost = async (userId, axiosJwt) => {
+        try {
+            const response = await axiosJwt.get("http://localhost:8080/posts/get-by-user-id/" + userId)
+            if (response != null) {
+                setPosts(response.data?.result);
+
+            } else {
+                console.log("get posts failed");
+                
+            }
+        } catch (error) {
+            console.log(error);
+            
+        }
+    }
+
+    // Call Api get friends
+    const getFriends = async(userId, axiosJwt) => {
+        try {
+            const res = await axiosJwt.get("http://localhost:8080/relations/get-friends-by-user-id/" + userId);
+            setFriends(res.data?.result);
+        } catch (error) {
+            console.log(error.message);
+        }
+    }
+
+    // Call Api get Bio
+    const getBio = async (userId, axiosJwt) => {
+        try {
+            const response = await axiosJwt.get('http://localhost:8080/abouts/get-by-user/' + userId);
+            setBio(response.data?.result.description);
+        } catch (error) {
+            console.log(error);
+            
+        }
+    }
+
+    useEffect(() => {
+        if (id === userDetail?.id) 
+            navigate('/my-info')
+        
+        getInfoUser(axiosJwt, id);
+        getAvatarUser(axiosJwt, id);
+        getPost(id, axiosJwt);
+        getFriends(id, axiosJwt);
+        getBio(id, axiosJwt);
+    }, [id]);
+
+    const renderAbout = () => {
+        if (user?.job == null && user?.university == null && user?.highSchool == null && user?.address == null && user?.dob == null) {
+            return (
+                <div className={styles.about}>
+                    <h3 className={styles.text_header}>Giới Thiệu</h3>
+                    <p className={styles.text}>Chưa có thông tin</p>
+                    
+                </div>
+            )
+        } else {
+            return (
+                <div className={styles.about}>
+                    <h3 className={styles.text_header}>Giới Thiệu</h3>
+                    {user?.job == null ? (<></>) : (<p className={styles.text}><img src='/img/myinfo/briefcase.png' alt='phone'className={styles.icon}/> Làm việc tại {user?.job}</p>)}
+                    {user?.university == null ? (<></>) : (<p className={styles.text}><img src='/img/myinfo/education-cap.png' alt='phone'className={styles.icon}/> {user?.university}</p>)}
+                    {user?.highSchool == null ? (<></>) : (<p className={styles.text}><img src='/img/myinfo/education-cap.png' alt='phone'className={styles.icon}/> {user?.highSchool}</p>)}
+                    {user?.address == null ? (<></>) : (<p className={styles.text}><img src='/img/myinfo/location.png' alt='phone'className={styles.icon}/> Đến từ {user?.address}</p>)}
+                    {user?.dob == null ? (<></>) : (<p className={styles.text}><img src='/img/myinfo/cake.png' alt='phone'className={styles.icon}/> Ngày sinh {user?.dob}</p>)}
+                    <p className={styles.text_footer}><img src='/img/clock.png' alt='phone'className={styles.icon}/> Tham gia vào tháng 3 năm 2019</p>
+                </div>
+            )
+        }
+    }
+
+    const renderContact  = () => {
+        if (user?.phoneNumber == null && user?.email == null && user?.hometown == null) {
+            return (
+                <div className={styles.information_child}>
+                    <h3 className={styles.text_header}>Liên Hệ</h3> 
+                    <p className={styles.text}> Chưa có thông tin</p> 
+                </div>
+            )
+        } else {
+            return (
+                <div className={styles.information_child}>
+                    <h3 className={styles.text_header}>Liên Hệ</h3> 
+                    {user?.phoneNumber == null ? (<></>) : (<p className={styles.text}><img src='/img/myinfo/phone.png' alt='phone'className={styles.icon}/> {user?.phoneNumber}</p>)}
+                    {user?.email == null ? (<></>) : (<p className={styles.text}><img src='/img/myinfo/mail.png' alt='phone'className={styles.icon}/> {user?.email}</p>)}
+                    {user?.hometown == null ? (<></>) : (<p className={styles.text}><img src='/img/myinfo/location.png' alt='phone'className={styles.icon}/> {user?.hometown}</p>)}
+                </div>
+            )
+        }
+    }
+
+    const handleRenderPost = () => {
+        
+        return posts.map((post) => {
+            return (
+                <Post key={post?.id} post={post} />
+            )
+        })
+    }
+
+    const renderBio = () => {
+        if (bio === null) {
+            return (
+                <span className={styles.display_none}></span>
+            )
+        } else {
+            return <span className={styles.text_bio}>{bio}</span>
+        }
+    }
 
     return (
         <div className={styles.container}>
             <NavBar />
             <div className={styles.user}>
                 <div className={styles.information}>
-                    <div className={styles.about}>
-                        <h3 className={styles.text_header}>Giới Thiệu</h3>
-                        <p className={styles.text}><img src='/img/myinfo/education-cap.png' alt='phone'className={styles.icon}/> Trường Đại học Kinh Doanh và Công Nghệ Hà Nội</p>
-                        <p className={styles.text}><img src='/img/myinfo/education-cap.png' alt='phone'className={styles.icon}/> Trường Trung học Phổ Thông A Duy Tiên</p>
-                        <p className={styles.text}><img src='/img/myinfo/location.png' alt='phone'className={styles.icon}/> Đến Từ Hà Nam</p>
-                        <p className={styles.text_footer}><img src='/img/clock.png' alt='phone'className={styles.icon}/> Tham gia vào tháng 3 năm 2019</p>
-                    </div>
-                    <div className={styles.information_child}>
-                        <h3 className={styles.text_header}>Liên Hệ</h3> 
-                        <p className={styles.text}><img src='/img/myinfo/phone.png' alt='phone'className={styles.icon}/> 0342232931</p>
-                        <p className={styles.text}><img src='/img/myinfo/mail.png' alt='phone'className={styles.icon}/> trinhhaison2004@gmail.com</p>
-                        <p className={styles.text_footer}><img src='/img/myinfo/location.png' alt='phone'className={styles.icon}/> Yên Sở - Hoàng Mai - Hà Nội</p>  
-                    </div>
-                    <div className={styles.information_child}>
-                        <div className={styles.img_header}>
-                            <h3 className={styles.text_header}>Bạn bè</h3>
-                                <Link to="#"><p className={styles.all_friend} >Xem tất cả</p></Link>
-                            </div>
-                        </div>
-                    <div className={styles.information_child}>
-                        <div className={styles.img_header}>
-                            <h3 className={styles.text_header}>Ảnh</h3>
-                            <Link to="#"><p className={styles.all_img}>Xem tất cả</p></Link>
-                        </div>
-                    </div>
+                    {renderAbout()}
+                    {renderContact()}
                 </div>
                 <div className={styles.line_col}></div>
                 <div className={styles.me_container}>
                     <div className={styles.me}>
                         <div className={styles.avatar_container}>
-                            <img className={styles.avatar} src='https://cdna.artstation.com/p/assets/images/images/057/968/226/large/isula-perera-pepsi-final-color-graded-with-watermark.jpg?1673092062' alt='my avatar' />
+                            <img className={styles.avatar} src={avatar != null ? avatar : '/img/user.png'} alt='my avatar' />
                         </div>
                         <div className={styles.name_container}>
-                            <h2 className={styles.text}>Friend name</h2>
-                            <span className={styles.text}>727 người bạn</span>
+                            <h2 className={styles.text}>{`${user?.firstName} ${user?.lastName}`}</h2>
+                            <span className={styles.text}>{friends.length > 0 ? `${friends.length} người bạn` : "Chưa có bạn bè"}</span><br />
+                            {renderBio()}
+                        </div>
+                        <div className={styles.button_add_friend}>
+                            <button type="button" className={`${styles.btn_add}`}>
+                                <img src='/img/myinfo/a.png' alt='icon' className={styles.icon} style={{marginBottom : "3px"}}/>
+                                Thêm bạn bè
+                            </button>
                         </div>
                     </div>
                     <div className={styles.line}></div>
@@ -84,18 +224,17 @@ function FriendInfo () {
                         <div className="tab-content" id="myTabContent">
                             <div className="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabIndex="0">
                                 <div className={styles.post_container}>
-                                    {/* <Post atr="1"/>
-                                    <Post atr="2"/> */}
+                                    {handleRenderPost()}
                                 </div>
                             </div>
                             <div className="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabIndex="0">
-                                {/* <InfomationFriend /> */}
+                                <InfomationFriend userId={user?.id}/>
                             </div>
                             <div className="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabIndex="0">
-                                {/* <AllFriend /> */}
+                                <AllFriend friends={friends}/>
                             </div>
                             <div className="tab-pane fade" id="image-tab-pane" role="tabpanel" aria-labelledby="image-tab" tabIndex="0">
-                                {/* <Image/> */}
+                                <Image userId={user?.id}/>
                             </div>
                             <div className="tab-pane fade" id="video-tab-pane" role="tabpanel" aria-labelledby="video-tab" tabIndex="0">
                                 <h3 className={styles.update_function}>Chức năng đang được cập nhật</h3>

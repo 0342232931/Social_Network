@@ -12,6 +12,7 @@ import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.converter.DefaultContentTypeResolver;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.converter.MessageConverter;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.messaging.simp.stomp.StompCommand;
@@ -19,6 +20,7 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.messaging.support.MessageHeaderAccessor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.web.socket.AbstractSecurityWebSocketMessageBrokerConfigurer;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.MimeTypeUtils;
@@ -38,6 +40,7 @@ import java.util.List;
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     AuthenticationServiceIpm authenticationService;
+    AuthenticationServiceIpm authenticationServiceIpm;
     CustomUserDetailsService customUserDetailsService;
 
     @Override
@@ -57,8 +60,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("ws") // Thiết lập endpoint Websocket tại đường dẫn /ws, nơi client sẽ kết nối
-                .setAllowedOriginPatterns("http://localhost:3000") // Chỉ định nguồn gốc cho phép kêt nối Websocket
+        registry.addEndpoint("/ws") // Thiết lập endpoint Websocket tại đường dẫn /ws, nơi client sẽ kết nối
+                .addInterceptors(new WebsocketAuthenticator(authenticationServiceIpm))
+                .setAllowedOriginPatterns("*") // Chỉ định nguồn gốc cho phép kêt nối Websocket
                 .withSockJS();
     }
 
@@ -89,6 +93,13 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
             // Được gọi trước khi message được gửi vào channel
             @Override
             public Message<?> preSend(Message<?> message, MessageChannel channel) {
+//                SimpMessageHeaderAccessor headerAccessor = SimpMessageHeaderAccessor.wrap(message);
+//
+//                String destination = headerAccessor.getDestination();
+//                if (destination != null) {
+//
+//                }
+
                 StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
                 assert accessor != null;
 

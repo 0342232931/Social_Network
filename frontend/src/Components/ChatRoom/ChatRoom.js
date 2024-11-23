@@ -16,21 +16,34 @@ function ChatRoom () {
     const user = useSelector((state) => state.auth.login?.currentUser?.result.userResponse);
     const token = useSelector((state) => state.auth.login?.currentUser?.result.token);
 
-    const [friends, setFriends] = useState(null);
-    const [chatUsers, setChatUsers] = useState(null);
-    const [dataUsers, setDataUsers] = useState(null);
+    const [friends, setFriends] = useState([]);
+    const [chatUsers, setChatUsers] = useState([]);
+    const [dataUsers, setDataUsers] = useState([]);
+    const [isStart, setIsStart] = useState(false);
+    const [receiver, setReceiver] = useState(null);
     const stompClient = useRef(null);
 
     const getAllFriend = async (userId, axiosJwt) => {
         try {
             const response = await axiosJwt.get('http://localhost:8080/relations/get-friends-by-user-id/' + userId);
-            if (response != null) {
-                console.log("get friend success");
-                setFriends(response.data?.result);
-            }
+
+            let users = response.data?.result;
+
+            const updatedUsers = await Promise.all(
+                users?.map(async (user) => {
+                    try {
+                        const res = await axiosJwt.get("http://localhost:8080/avatar/get-by-user-id/" + user?.id);
+                        const img = res.data?.result;
+                        return {...user, avatarUrl: `data:image/${img.fileType};base64,${img?.data}`};
+                    } catch (error) {
+                        console.log(error);
+                        return {...user, avatarUrl: null}
+                    }
+                })
+            );  
+            setFriends(updatedUsers);
         } catch (error) {
             console.log(error);
-            
         }
     }
 
@@ -47,7 +60,7 @@ function ChatRoom () {
 
                 stompClient.current.subscribe('/user/topic/caller-users', onReceivedMessage);
             }
-        )
+        )        
 
         // Đóng kết nối khi component un mount
         return () => {
@@ -56,7 +69,7 @@ function ChatRoom () {
             }
         }
 
-    }, [token])
+    }, [token,isStart])
 
     const onReceivedMessage = (message) => {
         const usersData = JSON.parse(message.body);
@@ -87,6 +100,18 @@ function ChatRoom () {
         setDataUsers(friends);
     }
 
+    const handleStartChat = () => {
+        if (isStart) {
+            return (<ChatComponent receiver={receiver}/>)
+        }
+        return (<span className={styles.nothing_chat_selected}><img className={styles.icon_nothing_chat_selected} src='/img/partners.png' /><p className={styles.text}>Hãy bắt đầu trò chuyện!!</p></span>)   
+    }
+
+    const onSelectUser = (user) => {
+        setIsStart(true);
+        setReceiver(user);
+    }
+
     return (
         <div>
             <NavBar />
@@ -96,11 +121,10 @@ function ChatRoom () {
                     <img alt='...' className={styles.icon} src='/img/Messenger/phone-book.png' onClick={handleRenderfriends} />
                 </div>
                 <div className={styles.list_container}>
-                    <ListUser friends={dataUsers}/>
+                    <ListUser dataUsers={dataUsers} onSelectUser={onSelectUser} />
                 </div>
                 <div className={styles.content_container}>
-                    {/* <span className={styles.nothing_chat_selected}><img className={styles.icon_nothing_chat_selected} src='/img/partners.png' /><p className={styles.text}>Hãy bắt đầu trò chuyện!!</p></span> */}
-                    <ChatComponent />
+                    {handleStartChat()}
                 </div>
             </div>
         </div>
