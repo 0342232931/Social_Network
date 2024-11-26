@@ -36,7 +36,7 @@ public class SecurityConfig {
         httpSecurity.authorizeHttpRequests(request -> request
                 .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINT).permitAll()
                 .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                .requestMatchers("/ws/**").authenticated()
+                .requestMatchers("/ws/**").permitAll()
                 .anyRequest().authenticated()
         );
 

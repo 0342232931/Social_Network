@@ -23,16 +23,20 @@ public class WebsocketAuthenticator implements HandshakeInterceptor {
     @Override
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler,
                                    Map<String, Object> attributes) throws Exception {
-        System.out.println("token : " + request.getHeaders());
-        String authHeader = request.getHeaders().getFirst("Authorization");
 
-        if (authHeader != null && authHeader.startsWith("Bearer ")){
+        String authHeader = request.getURI().getQuery();
 
-            String token = authHeader.substring(7);
+        if (authHeader != null && authHeader.startsWith("token=")){
 
-            return authenticationServiceIpm.introspect(IntrospectRequest.builder()
+            String token = authHeader.substring(6);
+
+            boolean isValid =  authenticationServiceIpm.introspect(IntrospectRequest.builder()
                             .token(token)
                             .build()).isValid();
+            if (isValid) {
+                attributes.put("Authorization", token);
+            }
+            return isValid;
         }
         return false;
     }
