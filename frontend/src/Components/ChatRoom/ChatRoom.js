@@ -50,11 +50,11 @@ function ChatRoom () {
     useEffect(() => {
         getAllFriend(user?.id, axiosJwt);
 
-        const socket = new SockJS("http://localhost:8080/ws");
+        const socket = new SockJS(`http://localhost:8080/ws?token=${token}`);
         stompClient.current = Stomp.over(socket);
 
         stompClient.current.connect(
-            {Authorization: `Bearer ${token}`},
+            {},
             () => {
                 console.log("Connected to WebSocket");
 

@@ -4,7 +4,7 @@ import Post from "../Post/PostForm";
 import { Link, useNavigate } from 'react-router-dom';
 import ModalPost from './ModalPost/ModalPost';
 import { useDispatch, useSelector } from 'react-redux';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { createAxios } from '../../createInstance';
 import { loginSuccess } from '../../redux/authSlice';
 
@@ -17,7 +17,6 @@ function HomePage () {
 
     const user = useSelector((state) => state.auth.login?.currentUser?.result.userResponse);
     const token = useSelector((state) => state.auth.login?.currentUser?.result.token);
-    const url = useState("/img/user.png");
     const [imgData, setImgData] = useState(null);
     const [friends, setFriends] = useState([]);
     const [post, setPost] = useState([]);
@@ -52,7 +51,7 @@ function HomePage () {
     // Get Posts
     const getPost = async (userId, axiosJwt) => {
          try {
-            const res = await axiosJwt.get('http://localhost:8080/posts/get-new-post-by-user-auth' + userId);
+            const res = await axiosJwt.get('http://localhost:8080/posts/get-new-post-by-user-auth/' + userId);
 
             setPost(res.data.result);
          } catch (error) {
@@ -120,7 +119,7 @@ function HomePage () {
                 <div className={styles.util}>
                     <div className={styles.my_info}>
                         <Link className={styles.link} to="/my-info">
-                            <img className={styles.avatar_friend} src={imgData == null ? url : imgData} alt='my avatar'/>
+                            <img className={styles.avatar_friend} src={imgData == null ? "/img/user.png" : imgData} alt='my avatar'/>
                             <h3 className={styles.friend_name}>{user?.firstName == null && user?.lastName == null ? user?.username : `${user?.firstName} ${user?.lastName}` }</h3>
                         </Link>
                     </div>
