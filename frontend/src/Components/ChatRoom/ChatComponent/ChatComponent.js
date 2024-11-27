@@ -5,6 +5,8 @@ import styles from './ChatComponent.module.css';
 import { useSelector } from 'react-redux';
 
 const ChatComponent = ({receiver}) => {
+    console.log(receiver);
+    
     const user = useSelector((state) => state.auth.login?.currentUser?.result.userResponse);
     const token = useSelector((state) => state.auth.login?.currentUser?.result.token);
 
@@ -24,11 +26,17 @@ const ChatComponent = ({receiver}) => {
                 stompClient.current.subcribe('/user/queue/messages', (message) => {
                     const payload = JSON.parse(message.body);
                     setMessages((prevMessages) => [...prevMessages, payload]);
+                    console.log("payload send message:");
+                    console.log(payload);
+                    
                 });
 
                 stompClient.current.subscribe("/user/topic/caller", (response) => {
                     const payload = JSON.parse(response.body);
                     setMessages(payload.messages);
+                    console.log("payload messages: ");
+                    console.log(payload);
+                    
                 });
 
                 loadAllMessage();
@@ -82,6 +90,10 @@ const ChatComponent = ({receiver}) => {
 
 
     const renderMessages = () => {
+        console.log("messages: ");
+        console.log(messages);
+        
+        
         return messages.map((message) => {
             return (
                 <>
