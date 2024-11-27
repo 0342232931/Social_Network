@@ -20,10 +20,8 @@ import vn.ths.SocialNetwork.repository.websocket.MessageRepository;
 import vn.ths.SocialNetwork.repository.user.UserRepository;
 import vn.ths.SocialNetwork.services.service.websocket.MessageService;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -77,6 +75,8 @@ public class MessageServiceIpm implements MessageService {
 
         try {
             Message message = messageMapper.toMessage(request);
+            message.setId(UUID.randomUUID().toString());
+            message.setCreateAt(LocalDateTime.now());
             message.setSender(sender);
             message.setReceiver(receiver);
 

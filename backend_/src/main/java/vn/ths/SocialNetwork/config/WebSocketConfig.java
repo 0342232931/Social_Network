@@ -28,6 +28,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     AuthenticationServiceIpm authenticationServiceIpm;
     AuthChannelInterceptorAdapter authChannelInterceptorAdapter;
+    WebsocketAuthenticator websocketAuthenticator;
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
@@ -47,7 +48,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws") // Thiết lập endpoint Websocket tại đường dẫn /ws, nơi client sẽ kết nối
-                .addInterceptors(new WebsocketAuthenticator(authenticationServiceIpm))
+                .addInterceptors(websocketAuthenticator)
                 .setAllowedOriginPatterns("*") // Chỉ định nguồn gốc cho phép kêt nối Websocket
                 .withSockJS();
     }

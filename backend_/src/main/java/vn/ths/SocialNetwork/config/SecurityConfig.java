@@ -1,5 +1,8 @@
 package vn.ths.SocialNetwork.config;
 
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -13,6 +16,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -20,6 +24,8 @@ import org.springframework.web.filter.CorsFilter;
 @Configuration
 @EnableMethodSecurity
 @EnableWebSecurity
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class SecurityConfig {
 
     private final String[] PUBLIC_ENDPOINT = {
@@ -28,19 +34,19 @@ public class SecurityConfig {
 
     };
 
-    @Autowired
-    private CustomJwtToken customJwtToken;
+    CustomJwtToken customJwtToken;
+    JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception{
-        httpSecurity.authorizeHttpRequests(request -> request
+        httpSecurity.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .authorizeHttpRequests(request -> request
                 .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINT).permitAll()
                 .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                 .requestMatchers("/ws/**").permitAll()
                 .anyRequest().authenticated()
         );
 
-//        httpSecurity.authorizeHttpRequests(auth -> auth.)
 
         httpSecurity.oauth2ResourceServer(oath2 ->
                 oath2.jwt(jwtConfigurer ->

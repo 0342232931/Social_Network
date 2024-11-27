@@ -1,11 +1,17 @@
 package vn.ths.SocialNetwork.controller.authentication;
 
 import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jwt.SignedJWT;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import vn.ths.SocialNetwork.config.CustomUserDetailsService;
 import vn.ths.SocialNetwork.dto.request.authentication.AuthenticationRequest;
 import vn.ths.SocialNetwork.dto.request.authentication.IntrospectRequest;
 import vn.ths.SocialNetwork.dto.request.authentication.LogoutRequest;
@@ -13,6 +19,7 @@ import vn.ths.SocialNetwork.dto.request.authentication.RefreshRequest;
 import vn.ths.SocialNetwork.dto.response.ApiResponse;
 import vn.ths.SocialNetwork.dto.response.authentication.AuthenticationResponse;
 import vn.ths.SocialNetwork.dto.response.authentication.IntrospectResponse;
+import vn.ths.SocialNetwork.services.implement.authentication.AuthenticationServiceIpm;
 import vn.ths.SocialNetwork.services.service.athentication.AuthenticationService;
 
 import java.text.ParseException;
@@ -25,13 +32,14 @@ import java.text.ParseException;
 public class AuthenticationController {
 
     AuthenticationService authenticationService;
+    AuthenticationServiceIpm authenticationServiceIpm;
+    CustomUserDetailsService customUserDetailsService;
 
     @PostMapping("/login")
     public ApiResponse<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request)
             throws Exception {
-        var result = authenticationService.authenticate(request);
         return ApiResponse.<AuthenticationResponse>builder()
-                .result(result)
+                .result(authenticationService.authenticate(request))
                 .build();
     }
 

@@ -37,25 +37,24 @@ public class MessageController {
     @MessageMapping("/user.sendMessage")
     @SendToUser("/topic/reply") // Phản hồi sẽ được gửi đến user vừa gửi message qua channel /topic/reply.
     public Map<String, Object> sendMessage(@Payload MessageCreationRequest request){
-
         // Kiểm tra Client có tự gửi message đến chính mình không
         if (request.getReceiverUsername().equals(request.getSenderUsername())){
             throw new AppException(ErrorCode.CAN_NOT_SEND_MESSAGE);
         }
-
         var message = messageService.save(request);
-
+        System.out.println("Tim sender");
         var sender = userService.findById(request.getSenderUsername());
-
+        System.out.println("Tao du lieu cho phan hoi");
         // Tạo dữ liệu cho phản hồi
         Map<String, Object> map = new HashMap<>();
         map.put("group",getGroupName(request.getSenderUsername(), request.getReceiverUsername()));
         map.put("message", message);
         map.put("sender", sender);
-
+        System.out.println("Gui message den receiver");
         // Dùng SimpMessagingTemplate.converterAndSendToUser để gửi message đến người nhận qua channel /queue/messages
         simpMessagingTemplate.convertAndSendToUser(request.getReceiverUsername(), "/queue/messages", map);
-
+        System.out.println("hoan thanh gui");
+        System.out.println("map: " + map);
         return map;
     }
 

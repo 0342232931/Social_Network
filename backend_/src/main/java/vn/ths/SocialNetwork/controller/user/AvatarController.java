@@ -1,18 +1,27 @@
 package vn.ths.SocialNetwork.controller.user;
 
+import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jwt.SignedJWT;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import vn.ths.SocialNetwork.config.CustomMultipartFile;
+import vn.ths.SocialNetwork.config.CustomUserDetailsService;
 import vn.ths.SocialNetwork.dto.request.user.AvatarCreationRequest;
 import vn.ths.SocialNetwork.dto.response.ApiResponse;
 import vn.ths.SocialNetwork.dto.response.user.AvatarResponse;
 import vn.ths.SocialNetwork.entity.user.Avatar;
+import vn.ths.SocialNetwork.services.implement.authentication.AuthenticationServiceIpm;
 import vn.ths.SocialNetwork.services.service.user.AvatarService;
 
+import java.text.ParseException;
 import java.util.Base64;
 import java.util.List;
 
@@ -50,7 +59,8 @@ public class AvatarController {
     }
 
     @GetMapping("/get-by-user-id/{id}")
-    ApiResponse<AvatarResponse> getAvatarByUserId (@PathVariable("id") String userId){
+    ApiResponse<AvatarResponse> getAvatarByUserId (@PathVariable("id") String userId, @RequestHeader("Authorization")
+                                        String token) throws ParseException, JOSEException {
         return ApiResponse.<AvatarResponse>builder()
                 .result(avatarService.getByUserId(userId))
                 .build();

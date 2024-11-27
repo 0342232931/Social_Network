@@ -6,6 +6,7 @@ import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import vn.ths.SocialNetwork.dto.request.authentication.IntrospectRequest;
 import vn.ths.SocialNetwork.exception.AppException;
@@ -22,10 +23,12 @@ public class AuthChannelInterceptorAdapter implements ChannelInterceptor {
 
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
+
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
 
         // Get token in attributes of session
         String token = (String) accessor.getSessionAttributes().get("Authorization");
+
         if (token != null){
             try {
                 boolean isValid = authenticationServiceIpm.introspect(IntrospectRequest.builder()

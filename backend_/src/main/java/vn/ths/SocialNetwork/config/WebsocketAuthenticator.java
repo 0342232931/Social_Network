@@ -19,6 +19,7 @@ import java.util.Map;
 public class WebsocketAuthenticator implements HandshakeInterceptor {
 
     AuthenticationServiceIpm authenticationServiceIpm;
+    CustomUserDetailsService customUserDetailsService;
 
     @Override
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler,
@@ -33,6 +34,7 @@ public class WebsocketAuthenticator implements HandshakeInterceptor {
             boolean isValid =  authenticationServiceIpm.introspect(IntrospectRequest.builder()
                             .token(token)
                             .build()).isValid();
+
             if (isValid) {
                 attributes.put("Authorization", token);
             }

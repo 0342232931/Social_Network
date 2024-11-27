@@ -1,9 +1,6 @@
 package vn.ths.SocialNetwork.entity.websocket;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import vn.ths.SocialNetwork.entity.user.User;
@@ -28,9 +25,9 @@ public class Message {
 
     LocalDateTime createAt = LocalDateTime.now();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     User sender;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     User receiver;
 }

@@ -57,8 +57,7 @@ public class User {
     @Column(name = "job")
     String job;
 
-    @ManyToMany
-    @ToString.Exclude
+    @ManyToMany(fetch = FetchType.EAGER)
     Set<Role> roles;
 
 }
