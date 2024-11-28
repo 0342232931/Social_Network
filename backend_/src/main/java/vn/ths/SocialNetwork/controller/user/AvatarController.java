@@ -59,8 +59,8 @@ public class AvatarController {
     }
 
     @GetMapping("/get-by-user-id/{id}")
-    ApiResponse<AvatarResponse> getAvatarByUserId (@PathVariable("id") String userId, @RequestHeader("Authorization")
-                                        String token) throws ParseException, JOSEException {
+    ApiResponse<AvatarResponse> getAvatarByUserId (@PathVariable("id") String userId)
+            throws ParseException, JOSEException {
         return ApiResponse.<AvatarResponse>builder()
                 .result(avatarService.getByUserId(userId))
                 .build();

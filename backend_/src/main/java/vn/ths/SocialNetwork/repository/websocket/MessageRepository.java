@@ -11,7 +11,9 @@ import java.util.List;
 
 @Repository
 public interface MessageRepository extends JpaRepository<Message, String> {
-    List<Message> getBySenderAndReceiver(User sender, User receiver);
+    @Query("SELECT m FROM Message m WHERE (m.sender.id = :senderId OR m.sender.id = :receiverId) " +
+            "AND (m.receiver.id = :receiverId OR m.receiver.id = :senderId) ORDER BY m.createAt ASC")
+    List<Message> getBySenderAndReceiver(@Param("senderId") String senderId, @Param("receiverId") String receiverId);
 
     @Query("SELECT DISTINCT m.receiver FROM Message m WHERE m.sender.id = :senderId")
     public List<User> getReceiverHaveMessageWithSenderId(@Param("senderId") String senderId);

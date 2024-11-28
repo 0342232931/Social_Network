@@ -16,4 +16,5 @@ public interface UserService {
     public UserResponse getMyInfo();
     public void deleteById(String id);
     public List<UserResponse> searchUsersByKeyword(String keyword);
+    public UserResponse findByUsername(String username);
 }

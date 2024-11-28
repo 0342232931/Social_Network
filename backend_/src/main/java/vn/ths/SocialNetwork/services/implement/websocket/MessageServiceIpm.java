@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import vn.ths.SocialNetwork.dto.request.websocket.AllMessageRequest;
 import vn.ths.SocialNetwork.dto.request.websocket.GetUsersRequest;
@@ -44,7 +45,7 @@ public class MessageServiceIpm implements MessageService {
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         try {
-            List<Message> messages = messageRepository.getBySenderAndReceiver(sender, receiver);
+            List<Message> messages = messageRepository.getBySenderAndReceiver(sender.getId(), receiver.getId());
 
             List<MessageResponse> messageResponses = new ArrayList<>();
 
@@ -57,7 +58,6 @@ public class MessageServiceIpm implements MessageService {
 
                 messageResponses.add(response);
             }
-
             return messageResponses;
         } catch (Exception e) {
             throw new RuntimeException(e);

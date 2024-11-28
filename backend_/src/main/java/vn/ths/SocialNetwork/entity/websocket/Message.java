@@ -1,5 +1,6 @@
 package vn.ths.SocialNetwork.entity.websocket;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -23,6 +24,7 @@ public class Message {
 
     String content;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     LocalDateTime createAt = LocalDateTime.now();
 
     @ManyToOne(fetch = FetchType.EAGER)

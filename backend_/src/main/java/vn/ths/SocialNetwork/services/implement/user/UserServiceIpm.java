@@ -119,4 +119,12 @@ public class UserServiceIpm implements UserService {
 
         return responses;
     }
+
+    @Override
+    public UserResponse findByUsername(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        return userMapper.toUserResponse(user);
+    }
 }

@@ -8,10 +8,23 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SendToUser;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
+import vn.ths.SocialNetwork.config.CustomUserDetailsService;
 import vn.ths.SocialNetwork.dto.request.websocket.AllMessageRequest;
 import vn.ths.SocialNetwork.dto.request.websocket.GetUsersRequest;
 import vn.ths.SocialNetwork.dto.request.websocket.MessageCreationRequest;
+import vn.ths.SocialNetwork.dto.response.ApiResponse;
 import vn.ths.SocialNetwork.dto.response.websocket.AllMessageResponse;
 import vn.ths.SocialNetwork.dto.response.user.UserResponse;
 import vn.ths.SocialNetwork.exception.AppException;
@@ -32,43 +45,49 @@ public class MessageController {
     MessageService messageService;
     SimpMessagingTemplate simpMessagingTemplate;
     UserService userService;
+    CustomUserDetailsService customUserDetailsService;
 
-    // Phương thức này sẽ được kích hoạt khi có message từ Client gửi đến endpoint /user.sendMessage
     @MessageMapping("/user.sendMessage")
-    @SendToUser("/topic/reply") // Phản hồi sẽ được gửi đến user vừa gửi message qua channel /topic/reply.
+    @SendToUser("/topic/reply")
     public Map<String, Object> sendMessage(@Payload MessageCreationRequest request){
+
+        if (SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserDetails userDetails = customUserDetailsService.loadUserByUsername(request.getSenderUsername());
+            Authentication authentication = new UsernamePasswordAuthenticationToken
+                    (userDetails, null, userDetails.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        }
+
         // Kiểm tra Client có tự gửi message đến chính mình không
         if (request.getReceiverUsername().equals(request.getSenderUsername())){
             throw new AppException(ErrorCode.CAN_NOT_SEND_MESSAGE);
         }
         var message = messageService.save(request);
-        System.out.println("Tim sender");
-        var sender = userService.findById(request.getSenderUsername());
-        System.out.println("Tao du lieu cho phan hoi");
-        // Tạo dữ liệu cho phản hồi
+
+        var sender = userService.findByUsername(request.getSenderUsername());
+
         Map<String, Object> map = new HashMap<>();
         map.put("group",getGroupName(request.getSenderUsername(), request.getReceiverUsername()));
         map.put("message", message);
         map.put("sender", sender);
-        System.out.println("Gui message den receiver");
+
         // Dùng SimpMessagingTemplate.converterAndSendToUser để gửi message đến người nhận qua channel /queue/messages
         simpMessagingTemplate.convertAndSendToUser(request.getReceiverUsername(), "/queue/messages", map);
-        System.out.println("hoan thanh gui");
-        System.out.println("map: " + map);
+
         return map;
     }
 
-    // Tải lịch sử message giữa 2 người dùng
-    @MessageMapping("/user.loadMessages")
-    @SendToUser("/topic/caller")
-    public AllMessageResponse getMessages(@Payload AllMessageRequest request){
-
-        var messages = messageService.getMessagesBySenderAndReceiver(request);
-
-        var groupName = getGroupName(request.getSenderUsername(), request.getReceiverUsername());
-
-        return new AllMessageResponse(groupName, messages);
-    }
+//    // Tải lịch sử message giữa 2 người dùng
+//    @MessageMapping("/user.loadMessages")
+//    @SendToUser("/topic/caller")
+//    public AllMessageResponse getMessages(@Payload AllMessageRequest request){
+//
+//        var messages = messageService.getMessagesBySenderAndReceiver(request);
+//
+//        var groupName = getGroupName(request.getSenderUsername(), request.getReceiverUsername());
+//
+//        return new AllMessageResponse(groupName, messages);
+//    }
 
     // Tải người dùng đã nhắn tin với user detail
     @MessageMapping("/user.loadUsers")
@@ -77,6 +96,19 @@ public class MessageController {
 
         return messageService.getUsersHaveMessageWithUserDetailId(request);
         
+    }
+
+    @PostMapping("/get-messages-by-receiver-sender")
+    @ResponseBody
+    public ApiResponse<AllMessageResponse> getMessages(@RequestBody AllMessageRequest request){
+
+        var messages = messageService.getMessagesBySenderAndReceiver(request);
+
+        var groupName = getGroupName(request.getSenderUsername(), request.getReceiverUsername());
+
+        return ApiResponse.<AllMessageResponse>builder()
+                .result(new AllMessageResponse(groupName, messages))
+                .build();
     }
 
     // Tạo tên nhóm chung giữa 2 người dùng để xác định các message trong cuộc trò chuyện

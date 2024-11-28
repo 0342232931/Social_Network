@@ -1,6 +1,7 @@
 package vn.ths.SocialNetwork.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -62,7 +63,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
         // Dùng Jackson cho việc chuyển đổi giữa JSON và các đối tượng trong java
         MappingJackson2MessageConverter converter = new MappingJackson2MessageConverter();
-        converter.setObjectMapper(new ObjectMapper());
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        converter.setObjectMapper(objectMapper);
         converter.setContentTypeResolver(resolver);
 
         // Thêm converter vào danh sách message converter của ứng dụng
