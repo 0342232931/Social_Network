@@ -2,11 +2,16 @@ import React, { useState, useEffect, useRef } from 'react';
 import SockJS from "sockjs-client";
 import { Stomp } from '@stomp/stompjs';
 import styles from './ChatComponent.module.css';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { createAxios } from '../../../createInstance';
+import { loginSuccess } from '../../../redux/authSlice';
 
 const ChatComponent = ({receiver}) => {
-    console.log(receiver);
-    
+
+    const data = useSelector((state) => state.auth.login?.currentUser);
+    const dispatch = useDispatch();
+    const axiosJwt = createAxios(data, dispatch, loginSuccess);
+
     const user = useSelector((state) => state.auth.login?.currentUser?.result.userResponse);
     const token = useSelector((state) => state.auth.login?.currentUser?.result.token);
 
@@ -18,28 +23,27 @@ const ChatComponent = ({receiver}) => {
         const socket = new SockJS(`http://localhost:8080/ws?token=${token}`);
         stompClient.current = Stomp.over(socket);
 
+        loadAllMessage(user?.username, receiver?.username);
+
         stompClient.current.connect(
             {},
-            () => {
-                console.log("connected to Websocket");
-                
-                stompClient.current.subcribe('/user/queue/messages', (message) => {
-                    const payload = JSON.parse(message.body);
-                    setMessages((prevMessages) => [...prevMessages, payload]);
+            () => {                
+                stompClient.current.subscribe('/user/queue/messages', (message) => {
                     console.log("payload send message:");
-                    console.log(payload);
+                    console.log(message.body);
+                    const payload = JSON.parse(message.body);
+                    setMessages((prevMessages) => [...prevMessages, payload?.message]);
                     
                 });
 
-                stompClient.current.subscribe("/user/topic/caller", (response) => {
+                stompClient.current.subscribe("/user/topic/reply", (response) => {
                     const payload = JSON.parse(response.body);
-                    setMessages(payload.messages);
+                    setMessages((prev) => [...prev, payload?.message]);
                     console.log("payload messages: ");
                     console.log(payload);
                     
                 });
 
-                loadAllMessage();
             },
             (error) => {
                 console.log("connection to websocket error: ", error);
@@ -51,22 +55,27 @@ const ChatComponent = ({receiver}) => {
             if(stompClient.current){
                 stompClient.current.disconnect();
                 console.log("Disconnected from websocket");
-                
             }
         }
     }, [receiver, token])
     
-    const loadAllMessage = () => {
+    const loadAllMessage = async(senderUsername, receiverUsername) => {
         const request = {
-            senderUsername: user?.username,
-            receiverUsername: receiver?.username,
-        }
+            senderUsername: senderUsername,
+            receiverUsername: receiverUsername,
+        };
 
-        stompClient.current.send(
-            "/app/user.loadMessages",
-            {},
-            JSON.stringify(request)
-        );
+        try {
+            const response = await axiosJwt.post("http://localhost:8080/get-messages-by-receiver-sender", request);
+            if(response.data?.result){
+                setMessages(response.data?.result.messages);
+            } else {
+                console.log("get messages failed");
+            }
+        } catch (error) {
+            console.log(error);
+            
+        }
     }
 
     const sendMessage = (e) => {
@@ -93,15 +102,14 @@ const ChatComponent = ({receiver}) => {
         console.log("messages: ");
         console.log(messages);
         
-        
         return messages.map((message) => {
             return (
-                <>
-                    <div key={message?.id} className={message?.sender.username === user?.username ? styles.message_container2 : styles.message_container}>
-                        <p className={message?.sender.username === user?.username ? styles.message_username2 : styles.message_username}>{`${message?.receiver.firstName} ${message?.receiver.lastName}`}</p>
+                <div key={message?.id}>
+                    <div className={message?.sender.username === user?.username ? styles.message_container2 : styles.message_container}>
+                        <p className={message?.sender.username === user?.username ? styles.message_username2 : styles.message_username}>{`${message?.sender.firstName} ${message?.sender.lastName}`}</p>
                         <p className={message?.sender.username === user?.username ? styles.message_content2 : styles.message_content}>{message?.content}</p>
                     </div> <br />
-                </>
+                </div>
             )
         })
     }
