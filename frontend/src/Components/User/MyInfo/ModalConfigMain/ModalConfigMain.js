@@ -74,12 +74,8 @@ function ModalConfigMain({userId}) {
     const getUser = async (userId, axiosJwt) => {
         try {
             const res = await axiosJwt.get('http://localhost:8080/users/' + userId);
-            if (res != null) {
-                console.log("get user in component configmain success");
-                setUser(res.data?.result);
-            } else {
-                console.log("get user in component configmain fail");
-            }
+            setUser(res.data?.result);
+
         } catch (error) {
             console.log(error);
             
@@ -99,11 +95,7 @@ function ModalConfigMain({userId}) {
         }
         try {
             const res = await axiosJwt.post('http://localhost:8080/abouts',request)
-            if(res.status === 200) {
-                console.log('Success');
-            } else {
-                console.log('Fail');
-            }
+            
         } catch (error) {
             console.log(error);
             
@@ -174,11 +166,11 @@ function ModalConfigMain({userId}) {
     }
 
     return (
-        <div className="modal fade" id="modal_config_main" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div className="modal fade" id="modal_config_main" tabIndex="-1" aria-labelledby="modal_config_main" aria-hidden="true">
             <div className="modal-dialog">
                 <div className={`modal-content ${styles.container}`}>
                     <div className="modal-header">
-                        <h5 className={`modal-title ${styles.title}`} id="exampleModalLabel">Chỉnh sửa thông tin</h5>
+                        <h5 className={`modal-title ${styles.title}`} id="modal_config_main">Chỉnh sửa thông tin</h5>
                         <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div className="modal-body">

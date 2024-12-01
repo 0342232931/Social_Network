@@ -3,14 +3,16 @@ import styles from "./Post.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { loginSuccess } from "../../redux/authSlice";
 import { createAxios } from "../../createInstance";
+import ModalPostComment from "./Modal/ModalPostComment";
 
 function Post({post}){
         
     const dispatch = useDispatch();
 
     const data = useSelector((state) => state.auth.login?.currentUser);
-    const [imgObj, setImgObj] = useState(null)
-    const [avatar, setAvatar] = useState(null)
+    const [imgObj, setImgObj] = useState(null);
+    const [avatar, setAvatar] = useState(null);
+    const [comments, setComments] = useState([]);
     const avtSrc = "/img/user.png";
     let axiosJwt = createAxios(data, dispatch, loginSuccess);
 
@@ -119,13 +121,15 @@ function Post({post}){
             <div className={styles.data}>
                     <span className={styles.data_child}>Likes: 100</span>
                     <span className={styles.data_child}>Comments: 50</span>
-                </div>
+            </div>
             <div className={styles.line}></div>
             <div className={styles.footer_container}>
                 <p className={styles.margin_left}><img className={styles.interact} src="/img/post/heart.png" alt="Love"/>  Like</p>
-                <p><img className={styles.interact} src="/img/post/comment.png" alt="comment"/>  Bình luận</p>
+                <button type="button" className={styles.btn_modal} data-bs-toggle="modal" data-bs-target={`#modal_post_comment`}>
+                                <p><img className={styles.interact} src="/img/post/comment.png" alt="comment"/>  Bình luận</p></button>
                 <p className={styles.margin_right}><img className={styles.interact} src="/img/post/send.png" alt="share" />  Chia sẻ</p>
             </div>
+            <ModalPostComment />
         </div>
     )
 }

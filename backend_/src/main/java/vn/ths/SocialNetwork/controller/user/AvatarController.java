@@ -37,8 +37,6 @@ public class AvatarController {
     @PostMapping("/{id}")
     ApiResponse<?> createAvatar(@PathVariable("id") String userId,
                                              @RequestBody AvatarCreationRequest request) throws Exception {
-        System.out.println("already created");
-
         try {
             byte [] data = Base64.getDecoder().decode(request.getData());
 

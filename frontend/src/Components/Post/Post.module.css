@@ -85,3 +85,10 @@
 .display_none {
     display: none;
 }
+.btn_modal {
+    background-color: inherit;
+    width: auto;
+    height: auto;
+    border: none;
+    color:  #b7b5b8;
+}

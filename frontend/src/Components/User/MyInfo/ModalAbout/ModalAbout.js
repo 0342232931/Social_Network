@@ -44,12 +44,12 @@ function ModalAbout() {
     }
 
     return (
-        <div className={`modal fade`} id="modal_about" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div className={`modal fade`} id="modal_about" tabIndex="-1" aria-labelledby="modal_about" aria-hidden="true">
             <div className={`modal-dialog`}>
                 <div className={`modal-content ${styles.container}`}>
                     <form onSubmit={handleSubmitForm}>
                         <div className="modal-header">
-                            <h5 className={`modal-title ${styles.title}`} id="exampleModalLabel">Chỉnh sửa chi tiết</h5>
+                            <h5 className={`modal-title ${styles.title}`} id="modal_about">Chỉnh sửa chi tiết</h5>
                             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div className="modal-body">

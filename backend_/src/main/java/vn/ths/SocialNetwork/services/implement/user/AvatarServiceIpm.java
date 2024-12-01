@@ -87,7 +87,6 @@ public class AvatarServiceIpm implements AvatarService {
                             .data(dataEncode)
                             .build());
         }
-        System.out.println(responses.toString());
         return responses;
     }
 }

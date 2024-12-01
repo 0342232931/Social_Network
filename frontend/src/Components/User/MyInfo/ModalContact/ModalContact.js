@@ -3,12 +3,12 @@ import styles from './ModalContact.module.css';
 function ModalContact() {
 
     return (
-        <div className="modal fade" id="modal_contact" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div className="modal fade" id="modal_contact" tabIndex="-1" aria-labelledby="modal_contact" aria-hidden="true">
             <div className="modal-dialog">
                 <div className={`modal-content ${styles.container}`}>
                     <form>
                         <div className="modal-header">
-                            <h5 className={`modal-title ${styles.title}`} id="exampleModalLabel">Chỉnh sửa chi tiết</h5>
+                            <h5 className={`modal-title ${styles.title}`} id="modal_contact">Chỉnh sửa chi tiết</h5>
                             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div className="modal-body">
