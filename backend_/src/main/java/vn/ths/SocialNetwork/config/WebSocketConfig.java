@@ -16,6 +16,7 @@ import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
+import org.springframework.web.socket.config.annotation.WebSocketTransportRegistration;
 import vn.ths.SocialNetwork.services.implement.authentication.AuthenticationServiceIpm;
 
 import java.util.List;
@@ -39,7 +40,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.setApplicationDestinationPrefixes("/app");
 
         // Kích hoạt broker nội bộ với các destination prefix /topic, /queue, /user
-        // Các client sẽ đăng ký vào những chủ đề naày để nhận thông báo từ controller
+        // Các client sẽ đăng ký vào những chủ đề này để nhận thông báo từ controller
         registry.enableSimpleBroker("/topic", "/queue", "/user");
 
         // Đặt prefix /user cho các message gửi đến từng user cụ thể ( user-specific )
@@ -81,4 +82,10 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registration.interceptors(authChannelInterceptorAdapter);
     }
 
+    @Override
+    public void configureWebSocketTransport(WebSocketTransportRegistration registry) {
+        registry.setSendTimeLimit(60 * 1000)
+                .setSendBufferSizeLimit(50 * 1024 * 1024)
+                .setMessageSizeLimit(50 * 1024 * 1024);
+    }
 }

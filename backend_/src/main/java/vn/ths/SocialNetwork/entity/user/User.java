@@ -17,14 +17,18 @@ import java.util.UUID;
 @Builder
 @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class User {
     @Id
+    @EqualsAndHashCode.Include
     final String id = UUID.randomUUID().toString().substring(0, 20);
 
     @Column(name = "email", unique = true)
+    @EqualsAndHashCode.Include
     String email;
 
     @Column(name = "username", unique = true)
+    @EqualsAndHashCode.Include
     String username;
 
     @Column(name = "password")

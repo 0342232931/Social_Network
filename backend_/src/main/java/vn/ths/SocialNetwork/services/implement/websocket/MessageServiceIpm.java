@@ -109,7 +109,6 @@ public class MessageServiceIpm implements MessageService {
         users.forEach(user -> {
             userResponses.add(userMapper.toUserResponse(user));
         });
-
         return userResponses;
     }
 }

@@ -1,10 +1,14 @@
 package vn.ths.SocialNetwork.config;
 
+import com.nimbusds.jwt.SignedJWT;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.server.HandshakeInterceptor;
@@ -37,8 +41,19 @@ public class WebsocketAuthenticator implements HandshakeInterceptor {
 
             if (isValid) {
                 attributes.put("Authorization", token);
+
+                SignedJWT signedJWT = authenticationServiceIpm.verifyToken(token, false);
+                String username = signedJWT.getJWTClaimsSet().getSubject();
+
+                UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
+                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                        userDetails, null, userDetails.getAuthorities());
+
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
+
             return isValid;
+
         }
         return false;
     }

@@ -35,6 +35,7 @@ public class SecurityConfig {
     };
 
     CustomJwtToken customJwtToken;
+//    JwtAuthenticatorFilter jwtAuthenticatorFilter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception{
@@ -46,6 +47,7 @@ public class SecurityConfig {
                 .anyRequest().authenticated()
         );
 
+//        httpSecurity.addFilterBefore(jwtAuthenticatorFilter,UsernamePasswordAuthenticationFilter.class);
 
         httpSecurity.oauth2ResourceServer(oath2 ->
                 oath2.jwt(jwtConfigurer ->
