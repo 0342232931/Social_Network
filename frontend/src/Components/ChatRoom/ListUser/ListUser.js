@@ -14,8 +14,27 @@ function ListUser({dataUsers, onSelectUser}){
     const [keyword , setKeyword] = useState('');
 
     useEffect(() => {
-        setUserReponse(dataUsers)
+        if (dataUsers != null) {
+            userSetAvatar(axiosJwt);
+        }
+        
     }, [dataUsers])
+
+    const userSetAvatar = async (axiosJwt) => {
+        const usersSetAvatarChild = await Promise.all(
+            dataUsers?.map(async (user) => {
+                try {
+                    const res = await axiosJwt.get("http://localhost:8080/avatar/get-by-user-id/" + user?.id);
+                    const img = res.data?.result;
+                    return {...user, avatarUrl: `data:image/${img.fileType};base64,${img?.data}`};
+                } catch (error) {
+                    console.log(error);
+                    return {...user, avatarUrl: null}
+                }
+            })
+        );  
+        setUserReponse(usersSetAvatarChild);
+    }
 
     const searchUsers = async (axiosJwt, keyword) => {
         try {
@@ -75,7 +94,7 @@ function ListUser({dataUsers, onSelectUser}){
                         )
                     })
                 }
-                
+
             </div>
         </div>
     )

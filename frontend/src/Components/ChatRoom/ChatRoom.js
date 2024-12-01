@@ -58,7 +58,13 @@ function ChatRoom () {
             () => {
                 console.log("Connected to WebSocket");
 
-                stompClient.current.subscribe('/user/topic/caller-users', onReceivedMessage);
+                stompClient.current.subscribe(`/user/${user?.id}/caller-users`, onReceivedMessage);
+                handleRenderChatUsers();
+                
+            },
+            (error) => {
+                console.log(error);
+                
             }
         )        
 
@@ -68,12 +74,13 @@ function ChatRoom () {
                 stompClient.current.disconnect();
             }
         }
-
+        
     }, [token,isStart])
 
     const onReceivedMessage = (message) => {
         const usersData = JSON.parse(message.body);
-        setChatUsers((prev) => [...prev, usersData]);
+        setChatUsers(usersData);
+        setDataUsers(usersData);
     }
 
     const loadChatUsers = (userDetailId) => {
@@ -83,17 +90,14 @@ function ChatRoom () {
         }
 
         stompClient.current.send(
-            "/app/user.sendMessage",
-            {
-                Authorization: `Bearer ${token}`,
-            },
+            "/app/user.loadUsers",
+            {},
             JSON.stringify(getUsersRequest),
         );
     }
 
     const handleRenderChatUsers = () => {
         loadChatUsers(user?.id);
-        setDataUsers(chatUsers);
     }
 
     const handleRenderfriends = () => {
@@ -102,7 +106,7 @@ function ChatRoom () {
 
     const handleStartChat = () => {
         if (isStart) {
-            return (<ChatComponent receiver={receiver}/>)
+            return (<ChatComponent receiver={receiver} loadChatUsers={loadChatUsers} chatUsers={chatUsers}/>)
         }
         return (<span className={styles.nothing_chat_selected}><img className={styles.icon_nothing_chat_selected} src='/img/partners.png' /><p className={styles.text}>Hãy bắt đầu trò chuyện!!</p></span>)   
     }

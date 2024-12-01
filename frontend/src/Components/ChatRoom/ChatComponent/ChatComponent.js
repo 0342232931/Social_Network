@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createAxios } from '../../../createInstance';
 import { loginSuccess } from '../../../redux/authSlice';
 
-const ChatComponent = ({receiver}) => {
+const ChatComponent = ({receiver, loadChatUsers, chatUsers}) => {
 
     const data = useSelector((state) => state.auth.login?.currentUser);
     const dispatch = useDispatch();
@@ -20,34 +20,31 @@ const ChatComponent = ({receiver}) => {
     const stompClient = useRef(null);
 
     useEffect(() => {
+        loadAllMessage(user?.username, receiver?.username);
+        
         const socket = new SockJS(`http://localhost:8080/ws?token=${token}`);
         stompClient.current = Stomp.over(socket);
-
-        loadAllMessage(user?.username, receiver?.username);
 
         stompClient.current.connect(
             {},
             () => {                
-                stompClient.current.subscribe('/user/queue/messages', (message) => {
-                    console.log("payload send message:");
-                    console.log(message.body);
+                stompClient.current.subscribe(`/user/${user?.username}/messages`, (message) => {
                     const payload = JSON.parse(message.body);
-                    setMessages((prevMessages) => [...prevMessages, payload?.message]);
-                    
-                });
-
-                stompClient.current.subscribe("/user/topic/reply", (response) => {
-                    const payload = JSON.parse(response.body);
-                    setMessages((prev) => [...prev, payload?.message]);
-                    console.log("payload messages: ");
-                    console.log(payload);
+                    setMessages((prevMessages) => [...prevMessages, payload]);
+         
+                    chatUsers?.forEach((chatUser) => {
+                        if (((payload?.receiver.id !== chatUser?.id && payload?.sender.id === user?.id) 
+                                || (payload?.sender.id !== chatUser?.id && payload?.receiver.id === user?.id)) 
+                            && messages.length <= 0){
+                            loadChatUsers(user?.id);
+                        }
+                    });
                     
                 });
 
             },
             (error) => {
                 console.log("connection to websocket error: ", error);
-
             }
         )
 
@@ -99,9 +96,6 @@ const ChatComponent = ({receiver}) => {
 
 
     const renderMessages = () => {
-        console.log("messages: ");
-        console.log(messages);
-        
         return messages.map((message) => {
             return (
                 <div key={message?.id}>

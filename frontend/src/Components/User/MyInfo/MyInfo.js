@@ -174,18 +174,6 @@ function MyInfo () {
                 <div className={styles.information}>
                     {renderAbout()}
                     {renderContact()}
-                    <div className={styles.information_child}>
-                        <div className={styles.img_header}>
-                            <h3 className={styles.text_header}>Bạn bè</h3>
-                                <Link to="/friend-page"><p className={styles.all_friend} >Xem tất cả</p></Link>
-                            </div>
-                        </div>
-                    <div className={styles.information_child}>
-                        <div className={styles.img_header}>
-                            <h3 className={styles.text_header}>Ảnh</h3>
-                            <Link to="#"><p className={styles.all_img}>Xem tất cả</p></Link>
-                        </div>
-                    </div>
                 </div>
                 <div className={styles.line_col}></div>
                 <div className={styles.me_container}>
@@ -260,9 +248,11 @@ function MyInfo () {
                     </div>
                 </div>
             </div>
-            <ModalAbout />
-            <ModalContact />
-            <ModalConfigMain userId={user?.id}/>
+            <div className={styles.display_none}>
+                <ModalAbout />
+                <ModalContact />
+                <ModalConfigMain userId={user?.id}/>
+            </div>
         </div>
     )
 }
