@@ -9,8 +9,14 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 import vn.ths.SocialNetwork.dto.request.websocket.GetNotificationsRequest;
 import vn.ths.SocialNetwork.dto.request.websocket.NotificationCreationRequest;
+import vn.ths.SocialNetwork.dto.request.websocket.NotificationDeleteRequest;
+import vn.ths.SocialNetwork.dto.response.websocket.NotificationDeleteResponse;
 import vn.ths.SocialNetwork.dto.response.websocket.NotificationResponse;
 import vn.ths.SocialNetwork.exception.AppException;
 import vn.ths.SocialNetwork.exception.ErrorCode;
@@ -30,7 +36,6 @@ public class NotificationController {
     SimpMessagingTemplate simpMessagingTemplate;
 
     @MessageMapping("/user.sendNotification")
-    @SendToUser("/topic/reply-notification")
     public NotificationResponse sendNotification(@Payload NotificationCreationRequest request){
 
         if (request.getSenderUsername().equals(request.getReceiverUsername()))
@@ -38,16 +43,41 @@ public class NotificationController {
 
         NotificationResponse notificationResponse = notificationService.save(request);
 
+        if (notificationResponse.getType().equals("ADD_FRIEND"))
+            simpMessagingTemplate.convertAndSendToUser(request.getReceiverUsername(),
+                    "/notification-type-add-friend", notificationResponse);
+
         simpMessagingTemplate.convertAndSendToUser(request.getReceiverUsername(),
-                "/queue/notification", notificationResponse);
+                "/notification", notificationResponse);
 
         return notificationResponse;
     }
 
-    @MessageMapping("/user.loadNotifications")
-    @SendToUser("/topic/caller-notifications")
-    public List<NotificationResponse> getNotifications(@Payload GetNotificationsRequest request){
-        return notificationService.getNotificationsByReceiverId(request);
+    @MessageMapping("/user.deleteNotification")
+    public List<NotificationDeleteResponse> deleteNotification(@Payload NotificationDeleteRequest request){
+
+        List<NotificationDeleteResponse> notificationResponses = notificationService.deleteById(request);
+
+        if(request.getIsAddFriend().equals("true"))
+            simpMessagingTemplate.convertAndSendToUser
+                    (request.getUserId(), "/notification-add-friend-delete", notificationResponses);
+
+        simpMessagingTemplate.convertAndSendToUser(request.getUserId(),
+                "/notification-delete", notificationResponses);
+
+        return notificationResponses;
+    }
+
+    @GetMapping("/get-notifications-add-friend-by-id/{id}")
+    @ResponseBody
+    public List<NotificationResponse> getNotificationsAddFriend(@PathVariable("id") String id){
+        return notificationService.getNotificationsTypeAddFriendByReceiverId(id);
+    }
+
+    @GetMapping("/get-notifications-by-id/{id}")
+    @ResponseBody
+    public List<NotificationResponse> getNotifications(@PathVariable("id") String id){
+        return notificationService.getNotificationsByReceiverId(id);
     }
 
 }

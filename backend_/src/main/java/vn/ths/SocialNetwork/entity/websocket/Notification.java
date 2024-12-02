@@ -28,6 +28,9 @@ public class Notification {
     @Column(name = "content")
     String content;
 
+    @Column(name = "type")
+    String type;
+
     @ManyToOne
     User sender;
 

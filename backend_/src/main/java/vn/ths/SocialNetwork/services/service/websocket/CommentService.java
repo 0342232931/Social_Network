@@ -9,9 +9,6 @@ import java.util.List;
 
 public interface CommentService {
     public CommentResponse create(CommentCreationRequest request);
-    public CommentResponse getById(String id);
-    public CommentResponse updateById(String id, CommentUpdateRequest request);
-    public List<Comment> getAll();
-    public List<Comment> getByPostId(String postId);
+    public List<CommentResponse> getByPostId(String postId);
     public void deleteById(String id);
 }

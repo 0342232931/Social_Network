@@ -15,8 +15,9 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class NotificationResponse {
     String id;
-    String message;
+    String content;
     LocalDateTime createAt;
     UserResponse sender;
     UserResponse receiver;
+    String type;
 }

@@ -8,14 +8,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import vn.ths.SocialNetwork.dto.request.post.PostCreationRequest;
 import vn.ths.SocialNetwork.dto.request.post.PostUpdateRequest;
+import vn.ths.SocialNetwork.dto.response.post.CountInteractResponse;
 import vn.ths.SocialNetwork.dto.response.post.PostResponse;
 import vn.ths.SocialNetwork.entity.post.Post;
 import vn.ths.SocialNetwork.entity.user.User;
 import vn.ths.SocialNetwork.exception.AppException;
 import vn.ths.SocialNetwork.exception.ErrorCode;
 import vn.ths.SocialNetwork.mapper.post.PostMapper;
+import vn.ths.SocialNetwork.repository.post.InteractRepository;
 import vn.ths.SocialNetwork.repository.post.PostRepository;
 import vn.ths.SocialNetwork.repository.user.UserRepository;
+import vn.ths.SocialNetwork.repository.websocket.CommentRepository;
+import vn.ths.SocialNetwork.repository.websocket.InteractionRepository;
 import vn.ths.SocialNetwork.services.service.post.PostService;
 import vn.ths.SocialNetwork.services.service.user.RelationService;
 
@@ -33,6 +37,8 @@ public class PostServiceIpm implements PostService {
 
     UserRepository userRepository;
     PostRepository postRepository;
+    CommentRepository commentRepository;
+    InteractionRepository interactionRepository;
     PostMapper postMapper;
     RelationService relationService;
 
@@ -69,6 +75,18 @@ public class PostServiceIpm implements PostService {
         post.setUpdateAt(currentDate);
 
         return postMapper.toPostResponse(postRepository.saveAndFlush(post));
+    }
+
+    @Override
+    public CountInteractResponse CountInteract(String id) {
+
+        int interactQuantity = interactionRepository.countInteractionInPostByPostId(id);
+        int commentQuantity = commentRepository.countCommentInPostByPostId(id);
+
+        return CountInteractResponse.builder()
+                .interactQuantity(interactQuantity)
+                .commentQuantity(commentQuantity)
+                .build();
     }
 
     @Override

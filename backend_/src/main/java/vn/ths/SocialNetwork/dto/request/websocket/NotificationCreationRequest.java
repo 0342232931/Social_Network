@@ -9,7 +9,8 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class NotificationCreationRequest {
-    String message;
+    String content;
     String senderUsername;
     String receiverUsername;
+    String type;
 }

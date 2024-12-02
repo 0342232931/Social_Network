@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import vn.ths.SocialNetwork.dto.request.post.PostCreationRequest;
 import vn.ths.SocialNetwork.dto.request.post.PostUpdateRequest;
 import vn.ths.SocialNetwork.dto.response.ApiResponse;
+import vn.ths.SocialNetwork.dto.response.post.CountInteractResponse;
 import vn.ths.SocialNetwork.dto.response.post.PostResponse;
 import vn.ths.SocialNetwork.entity.post.Post;
 import vn.ths.SocialNetwork.services.service.post.ImageService;
@@ -43,6 +44,13 @@ public class PostController {
     public ApiResponse<List<Post>> getNewPostByFriendForUserAuth(@PathVariable("id") String id){
         return ApiResponse.<List<Post>>builder()
                 .result(postService.getAllNewPostForFriendsOfUserAuthenticated(id))
+                .build();
+    }
+
+    @GetMapping("/count-interact-comment/{id}")
+    public ApiResponse<CountInteractResponse> countInteract(@PathVariable("id") String id){
+        return ApiResponse.<CountInteractResponse>builder()
+                .result(postService.CountInteract(id))
                 .build();
     }
 

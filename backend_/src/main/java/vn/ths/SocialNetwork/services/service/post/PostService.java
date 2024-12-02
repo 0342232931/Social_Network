@@ -2,6 +2,7 @@ package vn.ths.SocialNetwork.services.service.post;
 
 import vn.ths.SocialNetwork.dto.request.post.PostCreationRequest;
 import vn.ths.SocialNetwork.dto.request.post.PostUpdateRequest;
+import vn.ths.SocialNetwork.dto.response.post.CountInteractResponse;
 import vn.ths.SocialNetwork.dto.response.post.PostResponse;
 import vn.ths.SocialNetwork.entity.post.Post;
 
@@ -11,6 +12,7 @@ public interface PostService {
     public PostResponse create(PostCreationRequest request);
     public PostResponse findById(String id);
     public PostResponse updateById(String id, PostUpdateRequest request);
+    public CountInteractResponse CountInteract (String id);
     public List<Post> getAllNewPostForFriendsOfUserAuthenticated(String userId);
     public List<Post> getAll();
     public List<Post> getByUserId(String id);

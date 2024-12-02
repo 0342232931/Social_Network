@@ -4,65 +4,65 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import vn.ths.SocialNetwork.dto.request.user.RelationAddFriendRequest;
 import vn.ths.SocialNetwork.dto.request.user.RelationCreationRequest;
 import vn.ths.SocialNetwork.dto.request.user.RelationDeleteFriendRequest;
 import vn.ths.SocialNetwork.dto.response.ApiResponse;
 import vn.ths.SocialNetwork.dto.response.user.RelationResponse;
+import vn.ths.SocialNetwork.dto.response.websocket.AddFriendResponse;
 import vn.ths.SocialNetwork.entity.user.Relation;
 import vn.ths.SocialNetwork.entity.user.User;
 import vn.ths.SocialNetwork.services.service.user.RelationService;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/relations")
+@Controller
 @Slf4j
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class    RelationController {
+public class RelationController {
 
     RelationService relationService;
-
-    @GetMapping("/{id}")
-    ApiResponse<RelationResponse> getById(@PathVariable("id") String id){
-        return ApiResponse.<RelationResponse>builder()
-                .result(relationService.getById(id))
-                .build();
-    }
+    SimpMessagingTemplate simpMessagingTemplate;
 
     @GetMapping("/get-friends-by-user-id/{id}")
+    @ResponseBody
     ApiResponse<List<User>> getFriendsByUserId(@PathVariable("id") String userId){
         return ApiResponse.<List<User>>builder()
                 .result(relationService.getFriendsByUserId(userId))
                 .build();
     }
 
-    @GetMapping()
-    ApiResponse<List<Relation>> getAll(){
-        return ApiResponse.<List<Relation>>builder()
-                .result(relationService.getAll())
-                .build();
-    }
-
-    @PostMapping()
+    @PostMapping("/create-relation")
+    @ResponseBody
     ApiResponse<Relation> create(@RequestBody RelationCreationRequest request){
         return ApiResponse.<Relation>builder()
                 .result(relationService.create(request))
                 .build();
     }
 
-    @PutMapping("/add-friend/{id}")
-    ApiResponse<Relation> addFriend(@PathVariable("id") String userId,
-                                            @RequestBody RelationAddFriendRequest request){
-        var result = relationService.addFriend(userId, request);
-        return ApiResponse.<Relation>builder()
-                .result(result)
+    @MessageMapping("/user.add-friend")
+    ApiResponse<AddFriendResponse> addFriend(@RequestBody RelationAddFriendRequest request){
+
+        AddFriendResponse addFriendResponse = relationService.addFriend(request);
+
+        RelationAddFriendRequest request2 = new RelationAddFriendRequest(request.getFriendId(), request.getUserId());
+        AddFriendResponse response2 = relationService.addFriend(request2);
+
+        simpMessagingTemplate.convertAndSendToUser(request.getUserId(), "/friend", addFriendResponse);
+        simpMessagingTemplate.convertAndSendToUser(request.getFriendId(), "/friend", addFriendResponse);
+
+        return ApiResponse.<AddFriendResponse>builder()
+                .result(addFriendResponse)
                 .build();
     }
 
     @PutMapping("/delete-friend/{id}")
+    @ResponseBody
     ApiResponse<RelationResponse> deleteFriend(@PathVariable("id") String userId,
                                                @RequestBody RelationDeleteFriendRequest request){
         return ApiResponse.<RelationResponse>builder()
@@ -71,6 +71,7 @@ public class    RelationController {
     }
 
     @DeleteMapping("/{id}")
+    @ResponseBody
     ApiResponse<?> deleteById(@PathVariable("id") String id){
         relationService.deleteRelationById(id);
         return ApiResponse.builder().build();

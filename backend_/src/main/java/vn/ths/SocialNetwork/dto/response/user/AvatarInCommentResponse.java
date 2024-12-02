@@ -9,10 +9,9 @@ import vn.ths.SocialNetwork.entity.user.User;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AvatarResponse {
+public class AvatarInCommentResponse {
     String id;
     String fileName;
     String fileType;
     String data;
-    User user;
 }

@@ -4,6 +4,10 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import vn.ths.SocialNetwork.dto.request.websocket.CommentCreationRequest;
 import vn.ths.SocialNetwork.dto.request.websocket.CommentUpdateRequest;
@@ -14,44 +18,30 @@ import vn.ths.SocialNetwork.services.service.websocket.CommentService;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/comments")
+@Controller
 @Slf4j
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class CommentController {
 
     CommentService commentService;
+    SimpMessagingTemplate simpMessagingTemplate;
 
-    @GetMapping("/{id}")
-    public ApiResponse<CommentResponse> getCommentById(@PathVariable("id") String id){
-        return ApiResponse.<CommentResponse>builder().result(commentService.getById(id)).build();
-    }
+    @MessageMapping("/user.sendComment")
+    public CommentResponse sendComment(@Payload CommentCreationRequest request){
 
-    @GetMapping()
-    public ApiResponse<List<Comment>> getAllComment(){
-        return ApiResponse.<List<Comment>>builder().result(commentService.getAll()).build();
+        CommentResponse response = commentService.create(request);
+
+        simpMessagingTemplate.convertAndSendToUser(request.getPostId(), "/comments", response);
+        return response;
     }
 
     @GetMapping("/get-by-post-id/{id}")
-    public ApiResponse<List<Comment>> getCommentsByPostId(@PathVariable("id") String id){
-        return ApiResponse.<List<Comment>>builder().result(commentService.getByPostId(id)).build();
-    }
-
-    @PostMapping
-    public ApiResponse<CommentResponse> createComment(@RequestBody CommentCreationRequest request){
-        return ApiResponse.<CommentResponse>builder().result(commentService.create(request)).build();
-    }
-
-    @PutMapping("/{id}")
-    public ApiResponse<CommentResponse> updateComment(@PathVariable("id") String id,
-                                                      @RequestBody CommentUpdateRequest request){
-        return ApiResponse.<CommentResponse>builder().result(commentService.updateById(id, request)).build();
-    }
-
-    @DeleteMapping("/{id}")
-    public void deleteCommentById(@PathVariable("id") String id){
-        commentService.deleteById(id);
+    @ResponseBody
+    public ApiResponse<List<CommentResponse>> getCommentsByPostId(@PathVariable("id") String id){
+        return ApiResponse.<List<CommentResponse>>builder()
+                .result(commentService.getByPostId(id))
+                .build();
     }
 
 }

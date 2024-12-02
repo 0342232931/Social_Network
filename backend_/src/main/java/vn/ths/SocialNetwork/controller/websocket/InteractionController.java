@@ -12,7 +12,7 @@ import vn.ths.SocialNetwork.dto.response.post.InteractionResponse;
 import vn.ths.SocialNetwork.services.service.websocket.InteractionService;
 
 @RestController
-@RequestMapping("interactions")
+@RequestMapping("/interactions")
 @Slf4j
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)

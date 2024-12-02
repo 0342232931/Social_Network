@@ -2,10 +2,10 @@ package vn.ths.SocialNetwork.dto.response.websocket;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import vn.ths.SocialNetwork.dto.response.user.AvatarResponse;
 import vn.ths.SocialNetwork.dto.response.user.UserResponse;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -13,11 +13,12 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class NotificationResponse {
+public class NotificationDeleteResponse {
     String id;
-    String message;
+    String content;
     LocalDateTime createAt;
     UserResponse sender;
     UserResponse receiver;
     String type;
+    String avatarUrl;
 }

@@ -4,6 +4,7 @@ import vn.ths.SocialNetwork.dto.request.user.RelationAddFriendRequest;
 import vn.ths.SocialNetwork.dto.request.user.RelationCreationRequest;
 import vn.ths.SocialNetwork.dto.request.user.RelationDeleteFriendRequest;
 import vn.ths.SocialNetwork.dto.response.user.RelationResponse;
+import vn.ths.SocialNetwork.dto.response.websocket.AddFriendResponse;
 import vn.ths.SocialNetwork.entity.user.Relation;
 import vn.ths.SocialNetwork.entity.user.User;
 
@@ -14,7 +15,7 @@ public interface RelationService {
     public List<User> getFriendsByUserId(String userId);
     public List<Relation> getAll();
     public Relation create(RelationCreationRequest request);
-    public Relation addFriend(String userId, RelationAddFriendRequest request);
+    public AddFriendResponse addFriend(RelationAddFriendRequest request);
     public RelationResponse deleteFriend(String userId, RelationDeleteFriendRequest request);
     public void deleteRelationById(String relationId);
 }
