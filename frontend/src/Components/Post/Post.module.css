@@ -66,13 +66,24 @@
 }
 .margin_left {
     margin-left: 50px;
+    cursor: pointer;
 }
 .margin_right {
     margin-right: 50px;
+    cursor: pointer;
 }
 .interact {
     width: 20px;
     height: 20px;
+}
+.interact_like {
+    width: 20px;
+    height: 20px;
+    background-color: lightblue; /* Màu nền */
+    padding: 10px; /* Khoảng cách từ ảnh đến viền nền */
+    border: 2px solid black; /* Viền bao quanh */
+    border-radius: 10px; /* Bo góc viền */
+    background-clip: padding-box; /* Background chỉ áp dụng bên trong viền */
 }
 .time {
     font-size: 12px;

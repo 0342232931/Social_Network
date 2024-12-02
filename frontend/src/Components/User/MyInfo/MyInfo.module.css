@@ -3,6 +3,7 @@
 }
 .user {
     display: flex;
+    overflow-y: hidden;
 }
 .infomation {
     width: 30%;
@@ -12,6 +13,7 @@
     position: sticky;
 }
 .me_container {
+    height: 100%;
     width: 70%;
     right: 0;
     margin-left: auto;

@@ -5,10 +5,12 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import AllFriend from '../MyInfo/AllFriend/AllFriend';
 import Image from "../MyInfo/Image/Image";
 import InfomationFriend from './InfomationFriend/InfomationFriend';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createAxios } from '../../../createInstance';
 import { loginSuccess } from '../../../redux/authSlice';
+import SockJS from 'sockjs-client';
+import { Stomp } from '@stomp/stompjs';
 
 function FriendInfo () {
 
@@ -17,6 +19,7 @@ function FriendInfo () {
     let axiosJwt = createAxios(data, dispatch, loginSuccess);
 
     const userDetail = useSelector((state) => state.auth.login?.currentUser?.result.userResponse);
+    const token = useSelector((state) => state.auth.login?.currentUser?.result.token);
     const navigate = useNavigate();
 
     const location = useLocation();
@@ -27,6 +30,7 @@ function FriendInfo () {
     const [posts, setPosts] = useState([]);
     const [friends, setFriends] = useState([]);
     const [bio, setBio] = useState(null);
+    const stompClient = useRef();
 
     const getInfoUser = async (axiosJwt, userId) => {
         try {
@@ -99,6 +103,29 @@ function FriendInfo () {
         getPost(id, axiosJwt);
         getFriends(id, axiosJwt);
         getBio(id, axiosJwt);
+
+        const socket = new SockJS(`http://localhost:8080/ws?token=${token}`);
+        stompClient.current = Stomp.over(socket);
+
+        stompClient.current.connect(
+            {},
+            () => {
+                stompClient.current.subscribe(`/user/${id}/friend`, (response) => {
+                    const result = JSON.parse(response.body);
+                    if (result?.user1.id === id) {
+                        setFriends((prev) => [...prev, result?.user2]);
+                    } else {
+                        setFriends((prev) => [...prev, result.user1]);
+                    }
+                })
+            },
+            (error) => {
+                console.log("Connection to WS failed");
+                console.log(error);
+                
+            }
+        )
+
     }, [id]);
 
     const renderAbout = () => {
@@ -164,6 +191,22 @@ function FriendInfo () {
         }
     }
 
+    const handleOnClickAddFriend = () => {
+        
+        const request = {
+            content: "đã gửi cho bạn lời mời kết bạn",
+            senderUsername: userDetail?.username,
+            receiverUsername: user?.username,
+            type: "ADD_FRIEND",
+        }
+
+        stompClient.current.send(
+            "/app/user.sendNotification",
+            {},
+            JSON.stringify(request)
+        )
+    }
+
     return (
         <div className={styles.container}>
             <NavBar />
@@ -184,7 +227,7 @@ function FriendInfo () {
                             {renderBio()}
                         </div>
                         <div className={styles.button_add_friend}>
-                            <button type="button" className={`${styles.btn_add}`}>
+                            <button type="button" className={`${styles.btn_add}`} onClick={() => handleOnClickAddFriend()}>
                                 <img src='/img/myinfo/a.png' alt='icon' className={styles.icon} style={{marginBottom : "3px"}}/>
                                 Thêm bạn bè
                             </button>

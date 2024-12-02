@@ -39,9 +39,24 @@ function HomePage () {
     // Get Friends
     const getFriends = async (userId, axiosJwt) => {
         try {
-            const res = await axiosJwt.get('http://localhost:8080/relations/get-friends-by-user-id/' + userId);
+            const res = await axiosJwt.get('http://localhost:8080/get-friends-by-user-id/' + userId);
 
-            setFriends(res.data.result);
+            const result = res.data?.result;
+
+            const updatedUsers = await Promise.all(
+                result?.map(async (re) => {
+                    try {
+                        const response = await axiosJwt.get("http://localhost:8080/avatar/get-by-user-id/" + re?.id);
+                        const img = response.data?.result;
+                        return {...re, avatarUrl: `data:image/${img.fileType};base64,${img?.data}`};
+                    } catch (error) {
+                        console.log(error);
+                        return {...re, avatarUrl: null}
+                    }
+                })
+            );  
+
+            setFriends(updatedUsers);
         } catch (error) {
             console.log("err: " + error);
             
@@ -65,9 +80,9 @@ function HomePage () {
         if (friends.length > 0){
             return friends.map((friend) => {
                 return (
-                    <Link key={friend.id} to='/friend-info' className={styles.textdecoration_none}>
+                    <Link key={friend.id} to={`/friend-info?id=${friend?.id}`} className={styles.textdecoration_none}>
                         <div className={styles.friend_element}>
-                            <img className={styles.avatar_friend} src='/img/user.png' alt='avatar friend'/>
+                        <img className={styles.avatar_friend} src={friend?.avatarUrl != null ? friend?.avatarUrl : '/img/user.png'} alt='avatar friend'/>
                             <span className={styles.friend_name}><b>{friend?.firstName == null && friend?.lastName == null ? friend?.username : `${friend?.firstName} ${friend?.lastName}` }</b></span>
                         </div>
                     </Link>
@@ -84,14 +99,14 @@ function HomePage () {
 
     // Render Posts
     const renderPosts = () => {
-        if (!post.length > 0) {
+        if (!post?.length > 0) {
             return(
                 <div>
                     <h3 className={styles.not_element}>-----  Không có bài viết mới nào được tạo  -----</h3>
                 </div>
             )
         }
-        return post.map((post) => {
+        return post?.map((post) => {
             return (
                 <Post key={post?.id} postId={post?.id} content={post?.content} createAt={post?.createAt} user={post?.user}/>
             )

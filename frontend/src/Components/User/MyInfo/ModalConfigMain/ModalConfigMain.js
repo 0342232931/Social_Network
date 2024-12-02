@@ -1,10 +1,10 @@
 import styles from './ModalConfigMain.module.css';
-import ModalAbout from '../ModalAbout/ModalAbout';
 import ModalContact from '../ModalContact/ModalContact';
 import {useEffect, useMemo, useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { createAxios } from '../../../../createInstance';
 import { loginSuccess } from '../../../../redux/authSlice';
+import ModalAbout from "../ModalAbout/ModalAbout";
 
 function ModalConfigMain({userId}) {
 
@@ -166,7 +166,7 @@ function ModalConfigMain({userId}) {
     }
 
     return (
-        <div className="modal fade" id="modal_config_main" tabIndex="-1" aria-labelledby="modal_config_main" aria-hidden="true">
+        <div className={`modal fade`} id="modal_config_main" tabIndex="-1" aria-labelledby="modal_config_main" aria-hidden="true">
             <div className="modal-dialog">
                 <div className={`modal-content ${styles.container}`}>
                     <div className="modal-header">

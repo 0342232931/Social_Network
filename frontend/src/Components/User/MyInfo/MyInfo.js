@@ -71,7 +71,7 @@ function MyInfo () {
 
     const getFriends = async(userId, axiosJwt) => {
         try {
-            const response = await axiosJwt.get('http://localhost:8080/relations/get-friends-by-user-id/' + userId);
+            const response = await axiosJwt.get('http://localhost:8080/get-friends-by-user-id/' + userId);
             if (response != null) {
                 console.log("get friends success");
                 setFriends(response.data?.result);
@@ -248,11 +248,9 @@ function MyInfo () {
                     </div>
                 </div>
             </div>
-            <div className={styles.display_none}>
-                <ModalAbout />
-                <ModalContact />
-                <ModalConfigMain userId={user?.id}/>
-            </div>
+            <ModalAbout />
+            <ModalContact />
+            <ModalConfigMain userId={user?.id}/>
         </div>
     )
 }

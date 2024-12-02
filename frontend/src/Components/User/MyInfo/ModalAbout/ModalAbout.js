@@ -16,7 +16,7 @@ function ModalAbout() {
     const [job, setJob] = useState('');
     const [university, setUniversity] = useState('');
     const [highSchool, setHighSchool] = useState('');
-    const [hometown, setHometown] = useState('');
+    const [address, setAddress] = useState('');
     const [birthday, setBirthday] = useState();
 
     const handleSubmitForm = (e) => {
@@ -27,8 +27,8 @@ function ModalAbout() {
             firstName: user?.firstName,
             lastname: user?.lastName,
             dob: birthday,
-            address: user?.address,
-            hometown: hometown,
+            address: address,
+            hometown: user?.hometown,
             university: university,
             highSchool: highSchool,
             phoneNumber: user?.phoneNumber,
@@ -79,7 +79,7 @@ function ModalAbout() {
                                     <img src='/img/myinfo/location.png' alt='education' className={styles.icon} />
                                     <p className={styles.title_input}>Quê Quán</p>
                                 </div>
-                                <input className="form-control" type="text" aria-label="default input example" value={user?.hometown} onChange={e => setHometown(e.target.value)}/>
+                                <input className="form-control" type="text" aria-label="default input example" value={user?.address} onChange={e => setAddress(e.target.value)}/>
                             </div>
                             <div className={styles.margin_top}>
                                 <div className="d-flex">
