@@ -2,9 +2,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import styles from "./navbar.module.css";
 import { logoutUser } from '../../redux/apiRequest'
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createAxios } from "../../createInstance";
 import { loginSuccess } from "../../redux/authSlice";
+import SockJS from "sockjs-client";
+import { Stomp } from "@stomp/stompjs";
 
 function NavBar(){ 
 
@@ -14,9 +16,12 @@ function NavBar(){
   const data = useSelector((state) => state.auth.login?.currentUser);
   const user = useSelector((state) => state.auth.login?.currentUser?.result.userResponse);
   let axiosJwt = createAxios(data, dispatch, loginSuccess);
+  const token = useSelector((state) => state.auth.login?.currentUser?.result.token)
+  const stompClient = useRef();
 
   const [url, setUrl] = useState("/img/user.png")
   const [keyword, setKeyword] = useState(null);
+  const [notifications, setNotifications] = useState([]);
 
   const getAvatarUser = async (userId, axiosJwt) => {
     try {
@@ -31,15 +36,61 @@ function NavBar(){
   }
 }
 
-  useEffect(() => {
-      if(!data) {
-        navigate('/login')
-      } else {
-        getAvatarUser(user?.id, axiosJwt)
-      }
-  }, [])
+  const getNotifications = async (axiosJwt, userId) => {
+    try {
+      const res = await axiosJwt.get("http://localhost:8080/get-notifications-by-id/" + userId);
 
-  const token = useSelector((state) => state.auth.login?.currentUser?.result.token)
+      const notificationsData = res.data;
+
+      const updateNotification2 = notificationsData?.map((notification) => ({
+         ...notification,
+          avatarUrl: `data:image/png;base64,${notification?.avatarUrl}`,
+      }))
+
+      setNotifications(updateNotification2);
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
+
+  useEffect(() => {
+
+      if(!data) 
+        navigate('/login');
+    
+      getAvatarUser(user?.id, axiosJwt);
+      getNotifications(axiosJwt, user?.id);
+
+      const socket = new SockJS(`http://localhost:8080/ws?token=${token}`);
+      stompClient.current = Stomp.over(socket)
+
+      stompClient.current.connect(
+        {},
+        () => {
+
+          stompClient.current.subscribe(`/user/${user?.username}/notification`, (response) => {
+            const payload = JSON.parse(response.body);
+            const result = payload;
+            result.avatarUrl = `data:image/png;base64,${result?.avatarUrl}`;
+            setNotifications((prev) => [...prev, result]);
+          })
+
+          stompClient.current.subscribe(`/user/${user?.id}/notification-add-friend-delete`, (response) => {
+            const payload = JSON.parse(response.body);
+            const updateNotification = payload?.map((notification) => ({
+                ...notification,
+                avatarUrl: `data:image/png;base64,${notification?.avatarUrl}`,
+            }))
+            setNotifications(updateNotification);
+        })
+        },
+        (error) => {
+          console.log(error);
+          
+        }
+      )
+  }, [])
 
   const request = {
     token: token
@@ -52,6 +103,21 @@ function NavBar(){
   const handleSubmitSearch = (e) => {
     e.preventDefault();
     navigate(`/search?id=${keyword}`)
+  }
+
+  const handleRenderNotifications = () => {
+    if(notifications.length > 0) {
+      return notifications.map((notification) => {        
+        return (
+          <li key={notification?.id} className={`dropdown-item ${styles.padding_dropdown_item}`}>
+            <img className={`${styles.icon_info}`} alt="info" src={notification?.avatarUrl != null ? notification?.avatarUrl : "/img/user.png"} />
+            <div className={styles.container_text_bell}>
+              <span className={`${styles.dopdown_item_text}`}>{`${notification?.sender?.firstName} ${notification?.sender?.lastName} ${notification?.content}`}</span>
+            </div>
+          </li>
+        )
+      })
+    }
   }
 
   return (
@@ -77,9 +143,14 @@ function NavBar(){
           <Link to="/chat" className={styles.element_children}>
             <img className={styles.icon} src="/img/notification.png" alt="message"/>
           </Link>
-          <Link to="#" className={styles.element_children}>
-            <img className={styles.icon} src="/img/notification-bell.png"alt="bell"/>
-          </Link> 
+          <div className={`dropdown ${styles.element_children}`}>
+            <div data-bs-toggle="dropdown" aria-expanded="false">
+              <img className={styles.icon} src="/img/notification-bell.png"alt="bell"/>
+            </div>
+            <ul className={`dropdown-menu ${styles.util_container_bell}`}>
+              {handleRenderNotifications()}
+            </ul>
+          </div>
           <div className={`dropdown ${styles.element_children}`}>
             <div data-bs-toggle="dropdown" aria-expanded="false">
               <img className={`dropdown-item ${styles.avatar}`} alt="info" src={url}/>

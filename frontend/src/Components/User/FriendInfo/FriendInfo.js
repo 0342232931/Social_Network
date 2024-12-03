@@ -76,7 +76,7 @@ function FriendInfo () {
     // Call Api get friends
     const getFriends = async(userId, axiosJwt) => {
         try {
-            const res = await axiosJwt.get("http://localhost:8080/relations/get-friends-by-user-id/" + userId);
+            const res = await axiosJwt.get("http://localhost:8080/get-friends-by-user-id/" + userId);
             setFriends(res.data?.result);
         } catch (error) {
             console.log(error.message);
@@ -223,7 +223,7 @@ function FriendInfo () {
                         </div>
                         <div className={styles.name_container}>
                             <h2 className={styles.text}>{`${user?.firstName} ${user?.lastName}`}</h2>
-                            <span className={styles.text}>{friends.length > 0 ? `${friends.length} người bạn` : "Chưa có bạn bè"}</span><br />
+                            <span className={styles.text}>{`${friends.length} người bạn`}</span><br />
                             {renderBio()}
                         </div>
                         <div className={styles.button_add_friend}>

@@ -23,23 +23,14 @@ function FriendPage () {
     const getRequestAddFriend = async (axiosJwt, userId) => {
         try {
             const response = await axiosJwt.get("http://localhost:8080/get-notifications-add-friend-by-id/" + userId);
-            
-            let notifications = response.data;
+    
+            const addRequests = response.data;
+            const update = addRequests?.map((addRequest) => ({
+                ...addRequest,
+                avatarUrl: `data:image/png;base64,${addRequest?.avatarUrl}`,
+            }))
 
-            const updatedUsers = await Promise.all(
-                notifications?.map(async (notification) => {
-                    try {
-                        const res = await axiosJwt.get("http://localhost:8080/avatar/get-by-user-id/" + notification?.sender.id);
-                        const img = res.data?.result;
-                        return {...notification, avatarUrl: `data:image/${img.fileType};base64,${img?.data}`};
-                    } catch (error) {
-                        console.log(error);
-                        return {...notification, avatarUrl: null}
-                    }
-                })
-            );  
-
-            setAddFriendRequest(updatedUsers);
+            setAddFriendRequest(update)
         } catch (error) {
             console.log(error);
             
@@ -58,8 +49,7 @@ function FriendPage () {
                 stompClient.current.subscribe(`/user/${user?.username}/notification-type-add-friend`, (response) => {
                     const payload = JSON.parse(response.body);
                     const result = payload;
-                    const avatarUrl1 = `data:image/jpeg;base64,${result?.avatarUrl}`;
-                    result.avatarUrl = avatarUrl1;
+                    result.avatarUrl = `data:image/png;base64,${result?.avatarUrl}`;
                     setAddFriendRequest((prev) => [...prev, result]);
                 })
 

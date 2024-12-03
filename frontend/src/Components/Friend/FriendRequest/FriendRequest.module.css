@@ -21,6 +21,7 @@
     text-decoration: none;
     color: inherit;
     margin-top: 10px;
+    cursor: pointer;
 }
 .avatar_request_item {
     width: 50px;
@@ -38,4 +39,8 @@
     margin-right: 5px;
     width: 130px;
     height: 40px
+}
+.userinfo_container {
+    margin-left: 25%;
+    margin-top: 60px;
 }

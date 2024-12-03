@@ -183,7 +183,7 @@ function MyInfo () {
                         </div>
                         <div className={styles.name_container}>
                             <h2 className={styles.text}>{`${user?.firstName} ${user?.lastName}`}</h2>
-                            <span className={styles.text}>{friends.length === 0 ? `Chưa có bạn bè` : `${friends.length} người bạn`}</span><br/>
+                            <span className={styles.text}>{`${friends.length} người bạn`}</span><br/>
                             {renderBio()}
                         </div>
                         <div className={styles.button_config}>

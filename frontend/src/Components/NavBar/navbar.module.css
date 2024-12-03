@@ -92,3 +92,37 @@
     margin-top: -5px;
     margin-bottom: -5px;
 }
+.util_container_bell {
+    background-color: #343338;
+    width: 300px;
+    height: 350px;
+    color: aliceblue;
+    overflow-y: auto;
+}
+.util_container_bell::-webkit-scrollbar {
+    display: none;
+}
+.util_container_bell :hover {
+    background-color: #6c6b6f;
+    cursor: pointer;
+}
+.padding_dropdown_item {
+    max-width: 100%;
+    display: flex;
+    flex-direction: row;
+    padding: 10px;
+    height: auto;
+    word-wrap: break-word;
+}
+.dopdown_item_text {
+    height: auto;
+    font-size: 14px;
+    color: aliceblue;
+}
+.container_text_bell {
+    width: auto;/* Giới hạn chiều rộng không vượt quá phần tử chứa */
+    word-wrap: break-word;
+    white-space: normal;
+    margin-left: 10px;
+    margin-top: -5px;
+}

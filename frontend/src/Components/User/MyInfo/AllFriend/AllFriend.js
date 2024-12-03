@@ -13,39 +13,56 @@ function AllFriend({friends}) {
 
     const [listFriend, setListFriend] = useState([])
 
+    const getAvatarsFriends = async (friends, axiosJwt) => {
+        const updateFriends = await Promise.all(
+            friends?.map( async(friend) => {
+                try {
+                    const res = await axiosJwt.get("http://localhost:8080/avatar/get-by-user-id/" + friend?.id)
+                    const img = res.data?.result;
+                    return {...friend, avatarUrl: `data:image/${img.fileType};base64,${img?.data}`};
+
+                } catch (error) {
+                    console.log(error);
+                    return {...friend, avatarUrl: null}
+                }
+            })
+        )
+        setListFriend(updateFriends);
+    }
+
     useEffect(() => {
-        setListFriend(friends);
+        getAvatarsFriends(friends, axiosJwt);
     }, [friends])
 
     const renderFriend = () => {
         return listFriend.map((friend) => {
-            const url = getAvatarFriend(friend);
+            // const url = getAvatarFriend(friend);
             return (
-                <Link key={friend?.id} to="/friend-info" className={styles.friend_item}>
-                    <img className={styles.friend_avatar} src={url === null ? "/img/high-five.png" : url} alt="User avatar" />
+                <Link key={friend?.id} to={`/friend-info?id=${friend?.id}`} className={styles.friend_item}>
+                    <img className={styles.friend_avatar} src={friend?.avatarUrl === null ? "/img/user.png" : friend?.avatarUrl} alt="User avatar" />
                     <h4 className={styles.friend_name}>{`${friend?.firstName} ${friend?.lastName}`}</h4>
                 </Link>
             )
         });
     }
 
-    const getAvatarFriend = async (friend) => {
-        try {
-            const response = await axiosJwt.get("http://localhost:8080/avatar/get-by-user-id/" + friend?.id);
-            const img = response.data;
-            if (img != null) {
-                console.log("get avatar for friend success");
+    // const getAvatarFriend = async (friend) => {
+    //     try {
+    //         const response = await axiosJwt.get("http://localhost:8080/avatar/get-by-user-id/" + friend?.id);
+    //         const img = response.data;
+    //         if (img != null) {
+    //             console.log("get avatar for friend success");
                 
-                return `data:image/${img?.fileType};base64,${img?.data}`
-            } else {
-                console.log("get avatar for friend failed");
+    //             return `data:image/${img?.fileType};base64,${img?.data}`
+    //         } else {
+    //             console.log("get avatar for friend failed");
                 
-            }
-        } catch (error) {
-            console.log(error);
+    //         }
+    //     } catch (error) {
+    //         console.log(error);
             
-        }
-    }
+    //     }
+    // }
 
     const renderFriendNull = () => {
         return (

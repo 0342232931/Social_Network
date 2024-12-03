@@ -38,10 +38,6 @@ function InfomationFriend({userId}) {
             return (
                 <div className={styles.about_container}>
                     <h3 className={styles.title}>Giới thiệu</h3>
-                    <button type="button" className={`btn btn-secondary ${styles.button_config_infomation}`} data-bs-toggle="modal" data-bs-target="#modal_about">
-                        <img src='/img/myinfo/write.png' alt='icon' className={styles.icon} />
-                        Chỉnh sửa chi tiết
-                    </button>
                     <div className={styles.about_item}>    
                         <p className={styles.text}>Chưa có thông tin</p>
                     </div>
@@ -51,10 +47,6 @@ function InfomationFriend({userId}) {
             return (
                 <div className={styles.about_container}>
                     <h3 className={styles.title}>Giới thiệu</h3>
-                    <button type="button" className={`btn btn-secondary ${styles.button_config_infomation}`} data-bs-toggle="modal" data-bs-target="#modal_about">
-                        <img src='/img/myinfo/write.png' alt='icon' className={styles.icon} />
-                        Chỉnh sửa chi tiết
-                    </button>
                     <div className={styles.about_item}>    
                         {user?.job == null ? (<></>) : (<p><img src='/img/myinfo/briefcase.png' alt='phone'className={styles.icon}/> Làm việc tại {user?.job}</p>)}
                         {user?.university == null ? (<></>) : (<p><img src='/img/myinfo/education-cap.png' alt='phone'className={styles.icon}/> {user?.university}</p>)}
@@ -73,10 +65,6 @@ function InfomationFriend({userId}) {
             return (
                 <div className={styles.about_container}>
                     <h3 className={styles.title}>Liên hệ</h3>
-                    <button type="button" className={`btn btn-secondary ${styles.button_config_infomation}`} data-bs-toggle="modal" data-bs-target="#modal_contact">
-                        <img src='/img/myinfo/write.png' alt='icon' className={styles.icon} />
-                        Chỉnh sửa chi tiết
-                    </button>
                     <div className={styles.about_item}>    
                         <p>Chưa có thông tin</p>
                     </div>
@@ -86,10 +74,6 @@ function InfomationFriend({userId}) {
             return (
                 <div className={styles.about_container}>
                     <h3 className={styles.title}>Liên hệ</h3>
-                    <button type="button" className={`btn btn-secondary ${styles.button_config_infomation}`} data-bs-toggle="modal" data-bs-target="#modal_contact">
-                        <img src='/img/myinfo/write.png' alt='icon' className={styles.icon} />
-                        Chỉnh sửa chi tiết
-                    </button>
                     <div className={styles.about_item}>    
                         {user?.phoneNumber == null ? (<></>) : (<p><img src='/img/myinfo/phone.png' alt='phone'className={styles.icon}/> {user?.phoneNumber}</p>)}
                         {user?.email == null ? (<></>) : (<p><img src='/img/myinfo/mail.png' alt='phone'className={styles.icon}/> {user?.email}</p>)}
