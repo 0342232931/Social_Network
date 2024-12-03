@@ -56,12 +56,20 @@ public class NotificationServiceIpm implements NotificationService {
         notification.setReceiver(receiver);
         notification.setCreateAt(LocalDateTime.now());
         notification.setId(UUID.randomUUID().toString());
+        notification.setContent(request.getContent());
 
         NotificationResponse response = notificationMapper.toNotificationResponse
                 (notificationRepository.saveAndFlush(notification));
+
         response.setSender(userMapper.toUserResponse(sender));
         response.setReceiver(userMapper.toUserResponse(receiver));
+        response.setContent(notification.getContent());
 
+        Avatar avatar = avatarRepository.getByUserId(sender.getId())
+                .orElseThrow(() -> new AppException(ErrorCode.AVATAR_NOT_EXISTED));
+        String data = Base64.getEncoder().encodeToString(avatar.getData());
+
+        response.setAvatarUrl(data);
         return response;
     }
 
@@ -77,6 +85,12 @@ public class NotificationServiceIpm implements NotificationService {
             NotificationResponse notificationResponse = notificationMapper.toNotificationResponse(notification);
             notificationResponse.setSender(userMapper.toUserResponse(notification.getSender()));
             notificationResponse.setReceiver(userMapper.toUserResponse(notification.getReceiver()));
+            notificationResponse.setContent(notification.getContent());
+
+            Avatar avatar = avatarRepository.getByUserId(notification.getSender().getId())
+                    .orElseThrow(() -> new AppException(ErrorCode.AVATAR_NOT_EXISTED));
+            String data = Base64.getEncoder().encodeToString(avatar.getData());
+            notificationResponse.setAvatarUrl(data);
 
             responses.add(notificationResponse);
 
@@ -97,6 +111,12 @@ public class NotificationServiceIpm implements NotificationService {
             NotificationResponse notificationResponse = notificationMapper.toNotificationResponse(notification);
             notificationResponse.setSender(userMapper.toUserResponse(notification.getSender()));
             notificationResponse.setReceiver(userMapper.toUserResponse(notification.getReceiver()));
+            notificationResponse.setContent(notification.getContent());
+
+            Avatar avatar = avatarRepository.getByUserId(notification.getSender().getId())
+                    .orElseThrow(() -> new AppException(ErrorCode.AVATAR_NOT_EXISTED));
+            String data = Base64.getEncoder().encodeToString(avatar.getData());
+            notificationResponse.setAvatarUrl(data);
 
             responses.add(notificationResponse);
         });

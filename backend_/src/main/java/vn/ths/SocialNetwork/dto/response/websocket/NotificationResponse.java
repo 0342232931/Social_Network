@@ -20,4 +20,5 @@ public class NotificationResponse {
     UserResponse sender;
     UserResponse receiver;
     String type;
+    String avatarUrl;
 }
