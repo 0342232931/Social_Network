@@ -69,6 +69,13 @@ function FriendRequest() {
                 
             }
         )
+
+        return () => {
+            if(stompClient.current){
+                stompClient.current.disconnect();
+                console.log("Disconnected from websocket");
+            }
+        }
     },[])
 
     const handleSubmitAddFriend = (friendId, notificationId) => {

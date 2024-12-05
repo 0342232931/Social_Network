@@ -69,7 +69,8 @@
     padding: 5px 10px 5px 10px;
     color: rgb(38, 38, 39);
     outline: none;
-    border-radius: 5px;
+    border-radius: 10px;
+    border: none;
 }
 .search_input::placeholder{
     color: rgb(120, 119, 117);

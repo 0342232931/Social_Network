@@ -25,20 +25,20 @@ function FriendInfo () {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const id = queryParams.get('id');
+
     const [user, setInfo] = useState();
     const [avatar, setAvatar] = useState(null);
     const [posts, setPosts] = useState([]);
     const [friends, setFriends] = useState([]);
     const [bio, setBio] = useState(null);
+    const [isFriend, setIsFriend] = useState(null);
+
     const stompClient = useRef();
 
     const getInfoUser = async (axiosJwt, userId) => {
         try {
             const res = await axiosJwt.get("http://localhost:8080/users/" + userId);
             setInfo(res.data?.result)
-            console.log("user: ");
-            console.log(res.data?.result);
-            
         } catch (error) {
             console.log(error);
         }
@@ -94,6 +94,24 @@ function FriendInfo () {
         }
     }
 
+    const getIsFriend = async (axiosJwt, userId, friendId) => {
+        try {
+            
+            const request = {
+                userId: userId,
+                friendId: friendId,
+            }
+
+            const res = await axiosJwt.post("http://localhost:8080/check-friend", request)
+            setIsFriend(res.data?.result);
+            console.log(res.data?.result);
+            
+        } catch (error) {
+            console.log(error);
+            
+        }
+    }
+
     useEffect(() => {
         if (id === userDetail?.id) 
             navigate('/my-info')
@@ -103,6 +121,7 @@ function FriendInfo () {
         getPost(id, axiosJwt);
         getFriends(id, axiosJwt);
         getBio(id, axiosJwt);
+        getIsFriend(axiosJwt, userDetail?.id, id);
 
         const socket = new SockJS(`http://localhost:8080/ws?token=${token}`);
         stompClient.current = Stomp.over(socket);
@@ -111,22 +130,51 @@ function FriendInfo () {
             {},
             () => {
                 stompClient.current.subscribe(`/user/${id}/friend`, (response) => {
-                    const result = JSON.parse(response.body);
+                    const result = JSON.parse(response.body);                    
                     if (result?.user1.id === id) {
                         setFriends((prev) => [...prev, result?.user2]);
                     } else {
                         setFriends((prev) => [...prev, result.user1]);
                     }
                 })
+
+                stompClient.current.subscribe(`/user/${userDetail?.id}/check-is-friend`, (response) => {
+                    const payload = JSON.parse(response.body);
+                    setIsFriend(payload?.result);
+                })
+
+                // checkUserIsFriend();
             },
             (error) => {
                 console.log("Connection to WS failed");
                 console.log(error);
                 
             }
+            
         )
 
+        return () => {
+            if(stompClient.current){
+                stompClient.current.disconnect();
+                console.log("Disconnected from websocket");
+            }
+        }
+
     }, [id]);
+
+    const checkUserIsFriend = () => {
+        const request = {
+            userId : userDetail?.id,
+            friendId : id,
+        }
+
+        stompClient.current.send(
+            "/app/user.check-is-friend",
+            {},
+            JSON.stringify(request),
+        )
+
+    }
 
     const renderAbout = () => {
         if (user?.job == null && user?.university == null && user?.highSchool == null && user?.address == null && user?.dob == null) {
@@ -205,6 +253,118 @@ function FriendInfo () {
             {},
             JSON.stringify(request)
         )
+
+        const newIsFriend = {
+            isFriend: "false",
+            isSendNotificationAddFriend: "true",
+            isReceivedNotificationAddFriend: "false",
+        }
+        setIsFriend(newIsFriend);
+    }
+
+    const handleOnClickDeleteFriend = async (friendId) => {
+        
+        const request = {
+            friendId : friendId
+        }
+
+        try {
+            const response = await axiosJwt.put("http://localhost:8080/delete-friend/" + userDetail?.id, request);
+            if (response.status === 200) {
+
+                const newIsFriend = {
+                    isFriend: "false",
+                    isSendNotificationAddFriend: "false",
+                    isReceivedNotificationAddFriend: "false",
+                }
+                setIsFriend(newIsFriend);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+
+    }
+
+    const handleOnClickDeleteRequest = async(userId, friendId) => {        
+        const request = {
+            senderId : userId,
+            receiverId : friendId
+        }
+        try {
+            const res = await axiosJwt.post("http://localhost:8080/delete-by-sra", request,
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            );            
+            if (res.status === 200) {
+                const newIsFriend = {
+                    isFriend: "false",
+                    isSendNotificationAddFriend: "false",
+                    isReceivedNotificationAddFriend: "false",
+                }
+                setIsFriend(newIsFriend);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+
+    }
+
+    const handleOnClickConfirm = (userId, friendId) => {
+
+        const request = {
+            userId : userId,
+            friendId : friendId,
+        }
+
+        stompClient.current.send(
+            "/app/user.add-friend",
+            {},
+            JSON.stringify(request),
+        )
+
+        const newIsFriend = {
+            isFriend: "true",
+            isSendNotificationAddFriend: "false",
+            isReceivedNotificationAddFriend: "false",
+        }
+        setIsFriend(newIsFriend);
+
+    }
+
+    const handleRenderButtonAddFriend = () => {
+
+        if (isFriend?.isFriend === "true") {
+            return (
+                <button type="button" className={`${styles.btn_add}`} onClick={() => handleOnClickDeleteFriend(id)}>
+                    <img src='/img/friend/friend.png' alt='icon' className={styles.icon} style={{marginBottom : "3px"}}/>
+                    Bạn bè
+                </button>
+            )
+        } else if (isFriend?.isSendNotificationAddFriend === "true") {
+            return (
+                <button type="button" className={`${styles.btn_add}`} onClick={() => handleOnClickDeleteRequest(userDetail?.id, id)}>
+                    <img src='/img/friend/checked.png' alt='icon' className={styles.icon} style={{marginBottom : "3px"}}/>
+                    Đã gửi yêu cầu
+                </button>
+            )
+        } else if (isFriend?.isReceivedNotificationAddFriend === "true") {
+            return (
+                <button type="button" className={`${styles.btn_add}`} onClick={() => handleOnClickConfirm(userDetail?.id, id)}>
+                    <img src='/img/friend/checked.png' alt='icon' className={styles.icon} style={{marginBottom : "3px"}}/>
+                    Xác nhận
+                </button>
+            )
+        } else{
+            return (
+                <button type="button" className={`${styles.btn_add}`} onClick={() => handleOnClickAddFriend()}>
+                    <img src='/img/myinfo/a.png' alt='icon' className={styles.icon} style={{marginBottom : "3px"}}/>
+                    Thêm bạn bè
+                </button>
+            )
+        }
     }
 
     return (
@@ -227,10 +387,7 @@ function FriendInfo () {
                             {renderBio()}
                         </div>
                         <div className={styles.button_add_friend}>
-                            <button type="button" className={`${styles.btn_add}`} onClick={() => handleOnClickAddFriend()}>
-                                <img src='/img/myinfo/a.png' alt='icon' className={styles.icon} style={{marginBottom : "3px"}}/>
-                                Thêm bạn bè
-                            </button>
+                            {handleRenderButtonAddFriend()}
                         </div>
                     </div>
                     <div className={styles.line}></div>
@@ -271,7 +428,7 @@ function FriendInfo () {
                                 </div>
                             </div>
                             <div className="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabIndex="0">
-                                <InfomationFriend userId={user?.id}/>
+                                <InfomationFriend userId={id}/>
                             </div>
                             <div className="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabIndex="0">
                                 <AllFriend friends={friends}/>

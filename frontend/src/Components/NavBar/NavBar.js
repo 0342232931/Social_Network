@@ -90,6 +90,13 @@ function NavBar(){
           
         }
       )
+
+      return () => {
+        if(stompClient.current){
+            stompClient.current.disconnect();
+            console.log("Disconnected from websocket");
+        }
+    }
   }, [])
 
   const request = {
@@ -112,7 +119,7 @@ function NavBar(){
           <li key={notification?.id} className={`dropdown-item ${styles.padding_dropdown_item}`}>
             <img className={`${styles.icon_info}`} alt="info" src={notification?.avatarUrl != null ? notification?.avatarUrl : "/img/user.png"} />
             <div className={styles.container_text_bell}>
-              <span className={`${styles.dopdown_item_text}`}>{`${notification?.sender?.firstName} ${notification?.sender?.lastName} ${notification?.content}`}</span>
+              <span className={`${styles.dopdown_item_text}`}><strong>{`${notification?.sender?.firstName} ${notification?.sender?.lastName} `}</strong>{`${notification?.content}`}</span>
             </div>
           </li>
         )

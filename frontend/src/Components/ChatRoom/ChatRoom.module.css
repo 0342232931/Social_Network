@@ -6,20 +6,20 @@
 .menu_container {
     width: 4%;
     height: 90.5vh;
-    background-color: rgb(80, 82, 82);
+    background-color: rgb(53, 54, 127);
     left: 0;
 }
 
 .list_container {
     width: 30%;
     height: 90.5vh;
-    background-color: #29282c;
+    background-color: rgb(17, 74, 90);
 }
 
 .content_container {
     width: 66%;
     height: 90.5vh;
-    background-color: rgb(66, 57, 47);
+    background-color: rgb(17, 74, 90);
 }
 
 .icon {
