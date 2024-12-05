@@ -5,10 +5,9 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
-import vn.ths.SocialNetwork.dto.request.websocket.GetNotificationsRequest;
-import vn.ths.SocialNetwork.dto.request.websocket.NotificationCreationRequest;
-import vn.ths.SocialNetwork.dto.request.websocket.NotificationDeleteRequest;
+import vn.ths.SocialNetwork.dto.request.websocket.*;
 import vn.ths.SocialNetwork.dto.response.user.AvatarResponse;
+import vn.ths.SocialNetwork.dto.response.websocket.CheckIsFriendResponse;
 import vn.ths.SocialNetwork.dto.response.websocket.NotificationDeleteResponse;
 import vn.ths.SocialNetwork.dto.response.websocket.NotificationResponse;
 import vn.ths.SocialNetwork.entity.user.Avatar;
@@ -177,5 +176,16 @@ public class NotificationServiceIpm implements NotificationService {
             });
         }
         return responses;
+    }
+
+    @Override
+    @Transactional
+    public void deleteBySenderAndReceiverAndTypeAddFriend(DeleteNotificationBySARRequest request) {
+        Notification notification = notificationRepository.checkIsSendNotificationAddFriend
+                ("ADD_FRIEND", request.getSenderId(), request.getReceiverId());
+        if (notification != null)
+            notificationRepository.delete(notification);
+        else
+            throw new AppException(ErrorCode.NOTIFICATION_NOT_EXISTS);
     }
 }

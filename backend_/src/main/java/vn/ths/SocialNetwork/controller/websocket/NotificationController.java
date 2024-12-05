@@ -9,13 +9,12 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import vn.ths.SocialNetwork.dto.request.websocket.DeleteNotificationBySARRequest;
 import vn.ths.SocialNetwork.dto.request.websocket.GetNotificationsRequest;
 import vn.ths.SocialNetwork.dto.request.websocket.NotificationCreationRequest;
 import vn.ths.SocialNetwork.dto.request.websocket.NotificationDeleteRequest;
+import vn.ths.SocialNetwork.dto.response.ApiResponse;
 import vn.ths.SocialNetwork.dto.response.websocket.NotificationDeleteResponse;
 import vn.ths.SocialNetwork.dto.response.websocket.NotificationResponse;
 import vn.ths.SocialNetwork.exception.AppException;
@@ -66,6 +65,13 @@ public class NotificationController {
                 "/notification-delete", notificationResponses);
 
         return notificationResponses;
+    }
+
+    @PostMapping("/delete-by-sra")
+    @ResponseBody
+    public ApiResponse<?> deleteByReceiverAndSenderAndTypeAddFriend(@RequestBody DeleteNotificationBySARRequest request ){
+        notificationService.deleteBySenderAndReceiverAndTypeAddFriend(request);
+        return ApiResponse.builder().build();
     }
 
     @GetMapping("/get-notifications-add-friend-by-id/{id}")

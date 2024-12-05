@@ -9,8 +9,6 @@ import java.util.Optional;
 
 @Repository
 public interface RelationRepository extends JpaRepository<Relation, String> {
-
     public Optional<Relation> getByUser(User user);
     public Relation getRelationByUserId(String userId);
-
 }

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import vn.ths.SocialNetwork.entity.websocket.Notification;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, String> {
@@ -15,4 +16,8 @@ public interface NotificationRepository extends JpaRepository<Notification, Stri
 
     @Query("SELECT n FROM Notification n WHERE n.type = :type AND n.receiver.id = :receiverId ORDER BY n.createAt ASC")
     public List<Notification> getByTypeAndReceiverId(@Param("type") String type, @Param("receiverId") String receiverId);
+
+    @Query("SELECT n FROM Notification n WHERE n.type = :type AND n.sender.id = :senderId AND n.receiver.id = :receiverId")
+    public Notification checkIsSendNotificationAddFriend(@Param("type") String type, @Param("senderId") String senderId,
+                                                                   @Param("receiverId") String receiverId);
 }

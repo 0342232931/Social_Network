@@ -23,7 +23,7 @@ public class Relation {
     @OneToOne
     User user;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     List<User> friends;
 
 }

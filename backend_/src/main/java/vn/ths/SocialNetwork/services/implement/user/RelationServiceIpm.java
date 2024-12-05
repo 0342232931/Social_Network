@@ -9,15 +9,19 @@ import org.springframework.stereotype.Service;
 import vn.ths.SocialNetwork.dto.request.user.RelationAddFriendRequest;
 import vn.ths.SocialNetwork.dto.request.user.RelationCreationRequest;
 import vn.ths.SocialNetwork.dto.request.user.RelationDeleteFriendRequest;
+import vn.ths.SocialNetwork.dto.request.websocket.CheckIsFriendRequest;
 import vn.ths.SocialNetwork.dto.response.user.RelationResponse;
 import vn.ths.SocialNetwork.dto.response.websocket.AddFriendResponse;
+import vn.ths.SocialNetwork.dto.response.websocket.CheckIsFriendResponse;
 import vn.ths.SocialNetwork.entity.user.Relation;
 import vn.ths.SocialNetwork.entity.user.User;
+import vn.ths.SocialNetwork.entity.websocket.Notification;
 import vn.ths.SocialNetwork.exception.AppException;
 import vn.ths.SocialNetwork.exception.ErrorCode;
 import vn.ths.SocialNetwork.mapper.user.RelationMapper;
 import vn.ths.SocialNetwork.repository.user.RelationRepository;
 import vn.ths.SocialNetwork.repository.user.UserRepository;
+import vn.ths.SocialNetwork.repository.websocket.NotificationRepository;
 import vn.ths.SocialNetwork.services.service.user.RelationService;
 
 import java.util.List;
@@ -31,6 +35,7 @@ public class RelationServiceIpm implements RelationService {
     UserRepository userRepository;
     RelationRepository relationRepository;
     RelationMapper relationMapper;
+    NotificationRepository notificationRepository;
 
     @Override
     public RelationResponse getById(String id) {
@@ -149,5 +154,40 @@ public class RelationServiceIpm implements RelationService {
         relationRepository.findById(relationId).orElseThrow(() -> new AppException(ErrorCode.RELATION_NOT_EXISTED));
 
         relationRepository.deleteById(relationId);
+    }
+
+    @Override
+    public CheckIsFriendResponse checkIsFriend(CheckIsFriendRequest request) {
+
+        CheckIsFriendResponse response = new CheckIsFriendResponse("false", "false", "false");
+
+        Relation relation = relationRepository.getRelationByUserId(request.getUserId());
+        if (relation != null) {
+            List<User> friends = getFriendsByUserId(request.getUserId());
+
+            for (User friend : friends) {
+                if (friend.getId().equals(request.getFriendId())) {
+                    response.setIsFriend("true");
+                    return response;
+                }
+            }
+        }
+
+        Notification notification = notificationRepository.checkIsSendNotificationAddFriend("ADD_FRIEND",
+                request.getUserId(), request.getFriendId());
+        if ( notification != null) {
+            response.setIsSendNotificationAddFriend("true");
+            return response;
+        }
+
+        Notification notification2 = notificationRepository.checkIsSendNotificationAddFriend("ADD_FRIEND",
+                request.getFriendId(), request.getUserId());
+
+        if (notification2 != null) {
+            response.setIsReceivedNotificationAddFriend("true");
+            return response;
+        }
+
+        return response;
     }
 }

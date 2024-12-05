@@ -5,15 +5,18 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import vn.ths.SocialNetwork.dto.request.user.RelationAddFriendRequest;
 import vn.ths.SocialNetwork.dto.request.user.RelationCreationRequest;
 import vn.ths.SocialNetwork.dto.request.user.RelationDeleteFriendRequest;
+import vn.ths.SocialNetwork.dto.request.websocket.CheckIsFriendRequest;
 import vn.ths.SocialNetwork.dto.response.ApiResponse;
 import vn.ths.SocialNetwork.dto.response.user.RelationResponse;
 import vn.ths.SocialNetwork.dto.response.websocket.AddFriendResponse;
+import vn.ths.SocialNetwork.dto.response.websocket.CheckIsFriendResponse;
 import vn.ths.SocialNetwork.entity.user.Relation;
 import vn.ths.SocialNetwork.entity.user.User;
 import vn.ths.SocialNetwork.services.service.user.RelationService;
@@ -46,7 +49,7 @@ public class RelationController {
     }
 
     @MessageMapping("/user.add-friend")
-    ApiResponse<AddFriendResponse> addFriend(@RequestBody RelationAddFriendRequest request){
+    ApiResponse<AddFriendResponse> addFriend(@Payload RelationAddFriendRequest request){
 
         AddFriendResponse addFriendResponse = relationService.addFriend(request);
 
@@ -58,6 +61,27 @@ public class RelationController {
 
         return ApiResponse.<AddFriendResponse>builder()
                 .result(addFriendResponse)
+                .build();
+    }
+
+    @MessageMapping("/user.check-is-friend")
+    ApiResponse<CheckIsFriendResponse> checkIsFriend(@Payload CheckIsFriendRequest request){
+
+        var response = relationService.checkIsFriend(request);
+
+        simpMessagingTemplate.convertAndSendToUser(request.getUserId(), "/check-is-friend", response);
+
+        return ApiResponse.<CheckIsFriendResponse>builder()
+                .result(response)
+                .build();
+    }
+
+    @PostMapping("/check-friend")
+    @ResponseBody
+    ApiResponse<CheckIsFriendResponse> getCheckIsFriend(@RequestBody CheckIsFriendRequest request){
+        var response = relationService.checkIsFriend(request);
+        return ApiResponse.<CheckIsFriendResponse>builder()
+                .result(response)
                 .build();
     }
 

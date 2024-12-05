@@ -30,6 +30,7 @@ public enum ErrorCode {
     AVATAR_NOT_EXISTED(1201,"Avatar not existed", HttpStatus.NOT_FOUND),
     CAN_NOT_SEND_MESSAGE(1301, "Can't send message to you", HttpStatus.BAD_REQUEST),
     CAN_NOT_SEND_NOTIFICATION(1302, "Can't send notification to you", HttpStatus.BAD_REQUEST),
+    NOTIFICATION_NOT_EXISTS(1303, "Can't find notification", HttpStatus.NOT_FOUND),
     TOKEN_IS_NULL(1303, "token is null", HttpStatus.BAD_REQUEST),
     TOKEN_NOT_VALID(1304, "token is not valid", HttpStatus.BAD_REQUEST),
 ;
