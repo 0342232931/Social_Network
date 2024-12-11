@@ -15,4 +15,5 @@ public interface AuthenticationService {
     public IntrospectResponse introspect(IntrospectRequest request) throws JOSEException, ParseException;
     public void Logout(LogoutRequest request) throws ParseException, JOSEException;
     public AuthenticationResponse refreshToken(RefreshRequest request) throws ParseException, JOSEException;
+//    public AuthenticationResponse outboundAuthenticate(String code);
 }

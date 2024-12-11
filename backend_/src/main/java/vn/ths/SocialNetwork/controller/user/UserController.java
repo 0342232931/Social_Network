@@ -60,8 +60,11 @@ public class UserController {
 
     @PutMapping("/{id}")
     public ApiResponse<UserResponse> updateUserById(@PathVariable("id") String id, @RequestBody UserUpdateRequest request){
+        System.out.println(request);
+        var res = userService.updateById(id, request);
+        System.out.println(res);
         return ApiResponse.<UserResponse>builder()
-                .result(userService.updateById(id, request))
+                .result(res)
                 .build();
     }
 

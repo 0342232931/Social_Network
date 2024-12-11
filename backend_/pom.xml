@@ -148,6 +148,24 @@
 			<version>2.18.1</version>
 		</dependency>
 		<!--	End Gson, Json	-->
+		<!--	Feign Client	-->
+<!--		<dependency>-->
+<!--			<groupId>org.springframework.cloud</groupId>-->
+<!--			<artifactId>spring-cloud-starter-openfeign</artifactId>-->
+<!--			<version>4.0.1</version>-->
+<!--		</dependency>-->
+		<dependency>
+			<groupId>io.github.openfeign.form</groupId>
+			<artifactId>feign-form</artifactId>
+			<version>3.8.0</version>
+		</dependency>
+		<!--	End Feign Client	-->
+		<!--	OAuth2	-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+		</dependency>
+		<!--	End OAuth 2	-->
 	</dependencies>
 
 	<build>

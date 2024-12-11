@@ -5,9 +5,12 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import vn.ths.SocialNetwork.dto.request.post.PostCreationRequest;
 import vn.ths.SocialNetwork.dto.request.post.PostUpdateRequest;
+import vn.ths.SocialNetwork.dto.response.PageResponse;
 import vn.ths.SocialNetwork.dto.response.post.CountInteractResponse;
 import vn.ths.SocialNetwork.dto.response.post.PostResponse;
 import vn.ths.SocialNetwork.entity.post.Post;
@@ -22,10 +25,13 @@ import vn.ths.SocialNetwork.repository.websocket.CommentRepository;
 import vn.ths.SocialNetwork.repository.websocket.InteractionRepository;
 import vn.ths.SocialNetwork.services.service.post.PostService;
 import vn.ths.SocialNetwork.services.service.user.RelationService;
+import vn.ths.SocialNetwork.services.service.user.UserService;
 
+import java.awt.print.Pageable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -75,6 +81,42 @@ public class PostServiceIpm implements PostService {
         post.setUpdateAt(currentDate);
 
         return postMapper.toPostResponse(postRepository.saveAndFlush(post));
+    }
+
+    @Override
+    public PageResponse<PostResponse> getFriendPosts(int page, int size, String userId) {
+
+        List<User> friends = relationService.getFriendsByUserId(userId);
+        List<String> postIds = new ArrayList<>();
+
+        friends.forEach((friend) -> {
+            List<String> allPostIdFriend = postRepository.findAllPostIdByUserId(friend.getId());
+
+            if (allPostIdFriend != null)
+                postIds.addAll(allPostIdFriend);
+        });
+
+        Sort sort = Sort.by("createAt").descending();
+        PageRequest pageRequest = PageRequest.of(page - 1, size, sort);
+
+        var pageData = postRepository.findAllPostById(postIds, pageRequest);
+
+        return PageResponse.<PostResponse>builder()
+                .currentPage(page)
+                .pageSize(pageData.getSize())
+                .totalPage(pageData.getTotalPages())
+                .totalElement(pageData.getTotalElements())
+                .data(pageData.getContent().stream().map(postMapper::toPostResponse).toList())
+                .build();
+    }
+
+    @Override
+    public PostResponse getPostAdmin() {
+
+        Post post = postRepository.findById("eb9798cd-02fe-4f2e-9")
+                .orElseThrow(() -> new AppException(ErrorCode.POST_NOT_EXISTED));
+
+        return postMapper.toPostResponse(post);
     }
 
     @Override

@@ -4,10 +4,12 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 import vn.ths.SocialNetwork.dto.request.post.PostCreationRequest;
 import vn.ths.SocialNetwork.dto.request.post.PostUpdateRequest;
 import vn.ths.SocialNetwork.dto.response.ApiResponse;
+import vn.ths.SocialNetwork.dto.response.PageResponse;
 import vn.ths.SocialNetwork.dto.response.post.CountInteractResponse;
 import vn.ths.SocialNetwork.dto.response.post.PostResponse;
 import vn.ths.SocialNetwork.entity.post.Post;
@@ -35,6 +37,19 @@ public class PostController {
         return ApiResponse.<List<Post>>builder().result(postService.getAll()).build();
     }
 
+    @GetMapping("/get-friend-posts/{id}")
+    public ApiResponse<PageResponse<PostResponse>> getFriendPost(
+            @PathVariable("id") String userId,
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(value = "size", required = false, defaultValue = "10") int size){
+
+        System.out.println("request tại page : " + page);
+        var response = postService.getFriendPosts(page, size, userId);
+        return ApiResponse.<PageResponse<PostResponse>>builder()
+                .result(response)
+                .build();
+    }
+
     @GetMapping("/get-by-user-id/{id}")
     public ApiResponse<List<Post>> getPostByUserId(@PathVariable("id") String id){
         return ApiResponse.<List<Post>>builder().result(postService.getByUserId(id)).build();
@@ -51,6 +66,13 @@ public class PostController {
     public ApiResponse<CountInteractResponse> countInteract(@PathVariable("id") String id){
         return ApiResponse.<CountInteractResponse>builder()
                 .result(postService.CountInteract(id))
+                .build();
+    }
+
+    @GetMapping("/get-admin-post")
+    public ApiResponse<PostResponse> getAdminPost(){
+        return ApiResponse.<PostResponse>builder()
+                .result(postService.getPostAdmin())
                 .build();
     }
 

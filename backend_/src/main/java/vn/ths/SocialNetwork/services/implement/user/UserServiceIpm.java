@@ -71,12 +71,18 @@ public class UserServiceIpm implements UserService {
     @PreAuthorize("hasAnyRole('ADMIN','USER')")
     @Override
     public UserResponse updateById(String id, UserUpdateRequest request) {
-
         User user = userRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
-        userMapper.updateUser(user, request);
-
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setEmail(request.getEmail());
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
+        user.setDob(request.getDob());
+        user.setAddress(request.getAddress());
+        user.setHometown(request.getHometown());
+        user.setUniversity(request.getUniversity());
+        user.setHighSchool(request.getHighSchool());
+        user.setJob(request.getJob());
+        user.setPhoneNumber(request.getPhoneNumber());
 
         return userMapper.toUserResponse(userRepository.saveAndFlush(user));
     }
