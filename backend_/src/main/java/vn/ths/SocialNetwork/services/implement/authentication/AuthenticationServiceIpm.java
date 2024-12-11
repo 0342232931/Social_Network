@@ -23,7 +23,6 @@ import vn.ths.SocialNetwork.entity.user.User;
 import vn.ths.SocialNetwork.exception.AppException;
 import vn.ths.SocialNetwork.exception.ErrorCode;
 import vn.ths.SocialNetwork.mapper.user.UserMapper;
-//import vn.ths.SocialNetwork.repository.OutboundSocialNetworkClient;
 import vn.ths.SocialNetwork.repository.user.InvalidatedTokenRepository;
 import vn.ths.SocialNetwork.repository.user.UserRepository;
 import vn.ths.SocialNetwork.services.service.athentication.AuthenticationService;
@@ -68,7 +67,6 @@ public class AuthenticationServiceIpm implements AuthenticationService {
     UserRepository userRepository;
     UserMapper userMapper;
     InvalidatedTokenRepository invalidatedTokenRepository;
-//    OutboundSocialNetworkClient outboundSocialNetworkClient;
 
     PasswordEncoder passwordEncoder;
 
@@ -132,24 +130,6 @@ public class AuthenticationServiceIpm implements AuthenticationService {
         }
 
     }
-
-//    @Override
-//    public AuthenticationResponse outboundAuthenticate(String code) {
-//
-//        var response = outboundSocialNetworkClient.exchangeToken(ExchangeTokenRequest.builder()
-//                        .code(code)
-//                        .clientId(CLIENT_ID)
-//                        .clientSecret(CLIENT_SECRET)
-//                        .redirectUri(REDIRECT_URI)
-//                        .grantType(GRANT_TYPE)
-//                        .build());
-//
-//        log.info("TOKEN RESPONSE : " + response);
-//
-//        return AuthenticationResponse.builder()
-//                .token(response.getAccessToken())
-//                .build();
-//    }
 
     @Override
     public AuthenticationResponse refreshToken(RefreshRequest request) throws ParseException, JOSEException {
