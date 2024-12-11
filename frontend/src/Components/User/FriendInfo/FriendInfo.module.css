@@ -139,3 +139,9 @@
 .btn_add:hover{
     background-color: #355258;
 }
+.text_none_content {
+    margin-left: 22%;
+    font-size: 16px;
+    color: rgb(152, 155, 157);
+    font-style: italic;
+}

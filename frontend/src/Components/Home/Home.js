@@ -4,12 +4,12 @@ import Post from "../Post/PostForm";
 import { Link, useNavigate } from 'react-router-dom';
 import ModalPost from './ModalPost/ModalPost';
 import { useDispatch, useSelector } from 'react-redux';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createAxios } from '../../createInstance';
 import { loginSuccess } from '../../redux/authSlice';
+import throttle from "lodash/throttle";
 
-function HomePage () {
-
+function HomePage () {    
     const data = useSelector((state) => state.auth.login?.currentUser);
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -19,7 +19,14 @@ function HomePage () {
     const token = useSelector((state) => state.auth.login?.currentUser?.result.token);
     const [imgData, setImgData] = useState(null);
     const [friends, setFriends] = useState([]);
+
     const [post, setPost] = useState([]);
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(0);
+    const [loading, setLoading] = useState(true);
+    const [hasMore, setHasMore] = useState(false);
+    const observer = useRef();
+    const lastPostElementRef = useRef();
 
     // Call api get Avatar User
     const getAvatarUser = async (userId, axiosJwt) => {
@@ -63,18 +70,6 @@ function HomePage () {
         }
     }
 
-    // Get Posts
-    const getPost = async (userId, axiosJwt) => {
-         try {
-            const res = await axiosJwt.get('http://localhost:8080/posts/get-new-post-by-user-auth/' + userId);
-
-            setPost(res.data.result);
-         } catch (error) {
-            console.log("err: " + error);
-            
-         }
-    }
-
     // Render Friends
     const renderFriends = () => {
         if (friends.length > 0){
@@ -96,41 +91,110 @@ function HomePage () {
             )
         }
     }
+    const memoizedFriends = useMemo(() => renderFriends(), [friends]);
 
     // Render Posts
     const renderPosts = () => {
         if (!post?.length > 0) {
-            return(
-                <div>
-                    <h3 className={styles.not_element}>-----  Không có bài viết mới nào được tạo  -----</h3>
-                </div>
-            )
-        }
-        return post?.map((post) => {
             return (
-                <Post key={post?.id} postId={post?.id} content={post?.content} createAt={post?.createAt} user={post?.user}/>
+                <div>
+                    <h3 className={styles.not_element}>----- Không có bài viết mới nào được tạo -----</h3>
+                </div>
+            );
+        }
+        return post?.map((post) => (
+            <Post key={post?.id} post={post} />
+        ));
+    }
+    const memoizedPosts = useMemo(() => renderPosts(), [post]);
+
+    // Get Posts
+    const getPost = async (userId, axiosJwt, page) => {
+        console.log("get post in page: " + page);
+        console.log("total pages: " + totalPages);
+        
+        setLoading(true);
+         try {
+            const response = await axiosJwt.get("http://localhost:8080/posts/get-friend-posts/" + userId, 
+                {
+                    params: {
+                        page: page,
+                        size: 3,
+                    }
+                }
             )
-        })
-   
+            setPost((prev) => [...prev, ...response.data?.result.data]);    
+            setTotalPages(response.data?.result.totalPage);
+            setHasMore(response.data?.result.data?.length > 0);
+            setLoading(false);
+         } catch (error) {
+            console.log(error);
+            setLoading(false);
+            
+         }
     }
 
     // Check User is authenticated
     useEffect(() => {
         if(!data){
             navigate('/login');
-        }else {
+        } else if ((user?.firstName === null || user?.firstName === "") || (user?.lastName === null || user?.firstName === "")) {
+            navigate("/update-info")
+        } else {
             getAvatarUser(user?.id, axiosJwt);
             getFriends(user?.id, axiosJwt);
-            getPost(user?.id, axiosJwt);
         }
-    }, [data, user?.id, axiosJwt, imgData])
+    }, [data])
 
-   
+    useEffect(() => {
+        getPost(user?.id, axiosJwt, page)
+    }, [page])
+
+    // useEffect(() => {
+    //     if (!hasMore) return;
+    
+    //     if (observer.current) observer.current.disconnect();
+    //     observer.current = new IntersectionObserver((entries) => {
+    //       if (entries[0].isIntersecting) {
+    //         if (page < totalPages) {
+    //           setPage((prevPage) => prevPage + 1);
+    //         }
+    //       }
+    //     });
+    //     if (lastPostElementRef.current) {
+    //       observer.current.observe(lastPostElementRef.current);
+    //     }
+    
+    //     setHasMore(false);
+    //   }, [hasMore]);
+
+    const handleScroll = useCallback(
+        throttle(() => {
+            const container = document.querySelector('#post_content');
+            if (
+                container.scrollTop + container.clientHeight >=
+                container.scrollHeight - 10
+            ) {
+                if (hasMore && page < totalPages) {
+                    setPage((prevPage) => prevPage + 1);
+                }
+            }
+        }, 1500),
+        [hasMore]
+    );
+    
+    // Gắn sự kiện cuộn cho container
+    useEffect(() => {
+        const container = document.querySelector('#post_content');
+        container.addEventListener('scroll', handleScroll);
+        return () => container.removeEventListener('scroll', handleScroll);
+    }, [handleScroll]);
+
     return (
         <div className={styles.container}>
             <Navbar />
             <div className={styles.line}></div>
-            <div className={styles.content}>
+            <div className={styles.content} >
                 <div className={styles.util}>
                     <div className={styles.my_info}>
                         <Link className={styles.link} to="/my-info">
@@ -200,8 +264,9 @@ function HomePage () {
                         </Link>
                     </div>
                 </div>
-                <div className={styles.post_content}>
-                    {renderPosts()}
+                <div className={styles.post_content} id='post_content' /*onScroll={handleScroll}*/ >
+                    {memoizedPosts}
+                    {!hasMore && <p style={{ textAlign: "center", color: 'rgb(154, 150, 150)', fontStyle: "italic", marginTop: "10px" }}>--------------Đã tải hết bài viết--------------</p>}
                 </div>
                 <div className={styles.list_friend}>
                     <div className={styles.ads}>
@@ -218,7 +283,7 @@ function HomePage () {
                     <div className={styles.line}></div>
                     <div className={styles.friends}>
                         <h3 className={styles.friends_header}>Nguời Liên Hệ</h3>
-                        {renderFriends()}
+                        {memoizedFriends}
                     </div>
                 </div>
             </div>

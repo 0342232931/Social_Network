@@ -93,14 +93,14 @@ function MyInfo () {
     }, [])
 
     const renderAbout = () => {
-        if (user?.job == null && user?.university == null && user?.highSchool == null && user?.address == null && user?.dob == null) {
+        if (user?.job === "" && user?.university === "" && user?.highSchool === "" && user?.address === "" && user?.dob === null) {
             return (
                 <div className={styles.about}>
                     <h3 className={styles.text_header}>Giới Thiệu</h3>
                     <button type="button" className={`btn btn-secondary ${styles.button_config_infomation}`} data-bs-toggle="modal" data-bs-target="#modal_about">
                         <img src='/img/myinfo/write.png' alt='icon' className={styles.icon} />
                             Chỉnh sửa chi tiết</button>
-                    <p className={styles.text}>Chưa có thông tin</p>
+                    <p className={styles.text_none_content}>--------Chưa có thông tin--------</p>
                     
                 </div>
             )
@@ -111,11 +111,11 @@ function MyInfo () {
                     <button type="button" className={`btn btn-secondary ${styles.button_config_infomation}`} data-bs-toggle="modal" data-bs-target="#modal_about">
                         <img src='/img/myinfo/write.png' alt='icon' className={styles.icon} />
                         Chỉnh sửa chi tiết</button>
-                    {user?.job == null ? (<></>) : (<p className={styles.text}><img src='/img/myinfo/briefcase.png' alt='phone'className={styles.icon}/> Làm việc tại {user?.job}</p>)}
+                    {user?.job === "" ? (<></>) : (<p className={styles.text}><img src='/img/myinfo/briefcase.png' alt='phone'className={styles.icon}/> Làm việc tại {user?.job}</p>)}
                     {user?.university === "" ? (<></>) : (<p className={styles.text}><img src='/img/myinfo/education-cap.png' alt='phone'className={styles.icon}/> {user?.university}</p>)}
-                    {user?.highSchool == null ? (<></>) : (<p className={styles.text}><img src='/img/myinfo/education-cap.png' alt='phone'className={styles.icon}/> {user?.highSchool}</p>)}
-                    {user?.address == null ? (<></>) : (<p className={styles.text}><img src='/img/myinfo/location.png' alt='phone'className={styles.icon}/> Đến từ {user?.address}</p>)}
-                    {user?.dob == null ? (<></>) : (<p className={styles.text}><img src='/img/myinfo/cake.png' alt='phone'className={styles.icon}/> Ngày sinh {user?.dob}</p>)}
+                    {user?.highSchool === "" ? (<></>) : (<p className={styles.text}><img src='/img/myinfo/education-cap.png' alt='phone'className={styles.icon}/> {user?.highSchool}</p>)}
+                    {user?.address === "" ? (<></>) : (<p className={styles.text}><img src='/img/myinfo/location.png' alt='phone'className={styles.icon}/> Đến từ {user?.address}</p>)}
+                    {user?.dob === null ? (<></>) : (<p className={styles.text}><img src='/img/myinfo/cake.png' alt='phone'className={styles.icon}/> Ngày sinh {user?.dob}</p>)}
                     <p className={styles.text_footer}><img src='/img/clock.png' alt='phone'className={styles.icon}/> Tham gia vào tháng 3 năm 2019</p>
                 </div>
             )
@@ -123,14 +123,14 @@ function MyInfo () {
     }
 
     const renderContact  = () => {
-        if (user?.phoneNumber == null && user?.email == null && user?.hometown == null) {
+        if (user?.phoneNumber === "" && user?.email === "" && user?.hometown === "") {
             return (
                 <div className={styles.information_child}>
                     <h3 className={styles.text_header}>Liên Hệ</h3>
                     <button type="button" className={`btn btn-secondary ${styles.button_config_infomation}`} data-bs-toggle="modal" data-bs-target="#modal_contact">
                         <img src='/img/myinfo/write.png' alt='icon' className={styles.icon} />
                         Chỉnh sửa chi tiết</button>  
-                    <p className={styles.text}> Chưa có thông tin</p> 
+                    <p className={styles.text_none_content}>--------Chưa có thông tin--------</p>
                 </div>
             )
         } else {
@@ -140,9 +140,9 @@ function MyInfo () {
                     <button type="button" className={`btn btn-secondary ${styles.button_config_infomation}`} data-bs-toggle="modal" data-bs-target="#modal_contact">
                         <img src='/img/myinfo/write.png' alt='icon' className={styles.icon} />
                         Chỉnh sửa chi tiết</button>  
-                    {user?.phoneNumber == null ? (<></>) : (<p className={styles.text}><img src='/img/myinfo/phone.png' alt='phone'className={styles.icon}/> {user?.phoneNumber}</p>)}
-                    {user?.email == null ? (<></>) : (<p className={styles.text}><img src='/img/myinfo/mail.png' alt='phone'className={styles.icon}/> {user?.email}</p>)}
-                    {user?.hometown == null ? (<></>) : (<p className={styles.text}><img src='/img/myinfo/location.png' alt='phone'className={styles.icon}/> {user?.hometown}</p>)}
+                    {user?.phoneNumber === "" ? (<></>) : (<p className={styles.text}><img src='/img/myinfo/phone.png' alt='phone'className={styles.icon}/> {user?.phoneNumber}</p>)}
+                    {user?.email === "" ? (<></>) : (<p className={styles.text}><img src='/img/myinfo/mail.png' alt='phone'className={styles.icon}/> {user?.email}</p>)}
+                    {user?.hometown === "" ? (<></>) : (<p className={styles.text}><img src='/img/myinfo/location.png' alt='phone'className={styles.icon}/> {user?.hometown}</p>)}
                 </div>
             )
         }

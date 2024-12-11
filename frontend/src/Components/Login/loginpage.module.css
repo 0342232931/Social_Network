@@ -33,7 +33,7 @@ body {
     bottom: -80px;
 }
 .form_login{
-    height: 520px;
+    height: 550px;
     width: 400px;
     background-color: rgba(255,255,255,0.13);
     position: absolute;
@@ -109,6 +109,7 @@ body {
 }
 .social .fb{
   margin-left: 25px;
+  cursor: pointer;
 }
 .social i{
   margin-right: 4px;
@@ -116,4 +117,15 @@ body {
 .icon{
     width: 20px;
     height: 20px;
+}
+.navigate_register {
+    text-decoration: none;
+    font-style: italic;
+    font-size: 14px;
+    margin-left: 44%;
+    color: #ca3253;
+    margin-bottom: 10px;
+}
+.go {
+    cursor: pointer;
 }

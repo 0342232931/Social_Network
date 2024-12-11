@@ -12,6 +12,7 @@ function ModalAbout() {
     let axiosJwt = createAxios(data, dispatch, loginSuccess);
 
     const user = useSelector((state) => state.auth.login?.currentUser?.result.userResponse);
+    const token = useSelector((state) => state.auth.login?.currentUser?.result.token);
 
     const [job, setJob] = useState('');
     const [university, setUniversity] = useState('');
@@ -25,7 +26,7 @@ function ModalAbout() {
             email: user?.email,
             password: user?.password,
             firstName: user?.firstName,
-            lastname: user?.lastName,
+            lastName: user?.lastName,
             dob: birthday,
             address: address,
             hometown: user?.hometown,
@@ -36,7 +37,7 @@ function ModalAbout() {
         }
 
         try {
-            updateUser(user?.id, request, dispatch, axiosJwt);
+            updateUser(user?.id, request, dispatch, axiosJwt, token);
         } catch (error) {
             console.log(error);
             
@@ -58,35 +59,35 @@ function ModalAbout() {
                                     <img src='/img/myinfo/briefcase.png' alt='education' className={styles.icon} />
                                     <p className={styles.title_input}>Công việc</p>
                                 </div>
-                                <input className="form-control" type="text" aria-label="default input example" value={user?.job} onChange={e => setJob(e.target.value)}/>
+                                <input className="form-control" type="text" aria-label="default input example" onChange={e => setJob(e.target.value)}/>
                             </div>
                             <div className={styles.margin_top}>
                                 <div className="d-flex">
                                     <img src='/img/myinfo/education-cap.png' alt='education' className={styles.icon}/>
                                     <p className={styles.title_input}>Trường Đại Học</p>
                                 </div>
-                                <input className="form-control" type="text" aria-label="default input example" value={user?.university} onChange={e => setUniversity(e.target.value)}/>
+                                <input className="form-control" type="text" aria-label="default input example" onChange={e => setUniversity(e.target.value)}/>
                             </div>
                             <div className={styles.margin_top}>
                                 <div className="d-flex">
                                     <img src='/img/myinfo/education-cap.png' alt='education' className={styles.icon} />
                                     <p className={styles.title_input}>Trường Trung Học</p>
                                 </div>
-                                <input className="form-control" type="text" aria-label="default input example" value={user?.highSchool} onChange={e => setHighSchool(e.target.value)}/>
+                                <input className="form-control" type="text" aria-label="default input example" onChange={e => setHighSchool(e.target.value)}/>
                             </div>
                             <div className={styles.margin_top}>
                                 <div className="d-flex">
                                     <img src='/img/myinfo/location.png' alt='education' className={styles.icon} />
                                     <p className={styles.title_input}>Quê Quán</p>
                                 </div>
-                                <input className="form-control" type="text" aria-label="default input example" value={user?.address} onChange={e => setAddress(e.target.value)}/>
+                                <input className="form-control" type="text" aria-label="default input example" onChange={e => setAddress(e.target.value)}/>
                             </div>
                             <div className={styles.margin_top}>
                                 <div className="d-flex">
                                     <img src='/img/myinfo/cake.png' alt='education' className={styles.icon} />
                                     <p className={styles.title_input}>Ngày sinh</p>
                                 </div>
-                                <input className="form-control" type="date" aria-label="default input example" value={user?.dob} onChange={e => setBirthday(e.target.value)}/>
+                                <input className="form-control" type="date" aria-label="default input example" onChange={e => setBirthday(e.target.value)}/>
                             </div>
                         </div>
                         <div className="modal-footer">

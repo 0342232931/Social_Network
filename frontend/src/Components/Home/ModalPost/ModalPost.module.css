@@ -43,6 +43,7 @@
 .icon {
     width: 30px;
     height: 30px;
+    cursor: pointer;
 }
 .display_none {
     display: none;

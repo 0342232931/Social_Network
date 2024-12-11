@@ -8,6 +8,7 @@ import { updateUser } from '../../../../redux/apiRequest';
 function ModalContact() {
 
     const data = useSelector((state) => state.auth.login?.currentUser);
+    const token = useSelector((state) => state.auth.login?.currentUser?.result.token);
     const dispatch = useDispatch();
     let axiosJwt = createAxios(data, dispatch, loginSuccess);
 
@@ -23,7 +24,7 @@ function ModalContact() {
             email: email,
             password: user?.password,
             firstName: user?.firstName,
-            lastname: user?.lastName,
+            lastName: user?.lastName,
             dob: user?.dob,
             address: user?.address,
             hometown: hometown,
@@ -34,7 +35,7 @@ function ModalContact() {
         }
 
         try {
-            updateUser(user?.id, request, dispatch, axiosJwt);
+            updateUser(user?.id, request, dispatch, axiosJwt, token);
         } catch (error) {
             console.log(error);
         }
@@ -56,21 +57,21 @@ function ModalContact() {
                                     <img src='/img/myinfo/phone.png' alt='education' className={styles.icon}/>
                                     <p className={styles.title_input}>Điện Thoại</p>
                                 </div>
-                                <input className="form-control" type="text" aria-label="default input example" value={user?.phoneNumber} onChange={e => setPhoneNumber(e.target.value)} />
+                                <input className="form-control" type="text" aria-label="default input example" onChange={e => setPhoneNumber(e.target.value)} />
                             </div>
                             <div className={styles.margin_top}>
                                 <div className="d-flex">
                                     <img src='/img/myinfo/mail.png' alt='education' className={styles.icon} />
                                     <p className={styles.title_input}>Email</p>
                                 </div>
-                                <input className="form-control" type="text" aria-label="default input example" value={user?.email} onChange={e => setEmail(e.target.value)} />
+                                <input className="form-control" type="text" aria-label="default input example" onChange={e => setEmail(e.target.value)} />
                             </div>
                             <div className={styles.margin_top}>
                                 <div className="d-flex">
                                     <img src='/img/myinfo/location.png' alt='education' className={styles.icon} />
                                     <p className={styles.title_input}>Địa Chỉ Thường Trú</p>
                                 </div>
-                                <input className="form-control" type="text" aria-label="default input example" value={user?.hometown} onChange={e => setHometown(e.target.value)} />
+                                <input className="form-control" type="text" aria-label="default input example" onChange={e => setHometown(e.target.value)} />
                             </div>
                         </div>
                         <div className="modal-footer">

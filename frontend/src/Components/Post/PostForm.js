@@ -7,7 +7,7 @@ import ModalPostComment from "./Modal/ModalPostComment";
 import ModalError from "../Error/ModalError";
 
 function Post({post}){
-        
+
     const dispatch = useDispatch();
 
     const data = useSelector((state) => state.auth.login?.currentUser);
@@ -87,7 +87,7 @@ function Post({post}){
         countInteracComment(axiosJwt, post?.id);
         getAvatar(post?.user.id, axiosJwt);
         getImagesForPost(post?.id, axiosJwt);
-    }, [])
+    }, [post])
 
     const renderImages = () => {
 

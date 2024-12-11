@@ -31,11 +31,52 @@ export const registerUser = async (user, dispatch, navigate) => {  //test regist
     }
 }
 
-export const updateUser = async (userId, request, dispatch, axiosJwt) => { 
+export const updateUser = async (userId, request, dispatch, axiosJwt, token) => { 
     dispatch(registerStart());
     try{
-        await axiosJwt.put("http://localhost:8080/users/" + userId, request);
-        dispatch(loginSuccess());
+        const res = await axiosJwt.put("http://localhost:8080/users/" + userId, request);
+        
+        const userResponse = res.data?.result;
+
+        const data = {
+            code: 0,
+            result: {
+                token: token,
+                userResponse: {
+                    ...userResponse
+                },
+                authenticated: true,
+            }
+        }
+
+        dispatch(loginSuccess(data));
+    } catch (err){
+        dispatch(loginFailed());
+    }
+}
+
+export const updateUserRegister = async (userId, request, dispatch, axiosJwt, navigate, token) => { 
+    dispatch(registerStart());
+    try{
+        const response = await axiosJwt.put("http://localhost:8080/users/" + userId, request);
+
+        const userResponse = response.data?.result;
+
+        const data = {
+            code: 0,
+            result: {
+                token: token,
+                userResponse: {
+                    ...userResponse
+                },
+                authenticated: true,
+            }
+        }
+
+        dispatch(loginSuccess(data));
+
+        navigate("/")
+
     } catch (err){
         dispatch(loginFailed());
     }

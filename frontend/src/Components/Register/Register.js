@@ -16,23 +16,30 @@ function Register() {
 
   const handleRegister = (e) => {
     e.preventDefault();
-    const newUser = {
+    
+    if (cfPassword !== password) {
+      alert("Mật khẩu xách nhận không khớp!")
+    } else {
+      const newUser = {
       username: username,
       email: email,
       password: password
     };
     registerUser(newUser, dispatch, navigate);
+    }
+
+    
   }
 
   return (
     <div className={styles.container}>
       <div className={styles.center}>
-        <h1 className={styles.h1_field}><b>Register</b></h1>
+        <h1 className={styles.h1_field}><b>Đăng ký</b></h1>
         <form onSubmit={handleRegister} className={styles.form_register}>
           <div className={styles.txt_field}>
             <input className={styles.input_field} type="text" name="username" onChange={(e) => setUsername(e.target.value)}/>
             <span></span>
-            <label className={styles.label_field}>Username</label>
+            <label className={styles.label_field}>Tài khoản</label>
           </div>
           <div className={styles.txt_field}>
             <input className={styles.input_field} type="email" name="email" onChange={(e) => setEmail(e.target.value)}/>
@@ -42,16 +49,16 @@ function Register() {
           <div className={styles.txt_field}>
             <input className={styles.input_field} type="password" name="password" onChange={(e) => setPassword(e.target.value)}/>
             <span></span>
-            <label className={styles.label_field}>Password</label>
+            <label className={styles.label_field}>Mật khẩu</label>
           </div>
           <div className={styles.txt_field}>
             <input className={styles.input_field} type="password" name="cpassword" onChange={(e) => setCfPassword(e.target.value)}/>
             <span></span>
-            <label className={styles.label_field}>Confirm Password</label>
+            <label className={styles.label_field}>Nhập lại mật khẩu</label>
           </div>
-          <button name="submit" type="Submit" className={styles.submit_register}>Sign Up</button>
+          <button name="submit" type="Submit" className={styles.submit_register}>Xác nhận</button>
           <div className={styles.signup_link}>
-            <Link to={"/login"}>Have an Account ?</Link>
+            <Link to={"/login"}>Bạn đã có tài khoản ?</Link>
           </div>
         </form>
       </div>

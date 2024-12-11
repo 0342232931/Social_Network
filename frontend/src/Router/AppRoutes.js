@@ -10,6 +10,7 @@ import Suggest from '../Components/Friend/Suggest/Suggest';
 import Friends from '../Components/Friend/Friends/Friends';
 import ChatRoom from '../Components/ChatRoom/ChatRoom';
 import SearchComponent from '../Components/NavBar/SearchComponent/SearchComponent';
+import UpdateInfo from '../Components/Register/UpdateInfo/UpdateInfo';
 
 function AppRoutes() {
 
@@ -27,6 +28,7 @@ function AppRoutes() {
                 <Route path='/friends' element={<Friends />} />
                 <Route path='/chat' element={<ChatRoom />}/>
                 <Route path='/search' element={<SearchComponent />} />
+                <Route path='/update-info' element={<UpdateInfo />} />
             </Routes>
         </Router>
     )
